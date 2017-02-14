@@ -4,6 +4,14 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_select">배경화면 선택</string>
+    <string name="title_gallery">갤러리</string>
     <string name="title_search">배경화면 검색</string>
     <string name="title_setting">설정</string>
+    <string name="desc_folder_image">폴더</string>
+    <string name="desc_folder_open_image">열려진 폴더</string>
+    <string name="label_select">선택</string>
+    <string name="label_preview">미리보기</string>
+    <string name="label_done">확인</string>
+    <string name="pref_gallery">gallery</string>
+    <string name="pref_gallery_select_key">gallery_select</string>
 </resources>

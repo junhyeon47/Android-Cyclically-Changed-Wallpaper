@@ -15,7 +15,6 @@ import com.boostcamp.hyeon.wallpaper.R;
  */
 public class SearchFragment extends Fragment {
 
-
     public SearchFragment() {
         // Required empty public constructor
     }
