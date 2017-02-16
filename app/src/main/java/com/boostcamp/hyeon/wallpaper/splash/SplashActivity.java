@@ -63,7 +63,6 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<Void> loader, Void data) {
-        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_FIRST_INIT, false);
         moveToMainActivity();
     }
 
@@ -73,9 +72,14 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void moveToMainActivity(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        final Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(intent);
+                finish();
+            }
+        }, DELAY_MILLIS);
     }
 
     @Override
@@ -85,12 +89,7 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
             mRoundCornerProgressBar.setVisibility(View.VISIBLE);
             getSupportLoaderManager().initLoader(FIRST_SYNC_DATA_LOADER, null, this).forceLoad();
         }else{
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    moveToMainActivity();
-                }
-            }, DELAY_MILLIS);
+            moveToMainActivity();
         }
     }
 

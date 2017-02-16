@@ -40,6 +40,12 @@ public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnI
     }
 
     @Override
+    public void updateAllImagesDeselected() {
+        mGalleryModel.updateAllImagesDeselected();
+        mAdapterView.notifyAdapter();
+    }
+
+    @Override
     public void onItemClick(int position) {
         if(position == -1){
             //moveToDetailActivity

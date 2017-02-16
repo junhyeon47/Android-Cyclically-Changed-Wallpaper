@@ -41,6 +41,13 @@ public class FolderListPresenterImpl implements FolderListPresenter.Presenter, O
     }
 
     @Override
+    public String getOpenedFolderId() {
+        String folderId = mGalleryModel.getOpenedFolderId();
+        mAdapterView.notifyAdapter();
+        return folderId;
+    }
+
+    @Override
     public void onItemClick(int position) {
         mAdapterModel.update(position);
         mAdapterView.notifyAdapter();

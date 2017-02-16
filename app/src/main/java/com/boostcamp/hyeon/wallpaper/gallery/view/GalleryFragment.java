@@ -103,6 +103,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
                 realm.where(Folder.class).findAllSorted("name", Sort.ASCENDING),
                 true
         );
+        realm.commitTransaction();
 
 
         //init Folder(Left) RecyclerView
@@ -112,10 +113,6 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         mFolderRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mFolderRecyclerView.setAdapter(mFolderListAdapter);
         mFolderRecyclerView.setHasFixedSize(true);
-        RecyclerView.ItemAnimator animator = mFolderRecyclerView.getItemAnimator();
-        if (animator instanceof SimpleItemAnimator) {
-            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
-        }
 
         //init Folder Presenter
         mFolderListPresenter = new FolderListPresenterImpl(model);
@@ -124,22 +121,10 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         mFolderListPresenter.setFolderListAdapterModel(mFolderListAdapter);
 
         //init Image Adapter
-        RealmResults<Folder> folderRealmResults = realm.where(Folder.class).findAll();
-        int openedPosition = -1;
-        for(Folder folder : folderRealmResults){
-            if(folder.getOpened()){
-                openedPosition = folderRealmResults.indexOf(folder);
-                break;
-            }
-        }
-        if(openedPosition == -1){
-            folderRealmResults.get(0).setOpened(true);
-            mFolderListAdapter.notifyAdapter(0);
-            openedPosition = 0;
-        }
+        realm.beginTransaction();
         ImageListAdapter imageListAdapter = new ImageListAdapter(
                 getContext(),
-                folderRealmResults.get(openedPosition).getImages(),
+                realm.where(Folder.class).equalTo("bucketId", mFolderListPresenter.getOpenedFolderId()).findFirst().getImages(),
                 true
         );
         realm.commitTransaction();
@@ -148,10 +133,6 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         mImageRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         mImageRecyclerView.setAdapter(imageListAdapter);
         mImageRecyclerView.setHasFixedSize(true);
-        animator = mImageRecyclerView.getItemAnimator();
-        if (animator instanceof SimpleItemAnimator) {
-            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
-        }
 
         //init Presenter
         mImageListPresenter = new ImageListPresenterImpl(model);
@@ -253,14 +234,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, false);
 
         //update all Image objects isSelected set false
-        Realm realm = WallpaperApplication.getRealmInstance();
-        realm.beginTransaction();
-        RealmResults<Image> imageRealmResults = realm.where(Image.class).equalTo("isSelected", true).findAll();
-        for(Image image : imageRealmResults){
-            image.setSelected(false);
-        }
-        realm.commitTransaction();
-        mImageRecyclerView.getAdapter().notifyDataSetChanged();
+        mImageListPresenter.updateAllImagesDeselected();
     }
 
     @Override
@@ -269,6 +243,8 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
             @Override
             protected void onStartLoading() {
                 if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_FIRST_INIT, true)){
+                    SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_FIRST_INIT, false);
+                }else{
                     forceLoad();
                 }
             }

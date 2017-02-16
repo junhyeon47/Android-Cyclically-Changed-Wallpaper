@@ -19,5 +19,6 @@ public interface FolderListPresenter {
         void detachView();
         void setFolderListAdapterModel(FolderListAdapterContract.Model adapterModel);
         void setFolderListAdapterView(FolderListAdapterContract.View adapterView);
+        String getOpenedFolderId();
     }
 }

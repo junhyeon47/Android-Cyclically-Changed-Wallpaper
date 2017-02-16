@@ -1,6 +1,7 @@
 package com.boostcamp.hyeon.wallpaper.gallery.model;
 
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
+import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 
 import io.realm.Realm;
@@ -11,6 +12,23 @@ import io.realm.RealmResults;
  */
 
 public class GalleryModel {
+
+    public String getOpenedFolderId(){
+        Realm realm = WallpaperApplication.getRealmInstance();
+        RealmResults<Folder> folderRealmResults = realm.where(Folder.class).findAll();
+        String openedFolderId = null;
+        for(Folder folder : folderRealmResults){
+            if(folder.getOpened()){
+                openedFolderId = folder.getBucketId();
+                break;
+            }
+        }
+        if(openedFolderId == null){
+            folderRealmResults.get(0).setOpened(true);
+            openedFolderId = folderRealmResults.get(0).getBucketId();
+        }
+        return openedFolderId;
+    }
 
     public void updateAllImagesDeselected(){
         Realm realm = WallpaperApplication.getRealmInstance();

@@ -1,7 +1,5 @@
 package com.boostcamp.hyeon.wallpaper.gallery.presenter;
 
-import android.content.Context;
-
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.contract.ImageListAdapterContract;
 
 /**
@@ -17,5 +15,6 @@ public interface ImageListPresenter {
         void detachView();
         void setImageListAdapterModel(ImageListAdapterContract.Model adapterModel);
         void setImageListAdapterView(ImageListAdapterContract.View adapterView);
+        void updateAllImagesDeselected();
     }
 }
