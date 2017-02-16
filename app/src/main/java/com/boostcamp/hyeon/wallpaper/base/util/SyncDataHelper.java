@@ -1,28 +1,39 @@
-package com.boostcamp.hyeon.wallpaper.gallery.model;
+package com.boostcamp.hyeon.wallpaper.base.util;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
+import android.widget.ProgressBar;
 
-import com.boostcamp.hyeon.wallpaper.app.WallpaperApplication;
+import com.boostcamp.hyeon.wallpaper.R;
+import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
+import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
+import com.boostcamp.hyeon.wallpaper.base.domain.Image;
+
+import java.io.File;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
 /**
- * Created by hyeon on 2017. 2. 13..
+ * Created by hyeon on 2017. 2. 15..
  */
 
-public class FolderModel {
+public class SyncDataHelper {
 
-    public void syncContentProviderToRealm(Context context){
+    public static void syncContentProviderToRealm(Context context, Handler handler){
         //read all images from Content Provider to Cursor Object.
         String[] projection = {
                 MediaStore.Images.Media.BUCKET_ID, //Folder ID
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME, //Folder Name
                 MediaStore.Images.Media._ID, //Image ID
-                MediaStore.Images.Media.ORIENTATION, //Image Orientation.
+                MediaStore.Images.Media.DATA, //Image path
+                MediaStore.Images.Media.ORIENTATION, //Image orientation
                 MediaStore.Images.Media.DATE_TAKEN //Image Taken Date.
         };
         String order = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " ASC, "+ MediaStore.Images.Media.DATE_TAKEN +" DESC";
@@ -35,6 +46,17 @@ public class FolderModel {
                 order
         );
 
+        //init progress
+        int totalImageCount = allImagesCursor.getCount();
+        int loopCount = 0;
+        Bundle bundle = new Bundle();
+        if(handler != null){
+            bundle.putInt(context.getString(R.string.key_max), totalImageCount);
+            Message message = new Message();
+            message.setData(bundle);
+            handler.sendMessage(message);
+        }
+
         //realm object update for preparing sync
         updateRealmObjectForBeforeSync();
 
@@ -45,15 +67,17 @@ public class FolderModel {
             int bucketIdColumnIndex = allImagesCursor.getColumnIndex(projection[0]);
             int bucketDisplayNameColumnIndex = allImagesCursor.getColumnIndex(projection[1]);
             int idColumnIndex = allImagesCursor.getColumnIndex(projection[2]);
-            int orientationColumnIndex = allImagesCursor.getColumnIndex(projection[3]);
-            int dateTakenColumnIndex = allImagesCursor.getColumnIndex(projection[4]);
+            int pathColumnIndex = allImagesCursor.getColumnIndex(projection[3]);
+            int orientationColumnIndex = allImagesCursor.getColumnIndex(projection[4]);
+            int dateTakenColumnIndex = allImagesCursor.getColumnIndex(projection[5]);
 
             do {
                 //get data from Cursor
                 String bucketId = allImagesCursor.getString(bucketIdColumnIndex);
                 String bucketDisplayName = allImagesCursor.getString(bucketDisplayNameColumnIndex);
-                int imageId = allImagesCursor.getInt(idColumnIndex);
-                int orientation = allImagesCursor.getInt(orientationColumnIndex);
+                String imageId = allImagesCursor.getString(idColumnIndex);
+                String path = allImagesCursor.getString(pathColumnIndex);
+                String orientation = allImagesCursor.getString(orientationColumnIndex);
                 String dateTaken = allImagesCursor.getString(dateTakenColumnIndex);
 
                 //init realm
@@ -61,10 +85,10 @@ public class FolderModel {
                 realm.beginTransaction();
 
                 // if bucket isn't exist in realm, create realm object
-                Folder folder = realm.where(Folder.class).equalTo("bucketId", Integer.valueOf(bucketId)).findFirst();
+                Folder folder = realm.where(Folder.class).equalTo("bucketId", bucketId).findFirst();
                 if(folder == null){
                     folder = realm.createObject(Folder.class);
-                    folder.setBucketId(Integer.valueOf(bucketId));
+                    folder.setBucketId(bucketId);
                     folder.setName(bucketDisplayName);
                     folder.setImages(new RealmList<Image>());
                     folder.setOpened(false);
@@ -76,8 +100,10 @@ public class FolderModel {
                 if(image == null){
                     RealmList<Image> imageRealmList = folder.getImages();
                     image = realm.createObject(Image.class);
+                    image.setImageUri(Uri.fromFile(new File(path)).toString());
+                    image.setThumbnailUri(getThumbnailUri(context, Long.valueOf(imageId)));
                     image.setImageId(imageId);
-                    image.setOrientation(orientation);
+                    image.setOrientation(orientation == null ? "0" : orientation);
                     image.setDateTaken(dateTaken);
                     imageRealmList.add(image);
                 }
@@ -85,6 +111,18 @@ public class FolderModel {
                 image.setSynced(true);
 
                 realm.commitTransaction();
+
+
+                //update handler
+                loopCount++;
+                if(handler != null){
+                    bundle.clear();
+                    bundle.putInt(context.getString(R.string.key_progress), loopCount);
+                    Message message = new Message();
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }
+
             } while (allImagesCursor.moveToNext());
         } else {
             // Cursor is empty
@@ -96,7 +134,38 @@ public class FolderModel {
         deleteRealmObjectForNotExistData();
     }
 
-    private void deleteRealmObjectForNotExistData(){
+    private static String getThumbnailUri(Context context, long imageId) {
+        String[] projection = { MediaStore.Images.Thumbnails.DATA };
+
+        Cursor thumbnailCursor = context.getContentResolver().query(
+                MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
+                projection,
+                MediaStore.Images.Thumbnails.IMAGE_ID + "=?",
+                new String[]{String.valueOf(imageId)},
+                null);
+
+        if (thumbnailCursor == null) {
+            return null;
+        } else if (thumbnailCursor.moveToFirst()) {
+            int thumbnailColumnIndex = thumbnailCursor.getColumnIndex(projection[0]);
+
+            String thumbnailPath = thumbnailCursor.getString(thumbnailColumnIndex);
+            thumbnailCursor.close();
+            return Uri.fromFile(new File(thumbnailPath)).toString();
+        } else {
+            //if thumbnail is not exit, make thumbnail
+            MediaStore.Images.Thumbnails.getThumbnail(
+                    context.getContentResolver(),
+                    imageId,
+                    MediaStore.Images.Thumbnails.MINI_KIND,
+                    null
+            );
+            thumbnailCursor.close();
+            return getThumbnailUri(context, imageId);
+        }
+    }
+
+    private static void deleteRealmObjectForNotExistData(){
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
         RealmResults<Image> imageRealmResults = realm.where(Image.class).equalTo("isSynced", false).findAll();
@@ -106,7 +175,7 @@ public class FolderModel {
         realm.commitTransaction();
     }
 
-    private void updateRealmObjectForBeforeSync(){
+    private static void updateRealmObjectForBeforeSync() {
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
         RealmResults<Folder> folderRealmResults = realm.where(Folder.class).findAll();
@@ -116,16 +185,6 @@ public class FolderModel {
                 image.setSynced(false);
             }
             folder.setSynced(false);
-        }
-        realm.commitTransaction();
-    }
-
-    public void updateRealmObjectForDefaultMode(){
-        Realm realm = WallpaperApplication.getRealmInstance();
-        realm.beginTransaction();
-        RealmResults<Image> imageRealmResults = realm.where(Image.class).equalTo("isSelected", true).findAll();
-        for(Image image : imageRealmResults){
-            image.setSelected(false);
         }
         realm.commitTransaction();
     }

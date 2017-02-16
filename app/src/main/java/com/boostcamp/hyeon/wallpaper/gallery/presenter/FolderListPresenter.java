@@ -12,13 +12,12 @@ public interface FolderListPresenter {
     interface View{
         void changeModeForSelect();
         void changeModeForDefault();
+        void clickFolder(int position);
     }
     interface Presenter{
-        void attachView(FolderListPresenter.View view);
+        void attachView(View view);
         void detachView();
         void setFolderListAdapterModel(FolderListAdapterContract.Model adapterModel);
         void setFolderListAdapterView(FolderListAdapterContract.View adapterView);
-        void loadFolderList(Context context);
-        void updateImageList();
     }
 }

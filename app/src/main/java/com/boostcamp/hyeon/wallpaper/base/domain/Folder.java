@@ -1,25 +1,24 @@
-package com.boostcamp.hyeon.wallpaper.gallery.model;
+package com.boostcamp.hyeon.wallpaper.base.domain;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
-import io.realm.annotations.Required;
 
 /**
- * Created by hyeon on 2017. 2. 13..
+ * Created by hyeon on 2017. 2. 15..
  */
 
-public class Folder extends RealmObject {
-    @Required private Integer bucketId;
-    @Required private String name;
-    @Required private Boolean isOpened;
-    @Required private Boolean isSynced;
+public class Folder extends RealmObject{
+    private String bucketId;
+    private String name;
+    private Boolean isOpened;
+    private Boolean isSynced;
     private RealmList<Image> images;
 
-    public Integer getBucketId() {
+    public String getBucketId() {
         return bucketId;
     }
 
-    public void setBucketId(Integer bucketId) {
+    public void setBucketId(String bucketId) {
         this.bucketId = bucketId;
     }
 

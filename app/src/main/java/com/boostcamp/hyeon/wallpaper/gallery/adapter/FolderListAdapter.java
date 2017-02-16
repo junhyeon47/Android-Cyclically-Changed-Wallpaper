@@ -8,15 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.boostcamp.hyeon.wallpaper.R;
-import com.boostcamp.hyeon.wallpaper.app.WallpaperApplication;
+
+import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
+import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
 import com.boostcamp.hyeon.wallpaper.listener.OnItemClickListener;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.contract.FolderListAdapterContract;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.holder.FolderListViewHolder;
-import com.boostcamp.hyeon.wallpaper.gallery.model.Folder;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
+import io.realm.RealmResults;
 
 /**
  * Created by hyeon on 2017. 2. 12..
@@ -50,16 +52,29 @@ public class FolderListAdapter extends RealmRecyclerViewAdapter<Folder, FolderLi
     }
 
     @Override
+    public void notifyAdapter(int position) {
+        notifyItemChanged(position);
+    }
+
+    @Override
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
     }
 
     @Override
-    public void update(int bucketId) {
+    public void update(int position) {
         Realm realm = WallpaperApplication.getRealmInstance();
-        realm.beginTransaction();
-        Folder folder = realm.where(Folder.class).equalTo("bucketId", bucketId).findFirst();
-        folder.setOpened(!folder.getOpened());
+        WallpaperApplication.getRealmInstance().beginTransaction();
+        RealmResults<Folder> folderRealmResults = realm.where(Folder.class).findAll();
+        for(Folder folder : folderRealmResults){
+            if(folder.getBucketId().equals(getData().get(position).getBucketId())){
+                //select item
+                folder.setOpened(true);
+            }else{
+                folder.setOpened(false);
+            }
+        }
         realm.commitTransaction();
     }
+
 }

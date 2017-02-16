@@ -1,4 +1,4 @@
-package com.boostcamp.hyeon.wallpaper.gallery.model;
+package com.boostcamp.hyeon.wallpaper.base.domain;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Required;
@@ -8,25 +8,43 @@ import io.realm.annotations.Required;
  */
 
 public class Image extends RealmObject{
-    @Required private Integer imageId;
-    @Required private Integer orientation;
-    @Required private String dateTaken;
-    @Required private Boolean isSelected;
-    @Required private Boolean isSynced;
+    private String imageId;
+    private String imageUri;
+    private String thumbnailUri;
+    private String orientation;
+    private String dateTaken;
+    private Boolean isSelected;
+    private Boolean isSynced;
 
-    public Integer getImageId() {
+    public String getImageId() {
         return imageId;
     }
 
-    public void setImageId(Integer imageId) {
+    public void setImageId(String imageId) {
         this.imageId = imageId;
     }
 
-    public Integer getOrientation() {
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
+    public String getThumbnailUri() {
+        return thumbnailUri;
+    }
+
+    public void setThumbnailUri(String thumbnailUri) {
+        this.thumbnailUri = thumbnailUri;
+    }
+
+    public String getOrientation() {
         return orientation;
     }
 
-    public void setOrientation(Integer orientation) {
+    public void setOrientation(String orientation) {
         this.orientation = orientation;
     }
 

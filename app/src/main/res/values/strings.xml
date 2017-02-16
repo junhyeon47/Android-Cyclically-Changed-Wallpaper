@@ -12,6 +12,6 @@
     <string name="label_select">선택</string>
     <string name="label_preview">미리보기</string>
     <string name="label_done">확인</string>
-    <string name="pref_gallery">gallery</string>
-    <string name="pref_gallery_select_key">gallery_select</string>
+    <string name="key_max">max</string>
+    <string name="key_progress">progress</string>
 </resources>

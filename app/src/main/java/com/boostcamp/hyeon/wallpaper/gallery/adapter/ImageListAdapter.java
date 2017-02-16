@@ -3,16 +3,19 @@ package com.boostcamp.hyeon.wallpaper.gallery.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.boostcamp.hyeon.wallpaper.R;
-import com.boostcamp.hyeon.wallpaper.app.WallpaperApplication;
+
+import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
+import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.listener.OnItemClickListener;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.contract.ImageListAdapterContract;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.holder.ImageListViewHolder;
-import com.boostcamp.hyeon.wallpaper.gallery.model.Image;
+
 
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
@@ -45,18 +48,20 @@ public class ImageListAdapter extends RealmRecyclerViewAdapter<Image, ImageListV
     }
 
     @Override
-    public void update(int imageId) {
-        // isSelect field value change
-        Realm realm = WallpaperApplication.getRealmInstance();
-        realm.beginTransaction();
-        Image image = realm.where(Image.class).equalTo("imageId", imageId).findFirst();
-        image.setSelected(!image.getSelected());
-        realm.commitTransaction();
+    public void update(int position) {
+        WallpaperApplication.getRealmInstance().beginTransaction();
+        getData().get(position).setSelected(!getData().get(position).getSelected());
+        WallpaperApplication.getRealmInstance().commitTransaction();
     }
 
     @Override
     public void notifyAdapter() {
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void notifyAdapter(int position) {
+        notifyItemChanged(position);
     }
 
     @Override

@@ -7,4 +7,6 @@
     <color name="colorGrey300">#E0E0E0</color>
     <color name="colorTeal200">#80CBC4</color>
     <color name="colorBlackOpacity50">#50000000</color>
+    <color name="colorProgressBarBackground">#1e000000</color>
+    <color name="colorTeal500">#009688</color>
 </resources>

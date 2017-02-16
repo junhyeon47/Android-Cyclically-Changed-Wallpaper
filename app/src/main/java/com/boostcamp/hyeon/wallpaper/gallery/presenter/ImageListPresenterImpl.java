@@ -1,8 +1,8 @@
 package com.boostcamp.hyeon.wallpaper.gallery.presenter;
 
+import com.boostcamp.hyeon.wallpaper.gallery.model.GalleryModel;
 import com.boostcamp.hyeon.wallpaper.listener.OnItemClickListener;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.contract.ImageListAdapterContract;
-import com.boostcamp.hyeon.wallpaper.gallery.model.ImageModel;
 
 /**
  * Created by hyeon on 2017. 2. 13..
@@ -12,12 +12,15 @@ public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnI
     private ImageListPresenter.View mView;
     private ImageListAdapterContract.Model mAdapterModel;
     private ImageListAdapterContract.View mAdapterView;
-    private ImageModel mImageModel;
+    private GalleryModel mGalleryModel;
+
+    public ImageListPresenterImpl(GalleryModel mGalleryModel) {
+        this.mGalleryModel = mGalleryModel;
+    }
 
     @Override
     public void attachView(ImageListPresenter.View view) {
         this.mView = view;
-        mImageModel = new ImageModel();
     }
 
     @Override
@@ -37,21 +40,22 @@ public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnI
     }
 
     @Override
-    public void onItemClick(int imageId) {
-        if(imageId == -1){
+    public void onItemClick(int position) {
+        if(position == -1){
             //moveToDetailActivity
         }else{
-            mAdapterModel.update(imageId);
-            mAdapterView.notifyAdapter();
+            //if select mode
+            mAdapterModel.update(position);
+            mAdapterView.notifyAdapter(position);
         }
     }
 
     @Override
-    public void onItemLongClick(int imageId) {
+    public void onItemLongClick(int position) {
         mView.changeModeForSelect();
         //realm image object update. position -> select
-        mAdapterModel.update(imageId);
-        mAdapterView.notifyAdapter();
+        mAdapterModel.update(position);
+        mAdapterView.notifyAdapter(position);
     }
 
 }

@@ -13,7 +13,7 @@ public interface ImageListPresenter {
         void changeModeForSelect();
     }
     interface Presenter{
-        void attachView(ImageListPresenter.View view);
+        void attachView(View view);
         void detachView();
         void setImageListAdapterModel(ImageListAdapterContract.Model adapterModel);
         void setImageListAdapterView(ImageListAdapterContract.View adapterView);

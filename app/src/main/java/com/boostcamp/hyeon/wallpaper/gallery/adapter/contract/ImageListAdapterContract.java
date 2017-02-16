@@ -9,10 +9,11 @@ import com.boostcamp.hyeon.wallpaper.listener.OnItemClickListener;
 public interface ImageListAdapterContract {
     interface View {
         void notifyAdapter();
+        void notifyAdapter(int position);
         void setOnItemClickListener(OnItemClickListener listener);
     }
 
     interface Model {
-        void update(int imageId);
+        void update(int position);
     }
 }

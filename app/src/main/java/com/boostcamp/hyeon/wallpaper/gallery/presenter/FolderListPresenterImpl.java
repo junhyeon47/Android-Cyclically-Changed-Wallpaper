@@ -1,10 +1,9 @@
 package com.boostcamp.hyeon.wallpaper.gallery.presenter;
 
-import android.content.Context;
 
+import com.boostcamp.hyeon.wallpaper.gallery.model.GalleryModel;
 import com.boostcamp.hyeon.wallpaper.listener.OnItemClickListener;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.contract.FolderListAdapterContract;
-import com.boostcamp.hyeon.wallpaper.gallery.model.FolderModel;
 
 /**
  * Created by hyeon on 2017. 2. 13..
@@ -14,17 +13,20 @@ public class FolderListPresenterImpl implements FolderListPresenter.Presenter, O
     private FolderListPresenter.View mView;
     private FolderListAdapterContract.Model mAdapterModel;
     private FolderListAdapterContract.View mAdapterView;
-    private FolderModel mFolderModel;
+    private GalleryModel mGalleryModel;
+
+    public FolderListPresenterImpl(GalleryModel mGalleryModel) {
+        this.mGalleryModel = mGalleryModel;
+    }
 
     @Override
     public void attachView(FolderListPresenter.View view) {
         this.mView = view;
-        mFolderModel = new FolderModel();
     }
 
     @Override
     public void detachView() {
-
+        this.mView = null;
     }
 
     @Override
@@ -39,19 +41,12 @@ public class FolderListPresenterImpl implements FolderListPresenter.Presenter, O
     }
 
     @Override
-    public void loadFolderList(Context context) {
-        mFolderModel.syncContentProviderToRealm(context);
-    }
-
-    @Override
-    public void updateImageList() {
-        mFolderModel.updateRealmObjectForDefaultMode();
-    }
-
-    @Override
-    public void onItemClick(int bucketId) {
-        mAdapterModel.update(bucketId);
+    public void onItemClick(int position) {
+        mAdapterModel.update(position);
         mAdapterView.notifyAdapter();
+
+        //adapter change
+        mView.clickFolder(position);
     }
 
     @Override

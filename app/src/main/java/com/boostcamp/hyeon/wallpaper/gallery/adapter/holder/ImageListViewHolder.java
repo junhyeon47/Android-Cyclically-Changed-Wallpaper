@@ -1,9 +1,8 @@
 package com.boostcamp.hyeon.wallpaper.gallery.adapter.holder;
 
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.provider.MediaStore;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +10,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.boostcamp.hyeon.wallpaper.R;
-import com.boostcamp.hyeon.wallpaper.app.WallpaperApplication;
+
+import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
+import com.boostcamp.hyeon.wallpaper.base.domain.Image;
+import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.listener.OnItemClickListener;
-import com.boostcamp.hyeon.wallpaper.gallery.model.Image;
-import com.bumptech.glide.Glide;
+
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +33,7 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
 
     private Context mContext;
     private OnItemClickListener mOnItemCLickListener;
+    private int mSize;
 
     public ImageListViewHolder(View itemView, Context mContext, OnItemClickListener mOnItemCLickListener) {
         super(itemView);
@@ -38,19 +41,20 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
         this.mContext = mContext;
         this.mOnItemCLickListener = mOnItemCLickListener;
 
-        int size = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceWidthSize/4;
+        mSize = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceWidthSize/9*2;
 
         ViewGroup.LayoutParams layoutParams = mItemFrameLayout.getLayoutParams();
-        layoutParams.width = size;
-        layoutParams.height = size;
+        layoutParams.width = mSize;
+        layoutParams.height = mSize;
         mItemFrameLayout.setLayoutParams(layoutParams);
     }
 
-    public void bind(final Image image, int position){
-        Glide.with(mContext)
-                .loadFromMediaStore(ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, image.getImageId()))
+    public void bind(final Image image, final int position){
+        Picasso.with(mContext)
+                .load(Uri.parse(image.getThumbnailUri()))
+                .rotate(Integer.valueOf(image.getOrientation()))
+                .fit()
                 .centerCrop()
-                .crossFade()
                 .into(mThumbnailImageView);
 
         if(image.getSelected()){
@@ -62,17 +66,17 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
         mThumbnailImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isSelectMode())
-                    mOnItemCLickListener.onItemClick(image.getImageId());
+                if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, false))
+                    mOnItemCLickListener.onItemClick(position);
                 else
-                    mOnItemCLickListener.onItemClick(-1);
+                    mOnItemCLickListener.onItemClick(position);
             }
         });
 
         mThumbnailImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mOnItemCLickListener.onItemLongClick(image.getImageId());
+                mOnItemCLickListener.onItemLongClick(position);
                 return true;
             }
         });
@@ -80,13 +84,8 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
         mSelectImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnItemCLickListener.onItemClick(image.getImageId());
+                mOnItemCLickListener.onItemClick(position);
             }
         });
-    }
-
-    private boolean isSelectMode(){
-        SharedPreferences preferences = mContext.getSharedPreferences(mContext.getString(R.string.pref_gallery), Context.MODE_PRIVATE);
-        return preferences.getBoolean(mContext.getString(R.string.pref_gallery_select_key), false);
     }
 }

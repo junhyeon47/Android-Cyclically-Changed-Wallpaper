@@ -2,30 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/folder_layout_padding">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/folder_height"
-        android:background="@color/colorTeal200"
-        android:gravity="center_vertical"
-        android:padding="@dimen/folder_layout_padding">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/folder_name_margin"
+        android:gravity="center_vertical">
         <ImageView
-            android:id="@+id/iv_folder"
+            android:id="@+id/iv_folder_icon"
             android:src="@drawable/ic_folder_white_24dp"
             android:layout_width="@dimen/folder_image_size"
             android:layout_height="@dimen/folder_image_size"
             android:layout_marginRight="@dimen/folder_margin_right"
-            android:contentDescription="@string/desc_folder_image"/>
+            android:contentDescription="@string/desc_folder_image"
+            android:scaleType="fitXY"/>
 
         <ImageView
             android:src="@drawable/ic_folder_open_white_24dp"
-            android:id="@+id/iv_folder_open"
+            android:id="@+id/iv_folder_open_icon"
             android:layout_width="@dimen/folder_image_size"
             android:layout_height="@dimen/folder_image_size"
             android:layout_marginRight="@dimen/folder_margin_right"
             android:contentDescription="@string/desc_folder_open_image"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:scaleType="fitXY"/>
 
         <TextView
             android:id="@+id/tv_folder_name"
@@ -33,10 +35,9 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/folder_text_size"/>
-
     </LinearLayout>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <ImageView
+        android:id="@+id/iv_folder_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 </LinearLayout>

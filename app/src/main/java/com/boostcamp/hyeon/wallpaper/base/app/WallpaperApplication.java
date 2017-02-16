@@ -1,7 +1,9 @@
-package com.boostcamp.hyeon.wallpaper.app;
+package com.boostcamp.hyeon.wallpaper.base.app;
 
 import android.app.Application;
 import android.util.DisplayMetrics;
+
+import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -24,6 +26,9 @@ public class WallpaperApplication extends Application{
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         mDeviceWidthSize = displayMetrics.widthPixels;
         mDeviceHeightSize = displayMetrics.heightPixels;
+
+        //init SharedPreferences
+        SharedPreferenceHelper.getInstance(getApplicationContext());
     }
 
     public static Realm getRealmInstance(){
