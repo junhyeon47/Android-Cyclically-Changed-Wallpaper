@@ -51,14 +51,6 @@ public class FolderListViewHolder extends RecyclerView.ViewHolder{
             }
         });
 
-        if(folder.getOpened()){
-            mFolderIconImageView.setVisibility(View.GONE);
-            mFolderOpenIconImageView.setVisibility(View.VISIBLE);
-        }else{
-            mFolderIconImageView.setVisibility(View.VISIBLE);
-            mFolderOpenIconImageView.setVisibility(View.GONE);
-        }
-
         Picasso.with(mContext)
                 .load(Uri.parse(folder.getImages().get(0).getThumbnailUri()))
                 .rotate(Integer.valueOf(folder.getImages().get(0).getOrientation()))

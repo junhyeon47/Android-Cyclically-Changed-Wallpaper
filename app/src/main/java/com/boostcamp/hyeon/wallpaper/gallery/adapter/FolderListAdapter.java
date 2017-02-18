@@ -63,18 +63,6 @@ public class FolderListAdapter extends RealmRecyclerViewAdapter<Folder, FolderLi
 
     @Override
     public void update(int position) {
-        Realm realm = WallpaperApplication.getRealmInstance();
-        WallpaperApplication.getRealmInstance().beginTransaction();
-        RealmResults<Folder> folderRealmResults = realm.where(Folder.class).findAll();
-        for(Folder folder : folderRealmResults){
-            if(folder.getBucketId().equals(getData().get(position).getBucketId())){
-                //select item
-                folder.setOpened(true);
-            }else{
-                folder.setOpened(false);
-            }
-        }
-        realm.commitTransaction();
     }
 
 }

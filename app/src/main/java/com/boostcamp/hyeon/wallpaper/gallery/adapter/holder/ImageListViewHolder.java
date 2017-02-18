@@ -57,12 +57,6 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
                 .centerCrop()
                 .into(mThumbnailImageView);
 
-        if(image.getSelected()){
-            mSelectImageView.setVisibility(View.VISIBLE);
-        }else{
-            mSelectImageView.setVisibility(View.GONE);
-        }
-
         mThumbnailImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

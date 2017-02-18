@@ -45,7 +45,7 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
         new TedPermission(this)
                 .setPermissionListener(this)
                 .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .check();
 
     }
@@ -55,7 +55,7 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
         return new AsyncTaskLoader<Void>(this){
             @Override
             public Void loadInBackground() {
-                SyncDataHelper.syncContentProviderToRealm(getApplicationContext(), mHandler);
+                SyncDataHelper.insertToRealm(getApplicationContext(), mHandler);
                 return null;
             }
         };

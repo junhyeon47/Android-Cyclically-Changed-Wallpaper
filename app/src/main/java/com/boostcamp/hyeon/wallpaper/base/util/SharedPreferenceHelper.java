@@ -15,7 +15,8 @@ public class SharedPreferenceHelper {
 
     public enum Key{
         BOOLEAN_FIRST_INIT("pref_key_first_init"),
-        BOOLEAN_GALLEY_SELECT_MODE("pref_key_gallery_select_mode");
+        BOOLEAN_GALLEY_SELECT_MODE("pref_key_gallery_select_mode"),
+        STRING_SYNC_DATE("pref_key_sync_date");
 
         private final String name;
 

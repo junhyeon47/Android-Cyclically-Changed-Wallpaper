@@ -1,8 +1,9 @@
 package com.boostcamp.hyeon.wallpaper.gallery.view;
 
 
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,12 +21,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
-import com.boostcamp.hyeon.wallpaper.base.domain.Image;
+import com.boostcamp.hyeon.wallpaper.base.service.ImageFileObserverService;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.SyncDataHelper;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.FolderListAdapter;
@@ -42,11 +41,7 @@ import com.boostcamp.hyeon.wallpaper.main.view.MainActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmResults;
 import io.realm.Sort;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,7 +55,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
     private FolderListPresenterImpl mFolderListPresenter;
     private ImageListPresenterImpl mImageListPresenter;
     private MenuItem mSelectMenuItem, mPreviewMenuItem, mDoneMenuItem;
-
+    private ComponentName mService;
 
     public GalleryFragment() {
         // Required empty public constructor
@@ -89,6 +84,12 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
     }
 
     public void init(){
+//        //init service
+//        Intent intent = new Intent(getActivity(), ImageFileObserverService.class);
+//        //start service
+//        mService =  getActivity().startService(intent);
+
+
         //init loader
         getLoaderManager().initLoader(SYNC_DATA_LOADER, null, this);
 
@@ -142,6 +143,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
 
         //init SharedPreferences
         SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, false);
+
     }
 
     @Override
@@ -245,15 +247,15 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
                 if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_FIRST_INIT, true)){
                     SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_FIRST_INIT, false);
                 }else{
-                    forceLoad();
+                    //forceLoad();
                 }
             }
 
             @Override
             public Void loadInBackground() {
                 //content provider data sync
-                Log.d(TAG, "called AsyncTask");
-                SyncDataHelper.syncContentProviderToRealm(getContext(), null);
+                Log.d(TAG, "loadInBackground called.");
+                SyncDataHelper.insertToRealm(getContext(), null);
                 return null;
             }
         };
@@ -261,7 +263,8 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
 
     @Override
     public void onLoadFinished(Loader<Void> loader, Void data) {
-
+        Log.d(TAG, "onLoadFinished called.");
+        //restart service;
     }
 
     @Override
@@ -277,6 +280,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
                 mFolderListAdapter.getData().get(position).getImages(),
                 true
         );
+
         mImageRecyclerView.setAdapter(imageListAdapter);
 
         mImageListPresenter.detachView();

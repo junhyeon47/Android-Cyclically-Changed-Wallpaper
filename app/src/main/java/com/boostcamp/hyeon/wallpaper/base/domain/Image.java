@@ -8,13 +8,20 @@ import io.realm.annotations.Required;
  */
 
 public class Image extends RealmObject{
+    private String bucketId;
     private String imageId;
     private String imageUri;
     private String thumbnailUri;
     private String orientation;
     private String dateTaken;
-    private Boolean isSelected;
-    private Boolean isSynced;
+
+    public String getBucketId() {
+        return bucketId;
+    }
+
+    public void setBucketId(String bucketId) {
+        this.bucketId = bucketId;
+    }
 
     public String getImageId() {
         return imageId;
@@ -56,19 +63,4 @@ public class Image extends RealmObject{
         this.dateTaken = dateTaken;
     }
 
-    public Boolean getSelected() {
-        return isSelected;
-    }
-
-    public void setSelected(Boolean selected) {
-        isSelected = selected;
-    }
-
-    public Boolean getSynced() {
-        return isSynced;
-    }
-
-    public void setSynced(Boolean synced) {
-        isSynced = synced;
-    }
 }

@@ -49,9 +49,6 @@ public class ImageListAdapter extends RealmRecyclerViewAdapter<Image, ImageListV
 
     @Override
     public void update(int position) {
-        WallpaperApplication.getRealmInstance().beginTransaction();
-        getData().get(position).setSelected(!getData().get(position).getSelected());
-        WallpaperApplication.getRealmInstance().commitTransaction();
     }
 
     @Override
