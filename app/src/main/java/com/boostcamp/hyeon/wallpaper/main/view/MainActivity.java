@@ -1,5 +1,6 @@
 package com.boostcamp.hyeon.wallpaper.main.view;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.boostcamp.hyeon.wallpaper.R;
-import com.boostcamp.hyeon.wallpaper.listener.OnBackKeyPressedListener;
+import com.boostcamp.hyeon.wallpaper.base.listener.OnBackKeyPressedListener;
+import com.boostcamp.hyeon.wallpaper.base.service.TransparentActivityCallService;
 import com.boostcamp.hyeon.wallpaper.main.adapter.ViewPagerAdapter;
 import com.boostcamp.hyeon.wallpaper.search.SearchFragment;
 import com.boostcamp.hyeon.wallpaper.gallery.view.GalleryFragment;
@@ -24,7 +26,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     @BindView(R.id.view_pager) ViewPager mViewPager;
     private ViewPagerAdapter mAdapter;
     private OnBackKeyPressedListener mOnBackKeyPressedListener;
-    private int mCurrentFragemntPosition;
 
     private int mTabIcons[] = new int[]{
             R.drawable.selector_tab_btn_gallery,
@@ -42,13 +43,17 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Log.d(TAG, "onCreate");
         ButterKnife.bind(this);
 
         init();
     }
 
     private void init(){
+        //init service and start
+        Intent intent = new Intent(this, TransparentActivityCallService.class);
+        startService(intent);
+
         //create ViewPagerAdapter, add Fragment, mViewPager apply adapter.
         mAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         mAdapter.addFragment(new GalleryFragment());
@@ -58,10 +63,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
         //mTabLayout setup mViewPager
         mTabLayout.setupWithViewPager(mViewPager);
-
-        //init Fragment Position
-
-        mCurrentFragemntPosition = 0;
 
         //add icons each tab.
         for(int i=0; i<mTabLayout.getTabCount(); ++i){

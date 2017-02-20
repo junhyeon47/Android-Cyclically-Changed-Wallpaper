@@ -14,4 +14,23 @@
     <string name="label_done">확인</string>
     <string name="key_max">max</string>
     <string name="key_progress">progress</string>
+    <string name="wallpaper_set_action">ACTION.SET_WALLPAPER.WallpaperMangerReceiver</string>
+    <string name="label_change_screen_select">변경 화면 선택</string>
+    <string name="label_change_repeat_cycle_select">배경화면 변경 주기 선택</string>
+    <string name="label_wallpaper">배경화면</string>
+    <string name="label_lock_screen">잠금화면</string>
+    <string name="label_wallpaper_plus_lock_screen">배경화면 + 잠금화면</string>
+    <string name="label_five_minute">5분</string>
+    <string name="label_ten_minute">10분</string>
+    <string name="label_thirty_minute">30분</string>
+    <string name="label_one_hour">1시간</string>
+    <string name="label_two_hour">2시간</string>
+    <string name="label_three_hour">3시간</string>
+    <string name="label_six_hour">6시간</string>
+    <string name="label_twelve_hour">12시간</string>
+    <string name="label_twenty_four_hour">24시간</string>
+    <string name="label_cancel">취소</string>
+    <string name="label_wallpaper_register">배경화면으로 등록</string>
+    <string name="label_minute">분</string>
+    <string name="label_hour">시간</string>
 </resources>

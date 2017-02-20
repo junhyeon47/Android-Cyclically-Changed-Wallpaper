@@ -2,33 +2,34 @@ package com.boostcamp.hyeon.wallpaper.splash;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.boostcamp.hyeon.wallpaper.R;
-import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.SyncDataHelper;
 import com.boostcamp.hyeon.wallpaper.main.view.MainActivity;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SplashActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Void>, PermissionListener, Handler.Callback{
+public class SplashActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Void>, Handler.Callback{
+    private static final int PERMISSION_READ = 23;
     private static final int FIRST_SYNC_DATA_LOADER = 1;
-    private static final int DELAY_MILLIS = 1000;
+    private static final int DELAY_MILLIS = 2000;
     private Handler mHandler;
+    private long mStartTime;
+    private long mEndTime;
     @BindView(R.id.progress_bar) RoundCornerProgressBar mRoundCornerProgressBar;
 
     @Override
@@ -42,20 +43,25 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
         mHandler = new Handler(this);
 
         //check Permission
-        new TedPermission(this)
-                .setPermissionListener(this)
-                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .check();
+        checkPermission();
+    }
 
+    public void init(){
+        getSupportLoaderManager().initLoader(FIRST_SYNC_DATA_LOADER, null, this);
     }
 
     @Override
     public Loader<Void> onCreateLoader(int id, Bundle args) {
         return new AsyncTaskLoader<Void>(this){
             @Override
+            protected void onStartLoading() {
+                mStartTime = System.currentTimeMillis();
+                forceLoad();
+            }
+
+            @Override
             public Void loadInBackground() {
-                SyncDataHelper.insertToRealm(getApplicationContext(), mHandler);
+                SyncDataHelper.syncDataToRealm(getApplicationContext(), mHandler);
                 return null;
             }
         };
@@ -63,6 +69,7 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<Void> loader, Void data) {
+        mEndTime = System.currentTimeMillis();
         moveToMainActivity();
     }
 
@@ -72,31 +79,20 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void moveToMainActivity(){
+        long loadingTime = mEndTime - mStartTime;
         final Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(intent);
-                finish();
-            }
-        }, DELAY_MILLIS);
-    }
-
-    @Override
-    public void onPermissionGranted() {
-        //Toast.makeText(SplashActivity.this, "Permission Granted ", Toast.LENGTH_SHORT).show();
-        if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_FIRST_INIT, true)) {
-            mRoundCornerProgressBar.setVisibility(View.VISIBLE);
-            getSupportLoaderManager().initLoader(FIRST_SYNC_DATA_LOADER, null, this).forceLoad();
+        if(loadingTime > DELAY_MILLIS){
+            startActivity(intent);
+            finish();
         }else{
-            moveToMainActivity();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(intent);
+                    finish();
+                }
+            }, loadingTime);
         }
-    }
-
-    @Override
-    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-        Toast.makeText(SplashActivity.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
-        finish();
     }
 
     @Override
@@ -115,5 +111,26 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
             }
         }
         return true;
+    }
+
+    public void checkPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE }, PERMISSION_READ);
+        } else {
+            init();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case PERMISSION_READ:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    init();
+                }else{
+                    finish();
+                }
+                break;
+        }
     }
 }

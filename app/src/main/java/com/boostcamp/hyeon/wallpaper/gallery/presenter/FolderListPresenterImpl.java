@@ -1,9 +1,10 @@
 package com.boostcamp.hyeon.wallpaper.gallery.presenter;
 
 
+import com.boostcamp.hyeon.wallpaper.base.adapter.RealmListAdapterContract;
+import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
 import com.boostcamp.hyeon.wallpaper.gallery.model.GalleryModel;
-import com.boostcamp.hyeon.wallpaper.listener.OnItemClickListener;
-import com.boostcamp.hyeon.wallpaper.gallery.adapter.contract.FolderListAdapterContract;
+import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 
 /**
  * Created by hyeon on 2017. 2. 13..
@@ -11,8 +12,8 @@ import com.boostcamp.hyeon.wallpaper.gallery.adapter.contract.FolderListAdapterC
 
 public class FolderListPresenterImpl implements FolderListPresenter.Presenter, OnItemClickListener {
     private FolderListPresenter.View mView;
-    private FolderListAdapterContract.Model mAdapterModel;
-    private FolderListAdapterContract.View mAdapterView;
+    private RealmListAdapterContract.Model<Folder> mAdapterModel;
+    private RealmListAdapterContract.View mAdapterView;
     private GalleryModel mGalleryModel;
 
     public FolderListPresenterImpl(GalleryModel mGalleryModel) {
@@ -30,28 +31,22 @@ public class FolderListPresenterImpl implements FolderListPresenter.Presenter, O
     }
 
     @Override
-    public void setFolderListAdapterModel(FolderListAdapterContract.Model adapterModel) {
+    public void setListAdapterModel(RealmListAdapterContract.Model<Folder> adapterModel) {
         this.mAdapterModel = adapterModel;
     }
 
     @Override
-    public void setFolderListAdapterView(FolderListAdapterContract.View adapterView) {
+    public void setListAdapterView(RealmListAdapterContract.View adapterView) {
         this.mAdapterView = adapterView;
         this.mAdapterView.setOnItemClickListener(this);
     }
 
-    @Override
-    public String getOpenedFolderId() {
-        String folderId = mGalleryModel.getOpenedFolderId();
-        mAdapterView.notifyAdapter();
-        return folderId;
-    }
 
     @Override
     public void onItemClick(int position) {
-        mAdapterModel.update(position);
+        String bucketId = mAdapterModel.getItem(position).getBucketId();
+        mGalleryModel.selectFolder(bucketId);
         mAdapterView.notifyAdapter();
-
         //adapter change
         mView.clickFolder(position);
     }

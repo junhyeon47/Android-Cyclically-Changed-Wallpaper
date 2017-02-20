@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_SERVICE" />
 
     <application
@@ -15,33 +16,63 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".main.view.MainActivity">
-
-        </activity>
-        <activity android:name=".splash.SplashActivity">
+        <activity
+            android:name=".main.view.MainActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".splash.SplashActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".detail.view.DetailActivity"
+            android:theme="@style/Theme.Transparent" />
+        <activity
+            android:name=".preview.view.PreviewActivity"
+            android:theme="@style/Theme.Transparent" />
 
-        <service android:name=".base.service.ImageFileObserverService"
+        <activity android:name=".base.util.TransparentActivity"
+            android:theme="@style/Theme.Transparent"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity="com.boostcamp.hyeon.wallpaper.popup"/>
+
+        <receiver android:name=".base.receiver.WallpaperMangerReceiver">
+            <intent-filter>
+                <action android:name="com.boostcamp.hyeon.wallpaper" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".base.receiver.RestartServiceReceiver">
+            <intent-filter>
+                <action android:name="ACTION.RESTART.TransparentActivityCallService" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".base.receiver.BootCompletedReceiver"
             android:enabled="true"
-            android:process=":remote"/>
-        <service android:name=".base.service.ForeGroundService"
             android:exported="false"
-            android:process=":locker"/>
-        <receiver android:name=".base.receiver.RestartServiceReceiver"
-            android:enabled="true"
-            android:exported="false"
-            android:label="RestartService"
+            android:label="BootCompletedReceiver"
             android:process=":remote">
             <intent-filter>
-                <action android:name="ACTION.RESTART.ImageContentObserverService" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".base.service.TransparentActivityCallService"
+            android:enabled="true"
+            android:process=":remote" />
+        <service
+            android:name=".base.service.ForeGroundService"
+            android:exported="false"
+            android:process=":locker" />
+
     </application>
 
 </manifest>

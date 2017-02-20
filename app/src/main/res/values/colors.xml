@@ -9,4 +9,6 @@
     <color name="colorBlackOpacity50">#50000000</color>
     <color name="colorProgressBarBackground">#1e000000</color>
     <color name="colorTeal500">#009688</color>
+    <color name="colorTeal300Opacity150">#964db6ac</color>
+    <color name="colorGrey500">#9E9E9E</color>
 </resources>

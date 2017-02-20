@@ -7,16 +7,18 @@ import android.content.SharedPreferences;
  * Created by hyeon on 2017. 2. 16..
  */
 
-public class SharedPreferenceHelper {
+public class SharedPreferenceHelper{
     private static final String TAG = SharedPreferenceHelper.class.getSimpleName();
     private static final String SETTINGS_NAME = "wallpaper_setting";
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
 
     public enum Key{
-        BOOLEAN_FIRST_INIT("pref_key_first_init"),
         BOOLEAN_GALLEY_SELECT_MODE("pref_key_gallery_select_mode"),
-        STRING_SYNC_DATE("pref_key_sync_date");
+        BOOLEAN_PREVIEW_ACTIVITY_CALL("pref_key_preview_activity_call"),
+        STRING_CHANGE_SCREEN_TYPE("pref_key_change_screen_type"),
+        LONG_REPEAT_CYCLE_MILLS("pref_repeat_cycle_millis");
+
 
         private final String name;
 

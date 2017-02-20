@@ -1,9 +1,7 @@
 package com.boostcamp.hyeon.wallpaper.gallery.adapter.holder;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,7 +10,7 @@ import android.widget.TextView;
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
-import com.boostcamp.hyeon.wallpaper.listener.OnItemClickListener;
+import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -50,6 +48,14 @@ public class FolderListViewHolder extends RecyclerView.ViewHolder{
                 }
             }
         });
+
+        if(folder.getOpened()){
+            mFolderIconImageView.setVisibility(View.GONE);
+            mFolderOpenIconImageView.setVisibility(View.VISIBLE);
+        }else{
+            mFolderIconImageView.setVisibility(View.VISIBLE);
+            mFolderOpenIconImageView.setVisibility(View.GONE);
+        }
 
         Picasso.with(mContext)
                 .load(Uri.parse(folder.getImages().get(0).getThumbnailUri()))

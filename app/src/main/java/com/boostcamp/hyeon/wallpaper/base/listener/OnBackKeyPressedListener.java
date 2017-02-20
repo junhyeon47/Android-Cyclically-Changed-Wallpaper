@@ -1,4 +1,4 @@
-package com.boostcamp.hyeon.wallpaper.listener;
+package com.boostcamp.hyeon.wallpaper.base.listener;
 
 /**
  * Created by hyeon on 2017. 2. 14..

@@ -14,6 +14,9 @@ public class Image extends RealmObject{
     private String thumbnailUri;
     private String orientation;
     private String dateTaken;
+    private Boolean isSelected;
+    private Integer number;
+    private Boolean isSynced;
 
     public String getBucketId() {
         return bucketId;
@@ -63,4 +66,27 @@ public class Image extends RealmObject{
         this.dateTaken = dateTaken;
     }
 
+    public Boolean getSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(Boolean selected) {
+        isSelected = selected;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
+    public Boolean getSynced() {
+        return isSynced;
+    }
+
+    public void setSynced(Boolean synced) {
+        isSynced = synced;
+    }
 }

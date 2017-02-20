@@ -1,15 +1,22 @@
 package com.boostcamp.hyeon.wallpaper.gallery.view;
 
 
+import android.Manifest;
+import android.app.AlarmManager;
+import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,13 +28,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
-import com.boostcamp.hyeon.wallpaper.base.service.ImageFileObserverService;
+import com.boostcamp.hyeon.wallpaper.base.domain.Image;
+import com.boostcamp.hyeon.wallpaper.base.domain.Wallpaper;
+import com.boostcamp.hyeon.wallpaper.base.util.AlarmManagerHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.SyncDataHelper;
+import com.boostcamp.hyeon.wallpaper.detail.view.DetailActivity;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.FolderListAdapter;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.ImageListAdapter;
 import com.boostcamp.hyeon.wallpaper.gallery.model.GalleryModel;
@@ -35,27 +49,39 @@ import com.boostcamp.hyeon.wallpaper.gallery.presenter.FolderListPresenter;
 import com.boostcamp.hyeon.wallpaper.gallery.presenter.FolderListPresenterImpl;
 import com.boostcamp.hyeon.wallpaper.gallery.presenter.ImageListPresenter;
 import com.boostcamp.hyeon.wallpaper.gallery.presenter.ImageListPresenterImpl;
-import com.boostcamp.hyeon.wallpaper.listener.OnBackKeyPressedListener;
+import com.boostcamp.hyeon.wallpaper.base.listener.OnBackKeyPressedListener;
 import com.boostcamp.hyeon.wallpaper.main.view.MainActivity;
+import com.boostcamp.hyeon.wallpaper.preview.view.PreviewActivity;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 import io.realm.Sort;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GalleryFragment extends Fragment implements FolderListPresenter.View, ImageListPresenter.View, OnBackKeyPressedListener, LoaderManager.LoaderCallbacks<Void>{
+public class GalleryFragment extends Fragment implements FolderListPresenter.View, ImageListPresenter.View, OnBackKeyPressedListener, RadioGroup.OnCheckedChangeListener{
     private static final String TAG = GalleryFragment.class.getSimpleName();
-    private static final int SYNC_DATA_LOADER = 99;
+    private static final int DELAY_MILLIS = 100;
+    private static final int MINUETE_CONVERT_TO_MILLIS = 60*1000;
+    private static final int HOUR_CONVERT_TO_MILLIS = 60*60*1000;
     @BindView(R.id.rv_folder) RecyclerView mFolderRecyclerView;
     @BindView(R.id.rv_image) RecyclerView mImageRecyclerView;
     private FolderListAdapter mFolderListAdapter;
+    private ImageListAdapter mImageListAdapter;
     private FolderListPresenterImpl mFolderListPresenter;
     private ImageListPresenterImpl mImageListPresenter;
     private MenuItem mSelectMenuItem, mPreviewMenuItem, mDoneMenuItem;
-    private ComponentName mService;
+    private RadioGroup mChangeScreenRadioGroup, mChangeRepeatCycleRadioGroup;
 
     public GalleryFragment() {
         // Required empty public constructor
@@ -80,28 +106,24 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         ButterKnife.bind(this, view);
 
         init();
+
         return view;
     }
 
     public void init(){
-//        //init service
-//        Intent intent = new Intent(getActivity(), ImageFileObserverService.class);
-//        //start service
-//        mService =  getActivity().startService(intent);
-
-
-        //init loader
-        getLoaderManager().initLoader(SYNC_DATA_LOADER, null, this);
-
         //init Model
         GalleryModel model = new GalleryModel();
 
         //init Folder Adapter
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
+        RealmResults<Folder> folderRealmResults = realm.where(Folder.class).findAllSorted("name", Sort.ASCENDING);
+        if(folderRealmResults.size() != 0){
+            folderRealmResults.get(0).setOpened(true);
+        }
         mFolderListAdapter = new FolderListAdapter(
                 getContext(),
-                realm.where(Folder.class).findAllSorted("name", Sort.ASCENDING),
+                folderRealmResults,
                 true
         );
         realm.commitTransaction();
@@ -118,53 +140,54 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         //init Folder Presenter
         mFolderListPresenter = new FolderListPresenterImpl(model);
         mFolderListPresenter.attachView(this);
-        mFolderListPresenter.setFolderListAdapterView(mFolderListAdapter);
-        mFolderListPresenter.setFolderListAdapterModel(mFolderListAdapter);
+        mFolderListPresenter.setListAdapterModel(mFolderListAdapter);
+        mFolderListPresenter.setListAdapterView(mFolderListAdapter);
 
         //init Image Adapter
         realm.beginTransaction();
-        ImageListAdapter imageListAdapter = new ImageListAdapter(
+        String bucketId;
+        RealmList<Image> imageRealmList = null;
+        if(folderRealmResults.size() != 0) {
+            bucketId = realm.where(Folder.class).equalTo("isOpened", true).findFirst().getBucketId();
+            imageRealmList = realm.where(Folder.class).equalTo("bucketId", bucketId).findFirst().getImages();
+        }
+        mImageListAdapter = new ImageListAdapter(
                 getContext(),
-                realm.where(Folder.class).equalTo("bucketId", mFolderListPresenter.getOpenedFolderId()).findFirst().getImages(),
+                imageRealmList,
                 true
         );
         realm.commitTransaction();
 
         //init Image(Right) RecyclerView
         mImageRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        mImageRecyclerView.setAdapter(imageListAdapter);
+        mImageRecyclerView.setAdapter(mImageListAdapter);
         mImageRecyclerView.setHasFixedSize(true);
 
         //init Presenter
         mImageListPresenter = new ImageListPresenterImpl(model);
         mImageListPresenter.attachView(this);
-        mImageListPresenter.setImageListAdapterModel(imageListAdapter);
-        mImageListPresenter.setImageListAdapterView(imageListAdapter);
+        mImageListPresenter.setListAdapterModel(mImageListAdapter);
+        mImageListPresenter.setListAdapterView(mImageListAdapter);
 
         //init SharedPreferences
         SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, false);
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, "on Resume");
-        //init LoaderManager
-        LoaderManager loaderManager = getLoaderManager();
-        Loader<Void> loader = loaderManager.getLoader(SYNC_DATA_LOADER);
-        if(loader == null){
-            loaderManager.initLoader(SYNC_DATA_LOADER, null, this);
-        }else{
-            loaderManager.restartLoader(SYNC_DATA_LOADER, null, this);
-        }
+        mFolderListAdapter.notifyAdapter();
+        mImageListAdapter.notifyAdapter();
     }
 
     @Override
     public void onPause() {
         Log.d(TAG, "on Pause");
-        if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, true))
-            changeModeForDefault();
+        if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, false)){
+            if(!SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_PREVIEW_ACTIVITY_CALL, false))
+                changeModeForDefault();
+        }
         super.onPause();
     }
 
@@ -184,8 +207,10 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
                 changeModeForSelect();
                 return true;
             case R.id.menu_preview:
+                moveToPreviewActivity();
                 return true;
             case R.id.menu_done:
+                clickDone();
                 return true;
             case android.R.id.home:
                 onBack();
@@ -216,6 +241,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         ((MainActivity)getActivity()).setOnBackKeyPressedListener(this);
         //set SharedPreferences
         SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, true);
+        mImageListAdapter.notifyAdapter();
     }
 
     @Override
@@ -235,57 +261,151 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         //set SharedPreferences
         SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, false);
 
-        //update all Image objects isSelected set false
         mImageListPresenter.updateAllImagesDeselected();
-    }
-
-    @Override
-    public Loader<Void> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<Void>(getActivity()) {
-            @Override
-            protected void onStartLoading() {
-                if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_FIRST_INIT, true)){
-                    SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_FIRST_INIT, false);
-                }else{
-                    //forceLoad();
-                }
-            }
-
-            @Override
-            public Void loadInBackground() {
-                //content provider data sync
-                Log.d(TAG, "loadInBackground called.");
-                SyncDataHelper.insertToRealm(getContext(), null);
-                return null;
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Void> loader, Void data) {
-        Log.d(TAG, "onLoadFinished called.");
-        //restart service;
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Void> loader) {
-
     }
 
     @Override
     public void clickFolder(int position) {
         //change adapter
-        ImageListAdapter imageListAdapter = new ImageListAdapter(
+        mImageListAdapter = new ImageListAdapter(
                 getContext(),
                 mFolderListAdapter.getData().get(position).getImages(),
                 true
         );
 
-        mImageRecyclerView.setAdapter(imageListAdapter);
+        mImageRecyclerView.setAdapter(mImageListAdapter);
 
         mImageListPresenter.detachView();
         mImageListPresenter.attachView(this);
-        mImageListPresenter.setImageListAdapterModel(imageListAdapter);
-        mImageListPresenter.setImageListAdapterView(imageListAdapter);
+        mImageListPresenter.setListAdapterModel(mImageListAdapter);
+        mImageListPresenter.setListAdapterView(mImageListAdapter);
+    }
+
+    @Override
+    public void moveToDetailActivity(Bundle bundle) {
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        intent.putExtras(bundle);
+
+        getActivity().startActivity(intent);
+    }
+
+    private void moveToPreviewActivity(){
+        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_PREVIEW_ACTIVITY_CALL, true);
+        Realm realm = WallpaperApplication.getRealmInstance();
+        realm.beginTransaction();
+
+        if(realm.where(Image.class).equalTo("isSelected", true).findAll().size() > 0) {
+            Intent intent = new Intent(getActivity(), PreviewActivity.class);
+            getActivity().startActivity(intent);
+        }
+
+        realm.commitTransaction();
+    }
+
+    private void registerToAlarmManager(){
+        Realm realm = WallpaperApplication.getRealmInstance();
+        realm.beginTransaction();
+
+        RealmResults<Wallpaper> wallpaperRealmResults = realm.where(Wallpaper.class).findAll();
+        wallpaperRealmResults.deleteAllFromRealm();
+
+        Wallpaper wallpaper = realm.createObject(Wallpaper.class);
+        RealmResults<Image> imageRealmResults = realm.where(Image.class).equalTo("isSelected", true).findAllSorted("number", Sort.ASCENDING);
+        RealmList<Image> imageRealmList = new RealmList<>();
+        imageRealmList.addAll(imageRealmResults.subList(0, imageRealmResults.size()));
+        wallpaper.setImages(imageRealmList);
+        wallpaper.setCurrentPosition(0);
+
+        realm.commitTransaction();
+
+        Calendar date = Calendar.getInstance();
+        date.setTimeInMillis(System.currentTimeMillis()+DELAY_MILLIS);
+        AlarmManagerHelper.unregisterToAlarmManager(getContext());
+        AlarmManagerHelper.registerToAlarmManager(getContext(), date);
+        changeModeForDefault();
+    }
+
+    private void clickDone(){
+        Realm realm = WallpaperApplication.getRealmInstance();
+        realm.beginTransaction();
+        int numberOfSelectedImage = realm.where(Image.class).equalTo("isSelected", true).findAll().size();
+        realm.commitTransaction();
+
+        if(numberOfSelectedImage == 0){
+            Toast.makeText(getActivity(), "이미지를 선택해주세요!", Toast.LENGTH_SHORT).show();
+        }else if(numberOfSelectedImage == 1){
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                registerToAlarmManager();
+            }else{
+                showAlertDialog(numberOfSelectedImage);
+            }
+        }else if(numberOfSelectedImage > 1){
+            showAlertDialog(numberOfSelectedImage);
+        }
+    }
+
+    private void showAlertDialog(final int numberOfSelectedImage){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(R.layout.item_alert);
+        builder.setPositiveButton(getString(R.string.label_wallpaper_register), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                registerToAlarmManager();
+            }
+        });
+        builder.setNegativeButton(getString(R.string.label_cancel), null);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N && numberOfSelectedImage > 1){
+                    //누가 아니면서 이미지가 하나 이상인 경우
+                    ((Dialog)dialog).findViewById(R.id.layout_change_screen).setVisibility(View.GONE);
+                    mChangeRepeatCycleRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_repeat_cycle);
+                    mChangeRepeatCycleRadioGroup.setOnCheckedChangeListener(GalleryFragment.this);
+                    mChangeRepeatCycleRadioGroup.check(mChangeRepeatCycleRadioGroup.getChildAt(0).getId());
+                    SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_CHANGE_SCREEN_TYPE, getString(R.string.label_wallpaper));
+                }else if(Build.VERSION.SDK_INT == Build.VERSION_CODES.N && numberOfSelectedImage == 1){
+                    //누가 이면서 이미지가 하나인 경우
+                    ((Dialog)dialog).findViewById(R.id.layout_change_repeat_cycle).setVisibility(View.GONE);
+                    mChangeScreenRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_screen);
+                    mChangeScreenRadioGroup.setOnCheckedChangeListener(GalleryFragment.this);
+                    mChangeScreenRadioGroup.check(mChangeScreenRadioGroup.getChildAt(0).getId());
+                }else{
+                    //누가이면서 이미지가 여러장인 경우
+                    mChangeScreenRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_screen);
+                    mChangeRepeatCycleRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_repeat_cycle);
+                    mChangeScreenRadioGroup.setOnCheckedChangeListener(GalleryFragment.this);
+                    mChangeRepeatCycleRadioGroup.setOnCheckedChangeListener(GalleryFragment.this);
+                    mChangeScreenRadioGroup.check(mChangeScreenRadioGroup.getChildAt(0).getId());
+                    mChangeRepeatCycleRadioGroup.check(mChangeRepeatCycleRadioGroup.getChildAt(0).getId());
+                }
+            }
+        });
+        alertDialog.show();
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        RadioButton radioButton = (RadioButton)group.findViewById(checkedId);
+        if(radioButton == null)
+            return;
+        if(group.equals(mChangeScreenRadioGroup) && radioButton.isChecked()){
+            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_CHANGE_SCREEN_TYPE, radioButton.getText().toString());
+        }else if(group.equals(mChangeRepeatCycleRadioGroup) && radioButton.isChecked()){
+            String value = radioButton.getText().toString();
+            int minute = value.indexOf(getString(R.string.label_minute));
+            int hour = value.indexOf(getString(R.string.label_hour));
+            int repeatCycle;
+            if(minute != -1 && hour == -1){
+                repeatCycle = Integer.valueOf(value.substring(0, minute));
+                repeatCycle *= MINUETE_CONVERT_TO_MILLIS;
+            }else {
+                repeatCycle = Integer.valueOf(value.substring(0, hour));
+                repeatCycle *= HOUR_CONVERT_TO_MILLIS;
+            }
+            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, (long)repeatCycle);
+        }
     }
 }

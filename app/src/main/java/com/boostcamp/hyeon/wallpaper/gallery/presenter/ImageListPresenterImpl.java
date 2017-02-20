@@ -1,8 +1,12 @@
 package com.boostcamp.hyeon.wallpaper.gallery.presenter;
 
+import android.os.Bundle;
+
+import com.boostcamp.hyeon.wallpaper.base.adapter.RealmListAdapterContract;
+import com.boostcamp.hyeon.wallpaper.base.domain.Image;
+import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.gallery.model.GalleryModel;
-import com.boostcamp.hyeon.wallpaper.listener.OnItemClickListener;
-import com.boostcamp.hyeon.wallpaper.gallery.adapter.contract.ImageListAdapterContract;
+import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 
 /**
  * Created by hyeon on 2017. 2. 13..
@@ -10,8 +14,8 @@ import com.boostcamp.hyeon.wallpaper.gallery.adapter.contract.ImageListAdapterCo
 
 public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnItemClickListener {
     private ImageListPresenter.View mView;
-    private ImageListAdapterContract.Model mAdapterModel;
-    private ImageListAdapterContract.View mAdapterView;
+    private RealmListAdapterContract.Model<Image> mAdapterModel;
+    private RealmListAdapterContract.View mAdapterView;
     private GalleryModel mGalleryModel;
 
     public ImageListPresenterImpl(GalleryModel mGalleryModel) {
@@ -29,12 +33,12 @@ public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnI
     }
 
     @Override
-    public void setImageListAdapterModel(ImageListAdapterContract.Model adapterModel) {
+    public void setListAdapterModel(RealmListAdapterContract.Model<Image> adapterModel) {
         this.mAdapterModel = adapterModel;
     }
 
     @Override
-    public void setImageListAdapterView(ImageListAdapterContract.View adapterView) {
+    public void setListAdapterView(RealmListAdapterContract.View adapterView) {
         this.mAdapterView = adapterView;
         this.mAdapterView.setOnItemClickListener(this);
     }
@@ -47,12 +51,20 @@ public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnI
 
     @Override
     public void onItemClick(int position) {
-        if(position == -1){
-            //moveToDetailActivity
-        }else{
+        if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, false)){
             //if select mode
-            mAdapterModel.update(position);
+            String imageId = mAdapterModel.getItem(position).getImageId();
+            mGalleryModel.selectImage(imageId);
             mAdapterView.notifyAdapter(position);
+        }else{
+            //moveToDetailActivity
+            String bucketId = mAdapterModel.getItem(position).getBucketId();
+            String imageId = mAdapterModel.getItem(position).getImageId();
+
+            Bundle bundle = new Bundle();
+            bundle.putString("bucket_id", bucketId);
+            bundle.putString("image_id", imageId);
+            mView.moveToDetailActivity(bundle);
         }
     }
 
@@ -60,7 +72,10 @@ public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnI
     public void onItemLongClick(int position) {
         mView.changeModeForSelect();
         //realm image object update. position -> select
-        mAdapterModel.update(position);
+        //mAdapterModel.update(position);
+        //mAdapterView.notifyAdapter(position);
+        String imageId = mAdapterModel.getItem(position).getImageId();
+        mGalleryModel.selectImage(imageId);
         mAdapterView.notifyAdapter(position);
     }
 

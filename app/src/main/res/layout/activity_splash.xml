@@ -24,6 +24,5 @@
         app:rcBackgroundPadding="@dimen/progress_bar_padding"
         app:rcProgressColor="@color/colorTeal500"
         app:rcSecondaryProgressColor="@color/colorProgressBarBackground"
-        app:rcBackgroundColor="@color/colorProgressBarBackground"
-        android:visibility="invisible"/>
+        app:rcBackgroundColor="@color/colorProgressBarBackground" />
 </LinearLayout>

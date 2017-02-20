@@ -9,22 +9,19 @@ import android.view.ViewGroup;
 
 import com.boostcamp.hyeon.wallpaper.R;
 
-import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
+import com.boostcamp.hyeon.wallpaper.base.adapter.RealmListAdapterContract;
 import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
-import com.boostcamp.hyeon.wallpaper.listener.OnItemClickListener;
-import com.boostcamp.hyeon.wallpaper.gallery.adapter.contract.FolderListAdapterContract;
+import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.holder.FolderListViewHolder;
 
 import io.realm.OrderedRealmCollection;
-import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
-import io.realm.RealmResults;
 
 /**
  * Created by hyeon on 2017. 2. 12..
  */
 
-public class FolderListAdapter extends RealmRecyclerViewAdapter<Folder, FolderListViewHolder> implements FolderListAdapterContract.Model, FolderListAdapterContract.View{
+public class FolderListAdapter extends RealmRecyclerViewAdapter<Folder, FolderListViewHolder> implements RealmListAdapterContract.Model<Folder>, RealmListAdapterContract.View{
     private OnItemClickListener mOnItemClickListener;
 
     public FolderListAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<Folder> data, boolean autoUpdate) {
@@ -59,10 +56,6 @@ public class FolderListAdapter extends RealmRecyclerViewAdapter<Folder, FolderLi
     @Override
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
-    }
-
-    @Override
-    public void update(int position) {
     }
 
 }

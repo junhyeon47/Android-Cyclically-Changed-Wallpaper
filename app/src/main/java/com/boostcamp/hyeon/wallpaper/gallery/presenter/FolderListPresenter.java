@@ -1,8 +1,8 @@
 package com.boostcamp.hyeon.wallpaper.gallery.presenter;
 
-import android.content.Context;
 
-import com.boostcamp.hyeon.wallpaper.gallery.adapter.contract.FolderListAdapterContract;
+import com.boostcamp.hyeon.wallpaper.base.adapter.RealmListAdapterContract;
+import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
 
 /**
  * Created by hyeon on 2017. 2. 13..
@@ -17,8 +17,7 @@ public interface FolderListPresenter {
     interface Presenter{
         void attachView(View view);
         void detachView();
-        void setFolderListAdapterModel(FolderListAdapterContract.Model adapterModel);
-        void setFolderListAdapterView(FolderListAdapterContract.View adapterView);
-        String getOpenedFolderId();
+        void setListAdapterModel(RealmListAdapterContract.Model<Folder> adapterModel);
+        void setListAdapterView(RealmListAdapterContract.View adapterView);
     }
 }

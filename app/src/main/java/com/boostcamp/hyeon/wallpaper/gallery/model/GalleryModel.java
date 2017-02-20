@@ -13,21 +13,35 @@ import io.realm.RealmResults;
 
 public class GalleryModel {
 
-    public String getOpenedFolderId(){
+    public void selectFolder(String bucketId){
         Realm realm = WallpaperApplication.getRealmInstance();
+        realm.beginTransaction();
         RealmResults<Folder> folderRealmResults = realm.where(Folder.class).findAll();
-        String openedFolderId = null;
         for(Folder folder : folderRealmResults){
-            if(folder.getOpened()){
-                openedFolderId = folder.getBucketId();
-                break;
+            if(bucketId.equals(folder.getBucketId()))
+                folder.setOpened(true);
+            else
+                folder.setOpened(false);
+        }
+        realm.commitTransaction();
+    }
+
+    public void selectImage(String imageId){
+        Realm realm = WallpaperApplication.getRealmInstance();
+        realm.beginTransaction();
+        Image image = realm.where(Image.class).equalTo("imageId", imageId).findFirst();
+        int totalSelectedNumber = realm.where(Image.class).equalTo("isSelected", true).findAll().size();
+        if(!image.getSelected()){
+            image.setNumber(totalSelectedNumber+1);
+            image.setSelected(true);
+        }else {
+            RealmResults<Image> imageRealmResults = realm.where(Image.class).greaterThan("number", image.getNumber()).findAll();
+            for(Image greaterImage : imageRealmResults){
+                greaterImage.setNumber(greaterImage.getNumber()-1);
             }
+            image.setSelected(false);
         }
-        if(openedFolderId == null){
-            folderRealmResults.get(0).setOpened(true);
-            openedFolderId = folderRealmResults.get(0).getBucketId();
-        }
-        return openedFolderId;
+        realm.commitTransaction();
     }
 
     public void updateAllImagesDeselected(){
@@ -38,8 +52,8 @@ public class GalleryModel {
 
         for(Image image : imageRealmResults){
             image.setSelected(false);
+            image.setNumber(null);
         }
-
         realm.commitTransaction();
     }
 }

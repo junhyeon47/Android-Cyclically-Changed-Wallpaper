@@ -14,4 +14,7 @@
     <dimen name="progress_bar_padding">0.5dp</dimen>
     <dimen name="progress_bar_radius">3dp</dimen>
     <dimen name="splash_padding">10dp</dimen>
+    <dimen name="image_select_padding">10dp</dimen>
+    <dimen name="alert_padding">15dp</dimen>
+    <dimen name="alert_margin">10dp</dimen>
 </resources>

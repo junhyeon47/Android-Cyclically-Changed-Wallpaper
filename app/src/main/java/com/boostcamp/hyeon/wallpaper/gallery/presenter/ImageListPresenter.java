@@ -1,6 +1,9 @@
 package com.boostcamp.hyeon.wallpaper.gallery.presenter;
 
-import com.boostcamp.hyeon.wallpaper.gallery.adapter.contract.ImageListAdapterContract;
+import android.os.Bundle;
+
+import com.boostcamp.hyeon.wallpaper.base.adapter.RealmListAdapterContract;
+import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 
 /**
  * Created by hyeon on 2017. 2. 13..
@@ -9,12 +12,13 @@ import com.boostcamp.hyeon.wallpaper.gallery.adapter.contract.ImageListAdapterCo
 public interface ImageListPresenter {
     interface View{
         void changeModeForSelect();
+        void moveToDetailActivity(Bundle bundle);
     }
     interface Presenter{
         void attachView(View view);
         void detachView();
-        void setImageListAdapterModel(ImageListAdapterContract.Model adapterModel);
-        void setImageListAdapterView(ImageListAdapterContract.View adapterView);
+        void setListAdapterModel(RealmListAdapterContract.Model<Image> adapterModel);
+        void setListAdapterView(RealmListAdapterContract.View adapterView);
         void updateAllImagesDeselected();
     }
 }

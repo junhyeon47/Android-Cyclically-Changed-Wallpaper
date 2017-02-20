@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/alert_padding"
+    android:paddingTop="@dimen/alert_padding"
+    android:paddingRight="@dimen/alert_padding">
+    <LinearLayout
+        android:id="@+id/layout_change_screen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_change_screen_select"
+            android:textColor="@color/colorTeal300"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RadioGroup
+                android:id="@+id/rb_change_screen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonTint="@drawable/selector_radio_button"
+                    android:textColor="@drawable/selector_radio_button"
+                    android:text="@string/label_wallpaper" />
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonTint="@drawable/selector_radio_button"
+                    android:textColor="@drawable/selector_radio_button"
+                    android:text="@string/label_lock_screen" />
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonTint="@drawable/selector_radio_button"
+                    android:textColor="@drawable/selector_radio_button"
+                    android:text="@string/label_wallpaper_plus_lock_screen" />
+            </RadioGroup>
+        </ScrollView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_change_repeat_cycle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/alert_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_change_repeat_cycle_select"
+            android:textColor="@color/colorTeal300"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RadioGroup
+                android:id="@+id/rb_change_repeat_cycle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonTint="@drawable/selector_radio_button"
+                    android:textColor="@drawable/selector_radio_button"
+                    android:text="@string/label_five_minute" />
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonTint="@drawable/selector_radio_button"
+                    android:textColor="@drawable/selector_radio_button"
+                    android:text="@string/label_ten_minute" />
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonTint="@drawable/selector_radio_button"
+                    android:textColor="@drawable/selector_radio_button"
+                    android:text="@string/label_thirty_minute" />
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonTint="@drawable/selector_radio_button"
+                    android:textColor="@drawable/selector_radio_button"
+                    android:text="@string/label_one_hour" />
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonTint="@drawable/selector_radio_button"
+                    android:textColor="@drawable/selector_radio_button"
+                    android:text="@string/label_two_hour" />
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonTint="@drawable/selector_radio_button"
+                    android:textColor="@drawable/selector_radio_button"
+                    android:text="@string/label_three_hour" />
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonTint="@drawable/selector_radio_button"
+                    android:textColor="@drawable/selector_radio_button"
+                    android:text="@string/label_six_hour"/>
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonTint="@drawable/selector_radio_button"
+                    android:textColor="@drawable/selector_radio_button"
+                    android:text="@string/label_twelve_hour"/>
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonTint="@drawable/selector_radio_button"
+                    android:textColor="@drawable/selector_radio_button"
+                    android:text="@string/label_twenty_four_hour"/>
+            </RadioGroup>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

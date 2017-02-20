@@ -37,4 +37,5 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'gun0912.ted:tedpermission:1.0.2'
     compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
+    compile 'com.github.chrisbanes.photoview:library:1.2.3'
 }

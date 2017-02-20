@@ -2,19 +2,39 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_item"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorGrey300">
 
     <ImageView
         android:id="@+id/iv_thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginRight="0.5dp"
+        android:layout_marginEnd="0.5dp"
+        android:layout_marginBottom="0.5dp"/>
 
     <ImageView
         android:id="@+id/iv_select"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/select_image_padding"
-        android:background="@color/colorBlackOpacity50"
-        android:src="@drawable/ic_check_white_48dp"
+        android:background="@color/colorTeal300Opacity150"
         android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_select"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/tv_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:textSize="10dp"
+            android:textAlignment="center"
+            android:textColor="#e6ffffff"/>
+    </RelativeLayout>
+
 </FrameLayout>

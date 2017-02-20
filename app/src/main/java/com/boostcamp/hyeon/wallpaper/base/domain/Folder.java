@@ -10,7 +10,9 @@ import io.realm.RealmObject;
 public class Folder extends RealmObject{
     private String bucketId;
     private String name;
+    private Boolean isOpened;
     private RealmList<Image> images;
+    private Boolean isSynced;
 
     public String getBucketId() {
         return bucketId;
@@ -28,11 +30,27 @@ public class Folder extends RealmObject{
         this.name = name;
     }
 
+    public Boolean getOpened() {
+        return isOpened;
+    }
+
+    public void setOpened(Boolean opened) {
+        isOpened = opened;
+    }
+
     public RealmList<Image> getImages() {
         return images;
     }
 
     public void setImages(RealmList<Image> images) {
         this.images = images;
+    }
+
+    public Boolean getSynced() {
+        return isSynced;
+    }
+
+    public void setSynced(Boolean synced) {
+        isSynced = synced;
     }
 }
