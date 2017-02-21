@@ -2,7 +2,9 @@ package com.boostcamp.hyeon.wallpaper.base.app;
 
 import android.app.Application;
 import android.util.DisplayMetrics;
+import android.widget.Toast;
 
+import com.boostcamp.hyeon.wallpaper.base.util.MediaScannerConnectionHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 
 import io.realm.Realm;
@@ -29,6 +31,9 @@ public class WallpaperApplication extends Application{
 
         //init SharedPreferences
         SharedPreferenceHelper.getInstance(getApplicationContext());
+
+        //init MediaScannerConnection
+        MediaScannerConnectionHelper.getInstance(getApplicationContext());
     }
 
     public static Realm getRealmInstance(){
@@ -37,4 +42,5 @@ public class WallpaperApplication extends Application{
                 .build();
         return Realm.getInstance(config);
     }
+
 }

@@ -1,6 +1,9 @@
 package com.boostcamp.hyeon.wallpaper.detail.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.support.v4.util.Pools;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -12,15 +15,26 @@ import android.widget.ImageView;
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
+import com.boostcamp.hyeon.wallpaper.base.domain.ImageNaver;
+import com.boostcamp.hyeon.wallpaper.base.util.Define;
+import com.boostcamp.hyeon.wallpaper.base.util.ImageDownloadAsyncTask;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.RealmResults;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
+
+import static com.boostcamp.hyeon.wallpaper.base.util.Define.DOWNLOAD_IMAGE_EXT;
+import static com.boostcamp.hyeon.wallpaper.base.util.Define.DOWNLOAD_IMAGE_QUALITY;
+
 
 /**
  * Created by hyeon on 2017. 2. 19..
@@ -30,14 +44,16 @@ public class DetailPagerAdapter extends PagerAdapter {
     private static final String TAG = DetailPagerAdapter.class.getSimpleName();
     private static final int MAX_POOL_SIZE = 10;
     private Context mContext;
-    private RealmResults<Image> mList;
+    private RealmResults mList;
     private Pools.SimplePool<View> mPool;
     private PhotoViewAttacher mAttacher;
+    private int mFrom;
     @BindView(R.id.image_view) ImageView mImageView;
 
-    public DetailPagerAdapter(Context mContext, RealmResults<Image> mList) {
+    public DetailPagerAdapter(Context mContext, RealmResults mList, int mFrom) {
         this.mContext = mContext;
         this.mList = mList;
+        this.mFrom = mFrom;
         this.mPool = new Pools.SynchronizedPool<>(MAX_POOL_SIZE);
     }
 
@@ -47,14 +63,20 @@ public class DetailPagerAdapter extends PagerAdapter {
 
         ButterKnife.bind(this, view);
 
-        Image image = mList.get(position);
+        String imageUri = null;
+        if(mFrom == Define.GALLERY_FRAGMENT) {
+            imageUri = ((Image)mList.get(position)).getImageUri();
+        }else if(mFrom == Define.SEARCH_FRAGMENT){
+            imageUri = ((ImageNaver)mList.get(position)).getLink();
+        }
+
         Picasso.with(mContext)
-                .load(image.getImageUri())
-                .memoryPolicy(MemoryPolicy.NO_STORE)
+                .load(imageUri)
                 .into(mImageView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        mAttacher = new PhotoViewAttacher(mImageView);
+                        //sometimes error occur
+                        //mAttacher = new PhotoViewAttacher(mImageView);
                     }
 
                     @Override
@@ -91,5 +113,10 @@ public class DetailPagerAdapter extends PagerAdapter {
     @Override
     public boolean isViewFromObject(View view, Object object) {
         return view==object;
+    }
+
+    public void downloadImage(int position) {
+        String imageUri = ((ImageNaver) mList.get(position)).getLink();
+        new ImageDownloadAsyncTask().execute(imageUri);
     }
 }

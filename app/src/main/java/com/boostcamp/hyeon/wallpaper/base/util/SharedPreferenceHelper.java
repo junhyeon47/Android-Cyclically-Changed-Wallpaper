@@ -17,7 +17,9 @@ public class SharedPreferenceHelper{
         BOOLEAN_GALLEY_SELECT_MODE("pref_key_gallery_select_mode"),
         BOOLEAN_PREVIEW_ACTIVITY_CALL("pref_key_preview_activity_call"),
         STRING_CHANGE_SCREEN_TYPE("pref_key_change_screen_type"),
-        LONG_REPEAT_CYCLE_MILLS("pref_repeat_cycle_millis");
+        LONG_REPEAT_CYCLE_MILLS("pref_repeat_cycle_millis"),
+        STRING_SEARCH_RESULT_SAVE("pref_search_result_save"),
+        STRING_LAST_SEARCH_QUERY("pref_last_search_query");
 
 
         private final String name;

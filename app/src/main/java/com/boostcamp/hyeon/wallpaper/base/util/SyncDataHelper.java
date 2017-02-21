@@ -27,7 +27,7 @@ import io.realm.RealmResults;
 
 public class SyncDataHelper {
     private static final String TAG = SyncDataHelper.class.getSimpleName();
-    public static void syncDataToRealm(Context context, Handler handler){
+    public static void syncDataToRealm(Context context, Handler handler, String scanPath){
         //read all images from Content Provider to Cursor Object.
         String[] projection = {
                 MediaStore.Images.Media.BUCKET_ID, //Folder ID
@@ -38,17 +38,25 @@ public class SyncDataHelper {
                 MediaStore.Images.Media.DATE_TAKEN, //Image Taken Date.
                 MediaStore.Images.Media.DATE_ADDED
         };
+        String selection = null;
+        String[] selectionArgs = null;
         String order = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " ASC, "+ MediaStore.Images.Media.DATE_TAKEN +" DESC";
+
+        if(scanPath != null){
+            selection = MediaStore.Images.Media.DATA + " = ?";
+            selectionArgs = new String[]{ scanPath };
+        }
 
         Cursor cursor =  context.getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projection,
-                null,
-                null,
+                selection,
+                selectionArgs,
                 order
         );
 
-        updateRealmBeforeSync();
+        if(scanPath == null)
+            updateRealmBeforeSync();
 
         if (cursor == null) {
             // error handling
@@ -91,7 +99,8 @@ public class SyncDataHelper {
                     folder.setName(bucketDisplayName);
                     folder.setImages(new RealmList<Image>());
                 }
-                folder.setOpened(false);
+                if(scanPath == null)
+                    folder.setOpened(false);
                 folder.setSynced(true);
 
                 // if image isn't exist in realm create realm object and adding RealmList
@@ -131,8 +140,8 @@ public class SyncDataHelper {
         } else {
             // Cursor is empty
         }
-
-        deleteRealmAfterSync();
+        if(scanPath == null)
+            deleteRealmAfterSync();
     }
 
     private static String getThumbnailUri(Context context, long imageId) {

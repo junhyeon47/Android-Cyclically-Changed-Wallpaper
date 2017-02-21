@@ -36,7 +36,6 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
 
     private Context mContext;
     private OnItemClickListener mOnItemCLickListener;
-    private float mPadding;
 
     public ImageListViewHolder(View itemView, Context mContext, OnItemClickListener mOnItemCLickListener) {
         super(itemView);
@@ -51,7 +50,6 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
         layoutParams.height = size;
         mItemFrameLayout.setLayoutParams(layoutParams);
 
-        mPadding = mContext.getResources().getDimension(R.dimen.image_select_padding);
     }
 
     public void bind(final Image image, final int position){

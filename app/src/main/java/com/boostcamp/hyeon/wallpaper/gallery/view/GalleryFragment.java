@@ -1,11 +1,6 @@
 package com.boostcamp.hyeon.wallpaper.gallery.view;
 
-
-import android.Manifest;
-import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,9 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -28,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -40,7 +31,6 @@ import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.domain.Wallpaper;
 import com.boostcamp.hyeon.wallpaper.base.util.AlarmManagerHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
-import com.boostcamp.hyeon.wallpaper.base.util.SyncDataHelper;
 import com.boostcamp.hyeon.wallpaper.detail.view.DetailActivity;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.FolderListAdapter;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.ImageListAdapter;
@@ -52,12 +42,8 @@ import com.boostcamp.hyeon.wallpaper.gallery.presenter.ImageListPresenterImpl;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnBackKeyPressedListener;
 import com.boostcamp.hyeon.wallpaper.main.view.MainActivity;
 import com.boostcamp.hyeon.wallpaper.preview.view.PreviewActivity;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,7 +58,7 @@ import io.realm.Sort;
 public class GalleryFragment extends Fragment implements FolderListPresenter.View, ImageListPresenter.View, OnBackKeyPressedListener, RadioGroup.OnCheckedChangeListener{
     private static final String TAG = GalleryFragment.class.getSimpleName();
     private static final int DELAY_MILLIS = 100;
-    private static final int MINUETE_CONVERT_TO_MILLIS = 60*1000;
+    private static final int MINUTE_CONVERT_TO_MILLIS = 60*1000;
     private static final int HOUR_CONVERT_TO_MILLIS = 60*60*1000;
     @BindView(R.id.rv_folder) RecyclerView mFolderRecyclerView;
     @BindView(R.id.rv_image) RecyclerView mImageRecyclerView;
@@ -82,6 +68,8 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
     private ImageListPresenterImpl mImageListPresenter;
     private MenuItem mSelectMenuItem, mPreviewMenuItem, mDoneMenuItem;
     private RadioGroup mChangeScreenRadioGroup, mChangeRepeatCycleRadioGroup;
+    private int mRepeatCycle;
+    private String mChangeScreenType;
 
     public GalleryFragment() {
         // Required empty public constructor
@@ -128,11 +116,6 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         );
         realm.commitTransaction();
 
-
-        //init Folder(Left) RecyclerView
-        ViewGroup.LayoutParams params = mFolderRecyclerView.getLayoutParams();
-        params.width =  ((WallpaperApplication)getContext().getApplicationContext()).mDeviceWidthSize/3;
-        mFolderRecyclerView.setLayoutParams(params);
         mFolderRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mFolderRecyclerView.setAdapter(mFolderListAdapter);
         mFolderRecyclerView.setHasFixedSize(true);
@@ -171,14 +154,17 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
 
         //init SharedPreferences
         SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, false);
+
+        //init initial Value
+        mRepeatCycle = 3000;
+        mChangeScreenType = getString(R.string.label_wallpaper);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, "on Resume");
-        mFolderListAdapter.notifyAdapter();
-        mImageListAdapter.notifyAdapter();
+
     }
 
     @Override
@@ -302,7 +288,9 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         realm.commitTransaction();
     }
 
-    private void registerToAlarmManager(){
+    private void registerWallpaper(){
+        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, (long)mRepeatCycle);
+        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_CHANGE_SCREEN_TYPE, mChangeScreenType);
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
 
@@ -335,7 +323,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
             Toast.makeText(getActivity(), "이미지를 선택해주세요!", Toast.LENGTH_SHORT).show();
         }else if(numberOfSelectedImage == 1){
             if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                registerToAlarmManager();
+                registerWallpaper();
             }else{
                 showAlertDialog(numberOfSelectedImage);
             }
@@ -345,13 +333,12 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
     }
 
     private void showAlertDialog(final int numberOfSelectedImage){
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setView(R.layout.item_alert);
+        builder.setView(R.layout.item_menu_done_alert);
         builder.setPositiveButton(getString(R.string.label_wallpaper_register), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                registerToAlarmManager();
+                registerWallpaper();
             }
         });
         builder.setNegativeButton(getString(R.string.label_cancel), null);
@@ -360,20 +347,20 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
             @Override
             public void onShow(DialogInterface dialog) {
                 if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N && numberOfSelectedImage > 1){
-                    //누가 아니면서 이미지가 하나 이상인 경우
+                    //if build version is less than nougat and selected images is greater than one.
                     ((Dialog)dialog).findViewById(R.id.layout_change_screen).setVisibility(View.GONE);
                     mChangeRepeatCycleRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_repeat_cycle);
                     mChangeRepeatCycleRadioGroup.setOnCheckedChangeListener(GalleryFragment.this);
                     mChangeRepeatCycleRadioGroup.check(mChangeRepeatCycleRadioGroup.getChildAt(0).getId());
                     SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_CHANGE_SCREEN_TYPE, getString(R.string.label_wallpaper));
                 }else if(Build.VERSION.SDK_INT == Build.VERSION_CODES.N && numberOfSelectedImage == 1){
-                    //누가 이면서 이미지가 하나인 경우
+                    //if build version is nougat and selected images is only one.
                     ((Dialog)dialog).findViewById(R.id.layout_change_repeat_cycle).setVisibility(View.GONE);
                     mChangeScreenRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_screen);
                     mChangeScreenRadioGroup.setOnCheckedChangeListener(GalleryFragment.this);
                     mChangeScreenRadioGroup.check(mChangeScreenRadioGroup.getChildAt(0).getId());
                 }else{
-                    //누가이면서 이미지가 여러장인 경우
+                    //if build version is nougat and selected selected images is greater than one.
                     mChangeScreenRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_screen);
                     mChangeRepeatCycleRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_repeat_cycle);
                     mChangeScreenRadioGroup.setOnCheckedChangeListener(GalleryFragment.this);
@@ -392,20 +379,19 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         if(radioButton == null)
             return;
         if(group.equals(mChangeScreenRadioGroup) && radioButton.isChecked()){
-            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_CHANGE_SCREEN_TYPE, radioButton.getText().toString());
+            mChangeScreenType = radioButton.getText().toString();
         }else if(group.equals(mChangeRepeatCycleRadioGroup) && radioButton.isChecked()){
             String value = radioButton.getText().toString();
             int minute = value.indexOf(getString(R.string.label_minute));
             int hour = value.indexOf(getString(R.string.label_hour));
-            int repeatCycle;
+
             if(minute != -1 && hour == -1){
-                repeatCycle = Integer.valueOf(value.substring(0, minute));
-                repeatCycle *= MINUETE_CONVERT_TO_MILLIS;
+                mRepeatCycle = Integer.valueOf(value.substring(0, minute));
+                mRepeatCycle *= MINUTE_CONVERT_TO_MILLIS;
             }else {
-                repeatCycle = Integer.valueOf(value.substring(0, hour));
-                repeatCycle *= HOUR_CONVERT_TO_MILLIS;
+                mRepeatCycle = Integer.valueOf(value.substring(0, hour));
+                mRepeatCycle *= HOUR_CONVERT_TO_MILLIS;
             }
-            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, (long)repeatCycle);
         }
     }
 }

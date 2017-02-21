@@ -3,11 +3,16 @@ package com.boostcamp.hyeon.wallpaper.base.service;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.display.DisplayManager;
+import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.Display;
 
 import com.boostcamp.hyeon.wallpaper.base.receiver.RestartServiceReceiver;
 import com.boostcamp.hyeon.wallpaper.base.util.TransparentActivity;
@@ -21,7 +26,7 @@ import java.util.TimerTask;
 
 public class TransparentActivityCallService extends Service {
     private static final String TAG = TransparentActivityCallService.class.getSimpleName();
-    private static final int REPEAT_CYCLE = 60*1000;
+    private static final int REPEAT_CYCLE = 3*60*1000;
     private TimerTask mTask;
     private Timer mTimer;
     @Nullable
@@ -83,9 +88,18 @@ public class TransparentActivityCallService extends Service {
         mTask = new TimerTask() {
             @Override
             public void run() {
-                Intent intent = new Intent(TransparentActivityCallService.this, TransparentActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                PowerManager powerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
+                boolean isScreenOn;
+                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT_WATCH){
+                    isScreenOn = powerManager.isScreenOn();
+                }else{
+                    isScreenOn = powerManager.isInteractive();
+                }
+                if(!isScreenOn) {
+                    Intent intent = new Intent(TransparentActivityCallService.this, TransparentActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
             }
         };
 

@@ -56,3 +56,6 @@ freeline_project_description.json
 #Android Test
 #app/src/androidTest/
 #app/src/test/
+
+#API KEY
+api_key.xml

@@ -61,7 +61,7 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
 
             @Override
             public Void loadInBackground() {
-                SyncDataHelper.syncDataToRealm(getApplicationContext(), mHandler);
+                SyncDataHelper.syncDataToRealm(getApplicationContext(), mHandler, null);
                 return null;
             }
         };

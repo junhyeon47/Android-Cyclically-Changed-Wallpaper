@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.boostcamp.hyeon.wallpaper.base.adapter.RealmListAdapterContract;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
+import com.boostcamp.hyeon.wallpaper.base.util.Define;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.gallery.model.GalleryModel;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
@@ -29,7 +30,7 @@ public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnI
 
     @Override
     public void detachView() {
-
+        this.mView = null;
     }
 
     @Override
@@ -62,6 +63,7 @@ public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnI
             String imageId = mAdapterModel.getItem(position).getImageId();
 
             Bundle bundle = new Bundle();
+            bundle.putInt("from", Define.GALLERY_FRAGMENT);
             bundle.putString("bucket_id", bucketId);
             bundle.putString("image_id", imageId);
             mView.moveToDetailActivity(bundle);

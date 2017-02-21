@@ -27,4 +27,8 @@ public class SettingFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_setting, container, false);
     }
 
+    private void init(){
+
+    }
+
 }

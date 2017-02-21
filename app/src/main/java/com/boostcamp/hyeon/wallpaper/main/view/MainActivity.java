@@ -7,12 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnBackKeyPressedListener;
 import com.boostcamp.hyeon.wallpaper.base.service.TransparentActivityCallService;
 import com.boostcamp.hyeon.wallpaper.main.adapter.ViewPagerAdapter;
-import com.boostcamp.hyeon.wallpaper.search.SearchFragment;
+import com.boostcamp.hyeon.wallpaper.search.view.SearchFragment;
 import com.boostcamp.hyeon.wallpaper.gallery.view.GalleryFragment;
 import com.boostcamp.hyeon.wallpaper.setting.SettingFragment;
 
@@ -24,6 +27,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.tab_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) ViewPager mViewPager;
+    @BindView(R.id.et_search) EditText mSearchEditText;
+    @BindView(R.id.iv_search_icon) ImageView mSearchIconImageView;
+
     private ViewPagerAdapter mAdapter;
     private OnBackKeyPressedListener mOnBackKeyPressedListener;
 
@@ -75,14 +81,21 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         //setup ActionBar
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(mToolbarTitles[mTabLayout.getSelectedTabPosition()]);
-
     }
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         //ActionBar title change.
-        getSupportActionBar().setTitle(mToolbarTitles[tab.getPosition()]);
         supportInvalidateOptionsMenu();
+        if(mToolbarTitles[tab.getPosition()] == R.string.title_search) {
+            getSupportActionBar().setTitle(null);
+            mSearchEditText.setVisibility(View.VISIBLE);
+            mSearchIconImageView.setVisibility(View.VISIBLE);
+        }else{
+            getSupportActionBar().setTitle(mToolbarTitles[tab.getPosition()]);
+            mSearchEditText.setVisibility(View.GONE);
+            mSearchIconImageView.setVisibility(View.GONE);
+        }
 
         //life cycle change
         mAdapter.getItem(tab.getPosition()).onResume();
