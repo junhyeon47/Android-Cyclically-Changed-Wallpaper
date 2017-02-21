@@ -29,8 +29,10 @@
                 android:layout_height="match_parent"
                 android:visibility="gone"
                 android:inputType="text"
+                android:imeOptions="actionDone"
+                app:theme="@style/EditTextStyle"
                 app:backgroundTint="@color/colorWhite"
-                android:imeOptions="actionDone"/>
+                android:textCursorDrawable="@null"/>
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout

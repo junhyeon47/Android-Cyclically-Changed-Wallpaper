@@ -18,4 +18,13 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
+
+    <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="colorControlNormal">@color/colorWhite</item>
+        <item name="colorControlActivated">@color/colorGrey500</item>
+        <item name="android:textCursorDrawable">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textColorHint">@color/colorGrey300</item>
+        <item name="android:textColorHighlight">@color/colorBlackOpacity50</item>
+    </style>
 </resources>

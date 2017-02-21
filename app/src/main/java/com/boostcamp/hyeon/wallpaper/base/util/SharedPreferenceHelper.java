@@ -57,37 +57,37 @@ public class SharedPreferenceHelper{
     public void put(Key key, String value) {
         mEditor = mSharedPreferences.edit();
         mEditor.putString(key.getName(), value);
-        mEditor.apply();
+        mEditor.commit();
     }
 
     public void put(Key key, int value) {
         mEditor = mSharedPreferences.edit();
         mEditor.putInt(key.getName(), value);
-        mEditor.apply();
+        mEditor.commit();
     }
 
     public void put(Key key, boolean value) {
         mEditor = mSharedPreferences.edit();
         mEditor.putBoolean(key.getName(), value);
-        mEditor.apply();
+        mEditor.commit();
     }
 
     public void put(Key key, float value) {
         mEditor = mSharedPreferences.edit();
         mEditor.putFloat(key.getName(), value);
-        mEditor.apply();
+        mEditor.commit();
     }
 
     public void put(Key key, double value) {
         mEditor = mSharedPreferences.edit();
         mEditor.putString(key.getName(), String.valueOf(value));
-        mEditor.apply();
+        mEditor.commit();
     }
 
     public void put(Key key, long value) {
         mEditor = mSharedPreferences.edit();
         mEditor.putLong(key.getName(), value);
-        mEditor.apply();
+        mEditor.commit();
     }
 
 
