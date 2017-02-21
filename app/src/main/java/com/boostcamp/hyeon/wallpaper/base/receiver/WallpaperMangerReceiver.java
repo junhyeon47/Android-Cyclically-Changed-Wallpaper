@@ -16,6 +16,7 @@ import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.domain.Wallpaper;
 import com.boostcamp.hyeon.wallpaper.base.util.AlarmManagerHelper;
+import com.boostcamp.hyeon.wallpaper.base.util.Define;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 
 import java.io.IOException;
@@ -32,34 +33,45 @@ public class WallpaperMangerReceiver extends BroadcastReceiver {
     private static String TAG = WallpaperMangerReceiver.class.getSimpleName();
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive");
+        Log.d(TAG, "onReceive: "+intent.getAction());
+        Log.d(TAG, "onReceive: "+intent.getAction());
 
+        long changeCycle = SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, 0);
+        Log.d(TAG, "change cycle: "+changeCycle);
+        if (intent.getAction().equals(context.getString(R.string.wallpaper_set_action)) && changeCycle != Define.CHANGE_CYCLE_SCREEN_OFF) {
+            setWallpaperManager(context, changeCycle);
+        }else if(intent.getAction().equals(context.getString(R.string.wallpaper_set_action)) && changeCycle == Define.CHANGE_CYCLE_SCREEN_OFF){
+            setWallpaperManager(context, changeCycle);
+        }else if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF) && changeCycle == Define.CHANGE_CYCLE_SCREEN_OFF){
+            setWallpaperManager(context, changeCycle);
+        }
+    }
+
+    private void setWallpaperManager(Context context, long changeCycle){
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
         Wallpaper wallpaper = realm.where(Wallpaper.class).findFirst();
-
         Image image = wallpaper.getImages().get(wallpaper.getCurrentPosition());
         int currentPosition = wallpaper.getCurrentPosition();
-        if(currentPosition+1 >= wallpaper.getImages().size()){
+        if (currentPosition + 1 >= wallpaper.getImages().size()) {
             currentPosition = 0;
-        }else{
+        } else {
             currentPosition++;
         }
         wallpaper.setCurrentPosition(currentPosition);
         realm.commitTransaction();
 
         String changeScreenType = SharedPreferenceHelper.getInstance().getString(SharedPreferenceHelper.Key.STRING_CHANGE_SCREEN_TYPE, null);
-        setWallpaperManager(context, changeScreenType, Uri.parse(image.getImageUri()));
+        setWallpaperFromChangeType(context, changeScreenType, Uri.parse(image.getImageUri()));
 
-        if(wallpaper.getImages().size() != 1) {
+        if (wallpaper.getImages().size() != 1 && changeCycle != Define.CHANGE_CYCLE_SCREEN_OFF) {
             Calendar date = Calendar.getInstance();
-            long repeatCycle = SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, 0);
-            date.setTimeInMillis(System.currentTimeMillis()+repeatCycle);
+            date.setTimeInMillis(System.currentTimeMillis() + changeCycle);
             AlarmManagerHelper.registerToAlarmManager(context, date);
         }
     }
 
-    private void setWallpaperManager(Context context, String changeScreenType, Uri imageUri){
+    private void setWallpaperFromChangeType(Context context, String changeScreenType, Uri imageUri){
         if(changeScreenType.equals(context.getString(R.string.label_wallpaper))){
             setWallpaper(context, imageUri);
         }else if(changeScreenType.equals(context.getString(R.string.label_lock_screen))){

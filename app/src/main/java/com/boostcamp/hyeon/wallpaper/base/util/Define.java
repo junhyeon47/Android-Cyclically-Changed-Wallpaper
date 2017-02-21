@@ -11,4 +11,5 @@ public class Define {
     public static final int DOWNLOAD_IMAGE_QUALITY = 100;
     public static final String DOWNLOAD_IMAGE_EXT = ".jpg";
     public static final String APP_FOLDER_NAME = "Wallpaper";
+    public static final int CHANGE_CYCLE_SCREEN_OFF = -1;
 }

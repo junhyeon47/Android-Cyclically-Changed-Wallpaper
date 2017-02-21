@@ -5,16 +5,17 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.display.DisplayManager;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.Display;
 
+import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.receiver.RestartServiceReceiver;
+import com.boostcamp.hyeon.wallpaper.base.receiver.WallpaperMangerReceiver;
 import com.boostcamp.hyeon.wallpaper.base.util.TransparentActivity;
 
 import java.util.Timer;
@@ -24,11 +25,13 @@ import java.util.TimerTask;
  * Created by hyeon on 2017. 2. 17..
  */
 
-public class TransparentActivityCallService extends Service {
-    private static final String TAG = TransparentActivityCallService.class.getSimpleName();
+public class WallpaperManagerService extends Service {
+    private static final String TAG = WallpaperManagerService.class.getSimpleName();
     private static final int REPEAT_CYCLE = 3*60*1000;
+    private WallpaperMangerReceiver mWallpaperMangerReceiver;
     private TimerTask mTask;
     private Timer mTimer;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -45,13 +48,15 @@ public class TransparentActivityCallService extends Service {
         ForeGroundService.startForeground(this);
         Intent localIntent = new Intent(this, ForeGroundService.class);
         startService(localIntent);
-        initTimer();
+        initWallpaperMangerReceiver();
+        initTimerForTransparentActivity();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy called");
+        unregisterReceiver(mWallpaperMangerReceiver);
         registerToAlarmManager();
         mTimer.cancel();
         mTask.cancel();
@@ -65,9 +70,9 @@ public class TransparentActivityCallService extends Service {
 
     private void registerToAlarmManager(){
         Log.d(TAG, "registerToAlarmManager");
-        Intent intent = new Intent(TransparentActivityCallService.this, RestartServiceReceiver.class);
-        intent.setAction("ACTION.RESTART.TransparentActivityCallService");
-        PendingIntent sender = PendingIntent.getBroadcast(TransparentActivityCallService.this, 0, intent, 0);
+        Intent intent = new Intent(WallpaperManagerService.this, RestartServiceReceiver.class);
+        intent.setAction(getString(R.string.restart_service_action));
+        PendingIntent sender = PendingIntent.getBroadcast(WallpaperManagerService.this, 0, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 
@@ -76,15 +81,22 @@ public class TransparentActivityCallService extends Service {
 
     private void unregisterToAlarmManager(){
         Log.d(TAG , "unregisterToAlarmManager" );
-        Intent intent = new Intent(TransparentActivityCallService.this, RestartServiceReceiver.class);
-        intent.setAction("ACTION.RESTART.TransparentActivityCallService");
-        PendingIntent sender = PendingIntent.getBroadcast(TransparentActivityCallService.this, 0, intent, 0);
+        Intent intent = new Intent(WallpaperManagerService.this, RestartServiceReceiver.class);
+        intent.setAction(getString(R.string.restart_service_action));
+        PendingIntent sender = PendingIntent.getBroadcast(WallpaperManagerService.this, 0, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         alarmManager.cancel(sender);
     }
 
-    private void initTimer(){
+    private void initWallpaperMangerReceiver(){
+        mWallpaperMangerReceiver = new WallpaperMangerReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(mWallpaperMangerReceiver, intentFilter);
+    }
+
+    private void initTimerForTransparentActivity(){
         mTask = new TimerTask() {
             @Override
             public void run() {
@@ -96,7 +108,7 @@ public class TransparentActivityCallService extends Service {
                     isScreenOn = powerManager.isInteractive();
                 }
                 if(!isScreenOn) {
-                    Intent intent = new Intent(TransparentActivityCallService.this, TransparentActivity.class);
+                    Intent intent = new Intent(WallpaperManagerService.this, TransparentActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }

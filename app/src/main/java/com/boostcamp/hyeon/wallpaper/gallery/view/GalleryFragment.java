@@ -30,6 +30,7 @@ import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.domain.Wallpaper;
 import com.boostcamp.hyeon.wallpaper.base.util.AlarmManagerHelper;
+import com.boostcamp.hyeon.wallpaper.base.util.Define;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.detail.view.DetailActivity;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.FolderListAdapter;
@@ -68,7 +69,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
     private ImageListPresenterImpl mImageListPresenter;
     private MenuItem mSelectMenuItem, mPreviewMenuItem, mDoneMenuItem;
     private RadioGroup mChangeScreenRadioGroup, mChangeRepeatCycleRadioGroup;
-    private int mRepeatCycle;
+    private int mChangeCycle;
     private String mChangeScreenType;
 
     public GalleryFragment() {
@@ -156,7 +157,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, false);
 
         //init initial Value
-        mRepeatCycle = 3000;
+        mChangeCycle = 30000;
         mChangeScreenType = getString(R.string.label_wallpaper);
     }
 
@@ -289,7 +290,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
     }
 
     private void registerWallpaper(){
-        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, (long)mRepeatCycle);
+        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, (long)mChangeCycle);
         SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_CHANGE_SCREEN_TYPE, mChangeScreenType);
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
@@ -386,12 +387,15 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
             int hour = value.indexOf(getString(R.string.label_hour));
 
             if(minute != -1 && hour == -1){
-                mRepeatCycle = Integer.valueOf(value.substring(0, minute));
-                mRepeatCycle *= MINUTE_CONVERT_TO_MILLIS;
-            }else {
-                mRepeatCycle = Integer.valueOf(value.substring(0, hour));
-                mRepeatCycle *= HOUR_CONVERT_TO_MILLIS;
+                mChangeCycle = Integer.valueOf(value.substring(0, minute));
+                mChangeCycle *= MINUTE_CONVERT_TO_MILLIS;
+            }else if(minute == -1 && hour !=-1){
+                mChangeCycle = Integer.valueOf(value.substring(0, hour));
+                mChangeCycle *= HOUR_CONVERT_TO_MILLIS;
+            }else{
+                mChangeCycle = Define.CHANGE_CYCLE_SCREEN_OFF;
             }
+            Log.d(TAG, "mRepeatCycle: "+mChangeCycle);
         }
     }
 }

@@ -120,6 +120,12 @@
                     app:buttonTint="@drawable/selector_radio_button"
                     android:textColor="@drawable/selector_radio_button"
                     android:text="@string/label_twenty_four_hour"/>
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonTint="@drawable/selector_radio_button"
+                    android:textColor="@drawable/selector_radio_button"
+                    android:text="@string/label_screen_on_change_wallpaper"/>
             </RadioGroup>
         </ScrollView>
     </LinearLayout>

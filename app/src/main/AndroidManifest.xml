@@ -44,13 +44,13 @@
 
         <receiver android:name=".base.receiver.WallpaperMangerReceiver">
             <intent-filter>
-                <action android:name="com.boostcamp.hyeon.wallpaper" />
+                <action android:name="ACTION.SET_WALLPAPER.WallpaperMangerReceiver" />
             </intent-filter>
         </receiver>
 
         <receiver android:name=".base.receiver.RestartServiceReceiver">
             <intent-filter>
-                <action android:name="ACTION.RESTART.TransparentActivityCallService" />
+                <action android:name="ACTION.RESTART.WallpaperManagerService" />
             </intent-filter>
         </receiver>
 
@@ -66,7 +66,7 @@
         </receiver>
 
         <service
-            android:name=".base.service.TransparentActivityCallService"
+            android:name=".base.service.WallpaperManagerService"
             android:enabled="true"
             android:process=":remote" />
         <service

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.boostcamp.hyeon.wallpaper.base.service.TransparentActivityCallService;
+import com.boostcamp.hyeon.wallpaper.base.service.WallpaperManagerService;
 import com.boostcamp.hyeon.wallpaper.base.util.AlarmManagerHelper;
 
 import java.util.Calendar;
@@ -22,8 +22,8 @@ public class BootCompletedReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
             Log.d(TAG , "ACTION_BOOT_COMPLETED" );
-            // if device is restart, TransparentActivityCallService start
-            Intent startServiceIntent = new Intent(context, TransparentActivityCallService.class);
+            // if device is restart, WallpaperManagerService start
+            Intent startServiceIntent = new Intent(context, WallpaperManagerService.class);
             context.startService(startServiceIntent);
 
             //register wallpaper to AlarmManager

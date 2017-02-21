@@ -13,7 +13,7 @@ import android.widget.ImageView;
 
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnBackKeyPressedListener;
-import com.boostcamp.hyeon.wallpaper.base.service.TransparentActivityCallService;
+import com.boostcamp.hyeon.wallpaper.base.service.WallpaperManagerService;
 import com.boostcamp.hyeon.wallpaper.main.adapter.ViewPagerAdapter;
 import com.boostcamp.hyeon.wallpaper.search.view.SearchFragment;
 import com.boostcamp.hyeon.wallpaper.gallery.view.GalleryFragment;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
     private void init(){
         //init service and start
-        Intent intent = new Intent(this, TransparentActivityCallService.class);
+        Intent intent = new Intent(this, WallpaperManagerService.class);
         startService(intent);
 
         //create ViewPagerAdapter, add Fragment, mViewPager apply adapter.

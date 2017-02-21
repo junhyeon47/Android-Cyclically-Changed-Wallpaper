@@ -39,4 +39,6 @@
     <string name="label_search_result_do_not_save">저장 안함</string>
     <string name="label_last_search_result">마지막 검색어 및 결과 저장 여부</string>
     <string name="label_setting_completion">설정 완료</string>
+    <string name="restart_service_action">ACTION.RESTART.WallpaperManagerService</string>
+    <string name="label_screen_on_change_wallpaper">화면이 켜질 때마다 배경화면 변경</string>
 </resources>
