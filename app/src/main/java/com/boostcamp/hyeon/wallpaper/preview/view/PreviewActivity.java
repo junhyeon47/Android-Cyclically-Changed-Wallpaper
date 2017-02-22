@@ -50,7 +50,7 @@ public class PreviewActivity extends Activity implements PreviewListPresenter.Vi
         mPreviewListPresenter.setListAdapterModel(mPreviewListAdapter);
         mPreviewListPresenter.setListAdapterView(mPreviewListAdapter);
 
-        //init recycler view;
+        //init recycler view
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mRecyclerView.setAdapter(mPreviewListAdapter);
         mRecyclerView.setHasFixedSize(true);

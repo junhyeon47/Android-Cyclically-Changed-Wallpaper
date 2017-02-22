@@ -27,4 +27,10 @@
         <item name="android:textColorHint">@color/colorGrey300</item>
         <item name="android:textColorHighlight">@color/colorBlackOpacity50</item>
     </style>
+
+    <style name="CustomSwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/colorTeal500</item>
+        <item name="colorSwitchThumbNormal">@color/colorGrey500</item>
+        <item name="android:colorForeground">@color/colorBlackOpacity50</item>
+    </style>
 </resources>

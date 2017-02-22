@@ -40,7 +40,7 @@ public class SyncDataHelper {
         };
         String selection = null;
         String[] selectionArgs = null;
-        String order = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " ASC, "+ MediaStore.Images.Media.DATE_TAKEN +" DESC";
+        String order = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " ASC, "+ MediaStore.Images.Media.DATE_ADDED +" DESC";
 
         if(scanPath != null){
             selection = MediaStore.Images.Media.DATA + " = ?";
@@ -98,9 +98,8 @@ public class SyncDataHelper {
                     folder.setBucketId(bucketId);
                     folder.setName(bucketDisplayName);
                     folder.setImages(new RealmList<Image>());
-                }
-                if(scanPath == null)
                     folder.setOpened(false);
+                }
                 folder.setSynced(true);
 
                 // if image isn't exist in realm create realm object and adding RealmList

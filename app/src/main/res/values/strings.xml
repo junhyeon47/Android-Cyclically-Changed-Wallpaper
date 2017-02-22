@@ -16,7 +16,7 @@
     <string name="key_progress">progress</string>
     <string name="wallpaper_set_action">ACTION.SET_WALLPAPER.WallpaperMangerReceiver</string>
     <string name="label_change_screen_select">변경 화면 선택</string>
-    <string name="label_change_repeat_cycle_select">배경화면 변경 주기 선택</string>
+    <string name="label_wallpaper_change_cycle_select">배경화면 변경 주기 선택</string>
     <string name="label_wallpaper">배경화면</string>
     <string name="label_lock_screen">잠금화면</string>
     <string name="label_wallpaper_plus_lock_screen">배경화면 + 잠금화면</string>
@@ -41,4 +41,9 @@
     <string name="label_setting_completion">설정 완료</string>
     <string name="restart_service_action">ACTION.RESTART.WallpaperManagerService</string>
     <string name="label_screen_on_change_wallpaper">화면이 켜질 때마다 배경화면 변경</string>
+    <string name="label_wallpaper_change_cycle">배경화면 변경 주기</string>
+    <string name="label_random_wallpaper">랜덤 배경화면</string>
+    <string name="label_transparent_wallpaper">투명 배경화면</string>
+    <string name="label_using">사용중</string>
+    <string name="label_not_using">사용 안함</string>
 </resources>
