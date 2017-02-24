@@ -9,7 +9,7 @@
     <item android:id="@+id/menu_preview"
         android:orderInCategory="1"
         android:title="@string/label_preview"
-        android:icon="@drawable/ic_view_carousel_white_24dp"
+        android:icon="@drawable/ic_view_array_white_24dp"
         android:visible="false"
         app:showAsAction="always"/>
     <item android:id="@+id/menu_done"

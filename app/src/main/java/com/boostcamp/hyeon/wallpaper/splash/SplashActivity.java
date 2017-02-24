@@ -24,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SplashActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Void>, Handler.Callback{
-    private static final int PERMISSION_READ = 23;
+    private static final int PERMISSION_READ_WRITE = 23;
     private static final int FIRST_SYNC_DATA_LOADER = 1;
     private static final int DELAY_MILLIS = 2000;
     private Handler mHandler;
@@ -91,7 +91,7 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
                     startActivity(intent);
                     finish();
                 }
-            }, loadingTime);
+            }, DELAY_MILLIS - loadingTime);
         }
     }
 
@@ -114,8 +114,9 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     public void checkPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE }, PERMISSION_READ);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE }, PERMISSION_READ_WRITE);
         } else {
             init();
         }
@@ -124,7 +125,7 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
-            case PERMISSION_READ:
+            case PERMISSION_READ_WRITE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     init();
                 }else{
