@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.boostcamp.hyeon.wallpaper.base.service.WallpaperManagerService;
 import com.boostcamp.hyeon.wallpaper.base.util.AlarmManagerHelper;
+import com.boostcamp.hyeon.wallpaper.base.util.Define;
+import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 
 import java.util.Calendar;
 
@@ -26,11 +28,17 @@ public class BootCompletedReceiver extends BroadcastReceiver {
             Intent startServiceIntent = new Intent(context, WallpaperManagerService.class);
             context.startService(startServiceIntent);
 
+            int alarmId;
+            if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_TRANSPARENT_WALLPAPER, false)){
+                alarmId = Define.ID_ALARM_TRANSPARENT;
+            }else{
+                alarmId = Define.ID_ALARM_DEFAULT;
+            }
             //register wallpaper to AlarmManager
             Calendar date = Calendar.getInstance();
             date.setTimeInMillis(System.currentTimeMillis()+DELAY_MILLIS);
-            AlarmManagerHelper.unregisterToAlarmManager(context);
-            AlarmManagerHelper.registerToAlarmManager(context, date);
+            AlarmManagerHelper.unregisterToAlarmManager(context, alarmId);
+            AlarmManagerHelper.registerToAlarmManager(context, date, alarmId);
         }
     }
 }

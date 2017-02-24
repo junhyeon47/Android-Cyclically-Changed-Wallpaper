@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Display;
 
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
@@ -21,29 +20,42 @@ import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Random;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Created by hyeon on 2017. 2. 20..
  */
 
-public class WallpaperMangerReceiver extends BroadcastReceiver {
+public class WallpaperMangerReceiver extends BroadcastReceiver{
     private static String TAG = WallpaperMangerReceiver.class.getSimpleName();
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "onReceive: "+intent.getAction());
-        Log.d(TAG, "onReceive: "+intent.getAction());
-
+        if(!SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, false))
+            return;
+        boolean isTransparentWallpaper = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_TRANSPARENT_WALLPAPER, false);
         long changeCycle = SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, 0);
         Log.d(TAG, "change cycle: "+changeCycle);
-        if (intent.getAction().equals(context.getString(R.string.wallpaper_set_action)) && changeCycle != Define.CHANGE_CYCLE_SCREEN_OFF) {
-            setWallpaperManager(context, changeCycle);
-        }else if(intent.getAction().equals(context.getString(R.string.wallpaper_set_action)) && changeCycle == Define.CHANGE_CYCLE_SCREEN_OFF){
-            setWallpaperManager(context, changeCycle);
-        }else if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF) && changeCycle == Define.CHANGE_CYCLE_SCREEN_OFF){
-            setWallpaperManager(context, changeCycle);
+
+        if(!isTransparentWallpaper){
+            Log.d(TAG, "default wallpaper");
+            if (intent.getAction().equals(context.getString(R.string.wallpaper_set_action)) && changeCycle != Define.CHANGE_CYCLE_SCREEN_OFF) {
+                setWallpaperManager(context, changeCycle);
+            }else if(intent.getAction().equals(context.getString(R.string.wallpaper_set_action)) && changeCycle == Define.CHANGE_CYCLE_SCREEN_OFF){
+                setWallpaperManager(context, changeCycle);
+            }else if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF) && changeCycle == Define.CHANGE_CYCLE_SCREEN_OFF){
+                setWallpaperManager(context, changeCycle);
+            }
+        }else{
+            if(intent.getAction().equals(context.getString(R.string.wallpaper_set_action))){
+                Log.d(TAG, "transparent wallpaper: start");
+            }else if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF)){
+                Log.d(TAG, "transparent wallpaper: screen off");
+            }else if(intent.getAction().equals(Intent.ACTION_SCREEN_ON)){
+                Log.d(TAG, "transparent wallpaper: screen on");
+            }
         }
     }
 
@@ -51,34 +63,45 @@ public class WallpaperMangerReceiver extends BroadcastReceiver {
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
         Wallpaper wallpaper = realm.where(Wallpaper.class).findFirst();
-        Image image = wallpaper.getImages().get(wallpaper.getCurrentPosition());
-        int currentPosition = wallpaper.getCurrentPosition();
-        if (currentPosition + 1 >= wallpaper.getImages().size()) {
-            currentPosition = 0;
-        } else {
-            currentPosition++;
+        Image image = wallpaper.getImages().get(wallpaper.getNextPosition());
+        int currentPosition = wallpaper.getNextPosition();
+        int nextPosition;
+        if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_RANDOM_ORDER, false)){
+            int randomNumber;
+            do {
+                Random random = new Random();
+                randomNumber = random.nextInt(wallpaper.getImages().size());
+            }while (randomNumber == currentPosition);
+            nextPosition = randomNumber;
+        }else {
+            if (currentPosition + 1 >= wallpaper.getImages().size()) {
+                nextPosition = 0;
+            } else {
+                nextPosition = currentPosition + 1;
+            }
         }
         wallpaper.setCurrentPosition(currentPosition);
+        wallpaper.setNextPosition(nextPosition);
         realm.commitTransaction();
 
-        String changeScreenType = SharedPreferenceHelper.getInstance().getString(SharedPreferenceHelper.Key.STRING_CHANGE_SCREEN_TYPE, null);
+        int changeScreenType = SharedPreferenceHelper.getInstance().getInt(SharedPreferenceHelper.Key.INT_CHANGE_SCREEN_TYPE, 0);
         setWallpaperFromChangeType(context, changeScreenType, Uri.parse(image.getImageUri()));
 
         if (wallpaper.getImages().size() != 1 && changeCycle != Define.CHANGE_CYCLE_SCREEN_OFF) {
             Calendar date = Calendar.getInstance();
             date.setTimeInMillis(System.currentTimeMillis() + changeCycle);
-            AlarmManagerHelper.registerToAlarmManager(context, date);
+            AlarmManagerHelper.registerToAlarmManager(context, date, Define.ID_ALARM_DEFAULT);
         }
     }
 
-    private void setWallpaperFromChangeType(Context context, String changeScreenType, Uri imageUri){
-        if(changeScreenType.equals(context.getString(R.string.label_wallpaper))){
+    private void setWallpaperFromChangeType(Context context, int changeScreenType, Uri imageUri){
+        if(changeScreenType == Define.CHANGE_SCREEN_TYPE[Define.INDEX_TYPE_WALLPAPER]){
             setWallpaper(context, imageUri);
-        }else if(changeScreenType.equals(context.getString(R.string.label_lock_screen))){
+        }else if(changeScreenType == Define.CHANGE_SCREEN_TYPE[Define.INDEX_TYPE_LOCK_SCREEN]){
             setLockScreen(context, imageUri);
         }else{
-            setWallpaper(context, imageUri);
             setLockScreen(context, imageUri);
+            setWallpaper(context, imageUri);
         }
     }
 

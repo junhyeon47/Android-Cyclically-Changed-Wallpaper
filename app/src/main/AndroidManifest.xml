@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera" />
 
     <application
         android:name=".base.app.WallpaperApplication"
@@ -19,10 +22,12 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".main.view.MainActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".splash.SplashActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,18 +36,22 @@
         </activity>
         <activity
             android:name=".detail.view.DetailActivity"
-            android:theme="@style/Theme.Transparent" />
+            android:theme="@style/Theme.Transparent"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".preview.view.PreviewActivity"
-            android:theme="@style/Theme.Transparent" />
+            android:theme="@style/Theme.Transparent"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".base.util.TransparentActivity"
             android:theme="@style/Theme.Transparent"
             android:excludeFromRecents="true"
             android:noHistory="true"
-            android:taskAffinity="com.boostcamp.hyeon.wallpaper.popup"/>
+            android:taskAffinity="com.boostcamp.hyeon.wallpaper.popup"
+            android:screenOrientation="portrait"/>
 
-        <receiver android:name=".base.receiver.WallpaperMangerReceiver">
+        <receiver android:name=".base.receiver.WallpaperMangerReceiver"
+            android:process="">
             <intent-filter>
                 <action android:name="ACTION.SET_WALLPAPER.WallpaperMangerReceiver" />
             </intent-filter>
@@ -67,8 +76,7 @@
 
         <service
             android:name=".base.service.WallpaperManagerService"
-            android:enabled="true"
-            android:process=":remote" />
+            android:enabled="true"/>
         <service
             android:name=".base.service.ForeGroundService"
             android:exported="false"

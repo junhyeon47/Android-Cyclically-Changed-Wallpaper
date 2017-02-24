@@ -58,9 +58,6 @@ import io.realm.Sort;
  */
 public class GalleryFragment extends Fragment implements FolderListPresenter.View, ImageListPresenter.View, OnBackKeyPressedListener, RadioGroup.OnCheckedChangeListener{
     private static final String TAG = GalleryFragment.class.getSimpleName();
-    private static final int DELAY_MILLIS = 100;
-    private static final int MINUTE_CONVERT_TO_MILLIS = 60*1000;
-    private static final int HOUR_CONVERT_TO_MILLIS = 60*60*1000;
     @BindView(R.id.rv_folder) RecyclerView mFolderRecyclerView;
     @BindView(R.id.rv_image) RecyclerView mImageRecyclerView;
     private FolderListAdapter mFolderListAdapter;
@@ -70,7 +67,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
     private MenuItem mSelectMenuItem, mPreviewMenuItem, mDoneMenuItem;
     private RadioGroup mChangeScreenRadioGroup, mChangeRepeatCycleRadioGroup;
     private int mChangeCycle;
-    private String mChangeScreenType;
+    private int mChangeScreenType;
 
     public GalleryFragment() {
         // Required empty public constructor
@@ -158,7 +155,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
 
         //init initial Value
         mChangeCycle = 30000;
-        mChangeScreenType = getString(R.string.label_wallpaper);
+        mChangeScreenType = R.string.label_wallpaper;
     }
 
     @Override
@@ -290,8 +287,6 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
     }
 
     private void registerWallpaper(){
-        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, (long)mChangeCycle);
-        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_CHANGE_SCREEN_TYPE, mChangeScreenType);
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
 
@@ -304,13 +299,21 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         imageRealmList.addAll(imageRealmResults.subList(0, imageRealmResults.size()));
         wallpaper.setImages(imageRealmList);
         wallpaper.setCurrentPosition(0);
-
+        wallpaper.setNextPosition(0);
         realm.commitTransaction();
 
+        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, true);
+        if(imageRealmList.size() == 0) {
+            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, (long) Define.NOT_USE_CHANGE_CYCLE);
+        }else{
+            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, (long) mChangeCycle);
+        }
+        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.INT_CHANGE_SCREEN_TYPE, mChangeScreenType);
+
         Calendar date = Calendar.getInstance();
-        date.setTimeInMillis(System.currentTimeMillis()+DELAY_MILLIS);
-        AlarmManagerHelper.unregisterToAlarmManager(getContext());
-        AlarmManagerHelper.registerToAlarmManager(getContext(), date);
+        date.setTimeInMillis(System.currentTimeMillis()+Define.DELAY_MILLIS);
+        AlarmManagerHelper.unregisterToAlarmManager(getContext(), Define.ID_ALARM_DEFAULT);
+        AlarmManagerHelper.registerToAlarmManager(getContext(), date, Define.ID_ALARM_DEFAULT);
         changeModeForDefault();
     }
 
@@ -353,13 +356,14 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
                     mChangeRepeatCycleRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_repeat_cycle);
                     mChangeRepeatCycleRadioGroup.setOnCheckedChangeListener(GalleryFragment.this);
                     mChangeRepeatCycleRadioGroup.check(mChangeRepeatCycleRadioGroup.getChildAt(0).getId());
-                    SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_CHANGE_SCREEN_TYPE, getString(R.string.label_wallpaper));
+                    SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.INT_CHANGE_SCREEN_TYPE, R.string.label_wallpaper);
                 }else if(Build.VERSION.SDK_INT == Build.VERSION_CODES.N && numberOfSelectedImage == 1){
                     //if build version is nougat and selected images is only one.
                     ((Dialog)dialog).findViewById(R.id.layout_change_repeat_cycle).setVisibility(View.GONE);
                     mChangeScreenRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_screen);
                     mChangeScreenRadioGroup.setOnCheckedChangeListener(GalleryFragment.this);
                     mChangeScreenRadioGroup.check(mChangeScreenRadioGroup.getChildAt(0).getId());
+                    SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, Define.NOT_USE_CHANGE_CYCLE);
                 }else{
                     //if build version is nougat and selected selected images is greater than one.
                     mChangeScreenRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_screen);
@@ -380,7 +384,8 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         if(radioButton == null)
             return;
         if(group.equals(mChangeScreenRadioGroup) && radioButton.isChecked()){
-            mChangeScreenType = radioButton.getText().toString();
+            Log.d(TAG, getString(Define.CHANGE_SCREEN_TYPE[group.indexOfChild(radioButton)]));
+            mChangeScreenType = Define.CHANGE_SCREEN_TYPE[group.indexOfChild(radioButton)];
         }else if(group.equals(mChangeRepeatCycleRadioGroup) && radioButton.isChecked()){
             String value = radioButton.getText().toString();
             int minute = value.indexOf(getString(R.string.label_minute));
@@ -388,10 +393,10 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
 
             if(minute != -1 && hour == -1){
                 mChangeCycle = Integer.valueOf(value.substring(0, minute));
-                mChangeCycle *= MINUTE_CONVERT_TO_MILLIS;
+                mChangeCycle *= Define.MINUTE_CONVERT_TO_MILLIS;
             }else if(minute == -1 && hour !=-1){
                 mChangeCycle = Integer.valueOf(value.substring(0, hour));
-                mChangeCycle *= HOUR_CONVERT_TO_MILLIS;
+                mChangeCycle *= Define.HOUR_CONVERT_TO_MILLIS;
             }else{
                 mChangeCycle = Define.CHANGE_CYCLE_SCREEN_OFF;
             }

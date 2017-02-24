@@ -17,10 +17,10 @@ import java.util.Calendar;
 
 public class AlarmManagerHelper {
 
-    public static void registerToAlarmManager(Context context, Calendar date){
+    public static void registerToAlarmManager(Context context, Calendar date, int alarmId){
         Intent intent = new Intent(context, WallpaperMangerReceiver.class);
         intent.setAction(context.getString(R.string.wallpaper_set_action));
-        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent sender = PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         long now = System.currentTimeMillis();
@@ -38,10 +38,10 @@ public class AlarmManagerHelper {
         }
     }
 
-    public static void unregisterToAlarmManager(Context context){
+    public static void unregisterToAlarmManager(Context context, int alarmId){
         Intent intent = new Intent(context, WallpaperMangerReceiver.class);
         intent.setAction(context.getString(R.string.wallpaper_set_action));
-        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent sender = PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         AlarmManager manager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         manager.cancel(sender);

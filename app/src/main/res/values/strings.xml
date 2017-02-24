@@ -41,9 +41,12 @@
     <string name="label_setting_completion">설정 완료</string>
     <string name="restart_service_action">ACTION.RESTART.WallpaperManagerService</string>
     <string name="label_screen_on_change_wallpaper">화면이 켜질 때마다 배경화면 변경</string>
+    <string name="label_wallpaper_change_using">배경화면 변경 사용중</string>
+    <string name="label_wallpaper_change_not_using">배경화면 변경 사용 안함</string>
     <string name="label_wallpaper_change_cycle">배경화면 변경 주기</string>
-    <string name="label_random_wallpaper">랜덤 배경화면</string>
+    <string name="label_random_wallpaper">배경화면 변경 순서 무작위</string>
     <string name="label_transparent_wallpaper">투명 배경화면</string>
     <string name="label_using">사용중</string>
     <string name="label_not_using">사용 안함</string>
+    <string name="label_setup_wallpaper">"배경화면을 설정해주세요</string>
 </resources>

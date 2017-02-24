@@ -42,8 +42,8 @@ public class WallpaperListViewHolder extends RecyclerView.ViewHolder {
         this.mContext = mContext;
         this.mOnItemCLickListener = mOnItemCLickListener;
 
-        mWidth = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceWidthSize/2;
-        mHeight = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceHeightSize/2;
+        mWidth = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceWidthSize/5*2;
+        mHeight = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceHeightSize/5*2;
 
         ViewGroup.LayoutParams layoutParams = mImageView.getLayoutParams();
         layoutParams.width = mWidth;
@@ -81,10 +81,7 @@ public class WallpaperListViewHolder extends RecyclerView.ViewHolder {
                     break;
                 }
             }
-            if(currentPosition == 0)
-                currentPosition = imageRealmList.size()-1;
-            else
-                currentPosition -= 1;
+
 
             if(number == currentPosition){
                 mBorderFrameLayout.setVisibility(View.VISIBLE);

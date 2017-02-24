@@ -9,6 +9,7 @@ import io.realm.RealmObject;
 
 public class Wallpaper extends RealmObject{
     private Integer currentPosition;
+    private Integer nextPosition;
     private RealmList<Image> images;
 
     public Integer getCurrentPosition() {
@@ -17,6 +18,14 @@ public class Wallpaper extends RealmObject{
 
     public void setCurrentPosition(Integer currentPosition) {
         this.currentPosition = currentPosition;
+    }
+
+    public Integer getNextPosition() {
+        return nextPosition;
+    }
+
+    public void setNextPosition(Integer nextPosition) {
+        this.nextPosition = nextPosition;
     }
 
     public RealmList<Image> getImages() {

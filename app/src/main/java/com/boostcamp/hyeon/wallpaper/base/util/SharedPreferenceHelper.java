@@ -2,6 +2,7 @@ package com.boostcamp.hyeon.wallpaper.base.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 /**
  * Created by hyeon on 2017. 2. 16..
@@ -16,11 +17,13 @@ public class SharedPreferenceHelper{
     public enum Key{
         BOOLEAN_GALLEY_SELECT_MODE("pref_key_gallery_select_mode"),
         BOOLEAN_PREVIEW_ACTIVITY_CALL("pref_key_preview_activity_call"),
-        STRING_CHANGE_SCREEN_TYPE("pref_key_change_screen_type"),
-        LONG_REPEAT_CYCLE_MILLS("pref_repeat_cycle_millis"),
-        STRING_SEARCH_RESULT_SAVE("pref_search_result_save"),
-        STRING_LAST_SEARCH_QUERY("pref_last_search_query");
-
+        INT_CHANGE_SCREEN_TYPE("pref_key_change_screen_type"),
+        LONG_REPEAT_CYCLE_MILLS("pref_key_repeat_cycle_millis"),
+        STRING_SEARCH_RESULT_SAVE("pref_key_search_result_save"),
+        STRING_LAST_SEARCH_QUERY("pref_key_last_search_query"),
+        BOOLEAN_IS_USING_WALLPAPER("pref_key_is_using_wallpaper"),
+        BOOLEAN_IS_RANDOM_ORDER("pref_key_is_random_order"),
+        BOOLEAN_IS_TRANSPARENT_WALLPAPER("pref_key_is_transparent_wallpaper");
 
         private final String name;
 
@@ -57,37 +60,45 @@ public class SharedPreferenceHelper{
     public void put(Key key, String value) {
         mEditor = mSharedPreferences.edit();
         mEditor.putString(key.getName(), value);
-        mEditor.commit();
+        mEditor.apply();
+        mEditor.clear();
     }
 
     public void put(Key key, int value) {
         mEditor = mSharedPreferences.edit();
         mEditor.putInt(key.getName(), value);
-        mEditor.commit();
+        mEditor.apply();
+        mEditor.clear();
     }
 
     public void put(Key key, boolean value) {
         mEditor = mSharedPreferences.edit();
         mEditor.putBoolean(key.getName(), value);
-        mEditor.commit();
+        mEditor.apply();
+        mEditor.clear();
+        Log.d(TAG, "put "+key+": "+value);
     }
 
     public void put(Key key, float value) {
         mEditor = mSharedPreferences.edit();
         mEditor.putFloat(key.getName(), value);
-        mEditor.commit();
+        mEditor.apply();
+        mEditor.clear();
     }
 
     public void put(Key key, double value) {
         mEditor = mSharedPreferences.edit();
         mEditor.putString(key.getName(), String.valueOf(value));
-        mEditor.commit();
+        mEditor.apply();
+        mEditor.clear();
     }
 
     public void put(Key key, long value) {
         mEditor = mSharedPreferences.edit();
         mEditor.putLong(key.getName(), value);
-        mEditor.commit();
+        mEditor.apply();
+        mEditor.clear();
+        Log.d(TAG, "put "+key+": "+value);
     }
 
 

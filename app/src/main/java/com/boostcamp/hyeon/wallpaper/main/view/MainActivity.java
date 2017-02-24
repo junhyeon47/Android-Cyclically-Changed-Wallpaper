@@ -17,7 +17,7 @@ import com.boostcamp.hyeon.wallpaper.base.service.WallpaperManagerService;
 import com.boostcamp.hyeon.wallpaper.main.adapter.ViewPagerAdapter;
 import com.boostcamp.hyeon.wallpaper.search.view.SearchFragment;
 import com.boostcamp.hyeon.wallpaper.gallery.view.GalleryFragment;
-import com.boostcamp.hyeon.wallpaper.setting.SettingFragment;
+import com.boostcamp.hyeon.wallpaper.setting.view.SettingFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
