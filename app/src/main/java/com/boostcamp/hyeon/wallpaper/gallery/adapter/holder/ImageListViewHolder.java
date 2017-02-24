@@ -3,6 +3,7 @@ package com.boostcamp.hyeon.wallpaper.gallery.adapter.holder;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -17,6 +18,7 @@ import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -49,10 +51,10 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
         layoutParams.width = size;
         layoutParams.height = size;
         mItemFrameLayout.setLayoutParams(layoutParams);
-
+        Log.d(TAG, "ImageListViewHolder constructor");
     }
 
-    public void bind(final Image image, final int position){
+    public void bind(Image image, final int position){
         Picasso.with(mContext)
                 .load(Uri.parse(image.getThumbnailUri()))
                 .rotate(Integer.valueOf(image.getOrientation()))

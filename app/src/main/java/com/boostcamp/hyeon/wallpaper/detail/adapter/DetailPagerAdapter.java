@@ -1,5 +1,6 @@
 package com.boostcamp.hyeon.wallpaper.detail.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
@@ -22,6 +24,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,15 +46,16 @@ import static com.boostcamp.hyeon.wallpaper.base.util.Define.DOWNLOAD_IMAGE_QUAL
 public class DetailPagerAdapter extends PagerAdapter {
     private static final String TAG = DetailPagerAdapter.class.getSimpleName();
     private static final int MAX_POOL_SIZE = 10;
-    private Context mContext;
+    private Activity mActivity;
     private RealmResults mList;
     private Pools.SimplePool<View> mPool;
     private PhotoViewAttacher mAttacher;
     private int mFrom;
     @BindView(R.id.image_view) ImageView mImageView;
+    @BindView(R.id.avl_loading) AVLoadingIndicatorView mAvLoadingIndicatorView;
 
-    public DetailPagerAdapter(Context mContext, RealmResults mList, int mFrom) {
-        this.mContext = mContext;
+    public DetailPagerAdapter(Activity mActivity, RealmResults mList, int mFrom) {
+        this.mActivity = mActivity;
         this.mList = mList;
         this.mFrom = mFrom;
         this.mPool = new Pools.SynchronizedPool<>(MAX_POOL_SIZE);
@@ -70,7 +74,9 @@ public class DetailPagerAdapter extends PagerAdapter {
             imageUri = ((ImageNaver)mList.get(position)).getLink();
         }
 
-        Picasso.with(mContext)
+        mAvLoadingIndicatorView.show();
+
+        Picasso.with(mActivity)
                 .load(imageUri)
                 .into(mImageView, new Callback() {
                     @Override
@@ -99,7 +105,7 @@ public class DetailPagerAdapter extends PagerAdapter {
     private View getPagerItemView() {
         View view = mPool.acquire();
         if (view == null) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_detail, null);
+            view = LayoutInflater.from(mActivity).inflate(R.layout.item_detail, null);
         }
 
         return view;
@@ -117,6 +123,6 @@ public class DetailPagerAdapter extends PagerAdapter {
 
     public void downloadImage(int position) {
         String imageUri = ((ImageNaver) mList.get(position)).getLink();
-        new ImageDownloadAsyncTask().execute(imageUri);
+        new ImageDownloadAsyncTask(mActivity).execute(imageUri);
     }
 }

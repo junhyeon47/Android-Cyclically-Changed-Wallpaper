@@ -48,6 +48,7 @@ import io.realm.RealmResults;
 public class SearchFragment extends Fragment implements ImageNaverListPresenter.View, TextView.OnEditorActionListener, RadioGroup.OnCheckedChangeListener{
     private static final String TAG = SearchFragment.class.getSimpleName();
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.tv_search_message) TextView mSearchMessageTextView;
     private EditText mSearchEditText;
     private ImageNaverListAdapter mImageNaverListAdapter;
     private ImageNaverListPresenterImpl mImageNaverListPresenter;
@@ -115,6 +116,11 @@ public class SearchFragment extends Fragment implements ImageNaverListPresenter.
 
         //init initial value
         mSearchResultSaveValue = SharedPreferenceHelper.getInstance().getString(SharedPreferenceHelper.Key.STRING_SEARCH_RESULT_SAVE, null);
+
+        if(mImageNaverListAdapter.getData().size() <= 0)
+            mSearchMessageTextView.setVisibility(View.VISIBLE);
+        else
+            mSearchMessageTextView.setVisibility(View.GONE);
     }
 
     @Override

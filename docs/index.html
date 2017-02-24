@@ -1,1 +1,176 @@
-showcase
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Hyperspace by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+	</head>
+	<body>
+
+		<!-- Sidebar -->
+			<section id="sidebar">
+				<div class="inner">
+					<nav>
+						<ul>
+							<li><a href="#intro">Intro</a></li>
+							<li><a href="#one">Description</a></li>
+							<li><a href="#two">Vedio</a></li>
+							<li><a href="#three">Postscript</a></li>
+						</ul>
+					</nav>
+				</div>
+			</section>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Intro -->
+					<section id="intro" class="wrapper style1 fullscreen fade-up">
+						<div class="inner">
+							<img src="images/app_logo.png" width="150px" height="150px" class="right_float"/>
+							<h1>내 마음대로 배경화면</h1>
+							<p>빠르고 쉽게 여러개의 사진 또는 이미지를 배경화면으로 지정할 수 있는 어플리케이션!</p>
+						</div>
+					</section>
+
+				<!-- One -->
+					<section id="one" class="wrapper style2 spotlights">
+						<section>
+							<img src="images/app_desc_04.png" width="30%" height="30%" alt="" data-position="center center" />
+							<img src="images/app_desc_06.png" width="30%" height="30%" alt="" data-position="center center" />
+							<div class="content">
+								<div class="inner">
+									<h2>여러 장의 배경화면 이미지 선택!</h2>
+									<p>배경화면으로 사용할 여러 이미지를 선택하고, 미리보기, 확대보기 기능을 지원합니다.</p>
+								</div>
+							</div>
+						</section>
+						<section>
+							<img src="images/app_desc_05.png" width="30%" height="30%" alt="" data-position="center center" />
+							<img src="images/app_desc_02.png" width="30%" height="30%" alt="" data-position="center center" />
+							<div class="content">
+								<div class="inner">
+									<h2>배경화면 변경 시간 선택!</h2>
+									<p>여러 장의 이미지를 배경화면으로 설정할 경우, 5분에서 24시간까지 변경 시간을 설정할 수 있으며, 스마트폰의 화면이 켜질 때마다 변경할 수 있는 기능을 지원합니다.</p>
+								</div>
+							</div>
+						</section>
+						<section>
+							<img src="images/app_desc_07.png" width="30%" height="30%" alt="" data-position="center center" />
+							<img src="images/app_desc_09.png" width="30%" height="30%" alt="" data-position="center center" />
+							<div class="content">
+								<div class="inner">
+									<h2>배경화면 검색 및 다운로드!</h2>
+									<p>네이버 이미지 검색 API를 이용하여 쉽고 빠르게 배경화면을 다운로드합니다.</p>
+								</div>
+							</div>
+						</section>
+						<section>
+							<img src="images/app_desc_08.png" width="30%" height="30%" alt="" data-position="center center" />
+							<div class="content">
+								<div class="inner">
+									<h2>현재 설정된 배경화면의 정보를 한눈에 볼 수 있는 기능!</h2>
+									<p>현재 배경화면으로 지정된 모든 사진을 순서대로 볼 수 있고, 스위치를 통해서 배경화면 설정을 해제하는 기능, 배경화면 변경 주기를 바꾸는 기능, 무작위로 배경화면을 변경하는 기능을 지원합니다.</p>
+								</div>
+							</div>
+						</section>
+					</section>
+
+				<!-- Two -->
+					<section id="two" class="wrapper style3 fade-up">
+						<div class="inner">
+							<h2>소개 동영상</h2>
+							<!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+							<div style="margin: 0px auto; text-align: center;">
+					    <div id="player"></div>
+
+					    <script>
+					      // 2. This code loads the IFrame Player API code asynchronously.
+					      var tag = document.createElement('script');
+
+					      tag.src = "https://www.youtube.com/iframe_api";
+					      var firstScriptTag = document.getElementsByTagName('script')[0];
+					      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+					      // 3. This function creates an <iframe> (and YouTube player)
+					      //    after the API code downloads.
+					      var player;
+					      function onYouTubeIframeAPIReady() {
+					        player = new YT.Player('player', {
+					          height: '800',
+					          width: '470',
+					          videoId: 'uSxsbV2-Wgs',
+					          events: {
+					            'onReady': onPlayerReady,
+					            'onStateChange': onPlayerStateChange
+					          }
+					        });
+					      }
+
+					      // 4. The API will call this function when the video player is ready.
+					      function onPlayerReady(event) {
+					        //event.target.playVideo();
+					      }
+
+					      // 5. The API calls this function when the player's state changes.
+					      //    The function indicates that when playing a video (state=1),
+					      //    the player should play for six seconds and then stop.
+					      var done = false;
+					      function onPlayerStateChange(event) {
+					        if (event.data == YT.PlayerState.PLAYING && !done) {
+					          setTimeout(stopVideo, 6000);
+					          done = true;
+					        }
+					      }
+					      function stopVideo() {
+					        player.stopVideo();
+					      }
+					    </script>
+							</div>
+					</section>
+
+				<!-- Three -->
+					<section id="three" class="wrapper style1 fade-up">
+						<div class="inner">
+							<h2>후기</h2>
+							<p>처음에 생각했던 주제로 개발을 시작하지 못하고 중간에 주제를 변경했는데, 만족스러운 완성도를 보인 어플리케이션을 만들어서 뿌듯하다.
+								앱을 만들면서 가장 시간을 많이 쏟았던 부분은, 디바이스의 모든 사진들을 가져와서 화면에 출력 해주는 부분이다.
+								디바이스에 존재하는 모든 사진들을 가져와서 앱내에서 관리하는 것이 생각보다 메모리 누수가 많아서, Realm을 이용해서 디바이스 모든 이미지 파일들의 정보를 저장하였다.
+								그리고 한달간 부스트캠프를 하면서 많은걸 배워갈 수 있어서 좋았다.
+								MVP 패턴, Singleton 패턴(SharedPreferences와 MediaScannerConnection), Retrofit, Picasso, 그 외에 많은 UI 라이브러리에 대해서 공부할 수 있었고,
+								AlarmManager, BroadcastReceiver, Service에 대해서 깊이있게 생각해볼 수 있었다.
+							</p>
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer" class="wrapper style1-alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

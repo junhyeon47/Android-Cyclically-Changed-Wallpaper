@@ -16,7 +16,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_last_search_result"
-            android:textColor="@color/colorTeal300"/>
+            android:textColor="@color/colorTeal300"
+            android:textSize="15sp"
+            android:layout_marginBottom="5dp"/>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">

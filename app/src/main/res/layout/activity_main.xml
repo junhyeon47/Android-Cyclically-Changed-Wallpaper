@@ -33,7 +33,8 @@
                 android:imeOptions="actionDone"
                 app:theme="@style/EditTextStyle"
                 app:backgroundTint="@color/colorWhite"
-                android:textCursorDrawable="@null"/>
+                android:textCursorDrawable="@null"
+                android:hint="@string/message_hint_search"/>
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout

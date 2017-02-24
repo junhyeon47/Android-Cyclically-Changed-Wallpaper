@@ -13,8 +13,19 @@
         <ImageView
             android:src="@drawable/app_logo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="70dp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="@string/message_loading"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:visibility="invisible"/>
 
     <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
         android:id="@+id/progress_bar"
@@ -27,5 +38,6 @@
         app:rcBackgroundPadding="@dimen/progress_bar_padding"
         app:rcProgressColor="@color/colorTeal500"
         app:rcSecondaryProgressColor="@color/colorProgressBarBackground"
-        app:rcBackgroundColor="@color/colorProgressBarBackground" />
+        app:rcBackgroundColor="@color/colorProgressBarBackground"
+        android:visibility="invisible"/>
 </LinearLayout>

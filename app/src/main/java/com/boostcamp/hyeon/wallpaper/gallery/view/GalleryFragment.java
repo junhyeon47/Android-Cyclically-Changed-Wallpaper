@@ -114,9 +114,9 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         );
         realm.commitTransaction();
 
-        mFolderRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mFolderRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mFolderRecyclerView.setAdapter(mFolderListAdapter);
-        mFolderRecyclerView.setHasFixedSize(true);
+        mFolderRecyclerView.setHasFixedSize(false);
 
         //init Folder Presenter
         mFolderListPresenter = new FolderListPresenterImpl(model);
@@ -140,9 +140,9 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         realm.commitTransaction();
 
         //init Image(Right) RecyclerView
-        mImageRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        mImageRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mImageRecyclerView.setAdapter(mImageListAdapter);
-        mImageRecyclerView.setHasFixedSize(true);
+        mImageRecyclerView.setHasFixedSize(false);
 
         //init Presenter
         mImageListPresenter = new ImageListPresenterImpl(model);
@@ -211,6 +211,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
 
     @Override
     public void changeModeForSelect() {
+        mImageRecyclerView.getRecycledViewPool().clear();
         //menu_select menu item gone.
         //menu_preview, menu_done menu item visible.
         mSelectMenuItem.setVisible(false);
@@ -250,10 +251,15 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
 
     @Override
     public void clickFolder(int position) {
+        String bucketId = mFolderListAdapter.getData().get(position).getBucketId();
+        Realm realm = WallpaperApplication.getRealmInstance();
+        realm.beginTransaction();
+        RealmResults<Image> imageRealmResults = realm.where(Image.class).equalTo("bucketId", bucketId).findAllSorted("dateAdded", Sort.DESCENDING);
+        realm.commitTransaction();
         //change adapter
         mImageListAdapter = new ImageListAdapter(
                 getContext(),
-                mFolderListAdapter.getData().get(position).getImages().sort("dateAdded", Sort.DESCENDING),
+                imageRealmResults,
                 true
         );
 
@@ -316,6 +322,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         AlarmManagerHelper.unregisterToAlarmManager(getContext(), Define.ID_ALARM_DEFAULT);
         AlarmManagerHelper.registerToAlarmManager(getContext(), date, Define.ID_ALARM_DEFAULT);
         changeModeForDefault();
+        Toast.makeText(getActivity(), getString(R.string.message_complete_set_wallpaper), Toast.LENGTH_SHORT).show();
     }
 
     private void clickDone(){
@@ -357,7 +364,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
                     mChangeRepeatCycleRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_repeat_cycle);
                     mChangeRepeatCycleRadioGroup.setOnCheckedChangeListener(GalleryFragment.this);
                     mChangeRepeatCycleRadioGroup.check(mChangeRepeatCycleRadioGroup.getChildAt(0).getId());
-                    SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.INT_CHANGE_SCREEN_TYPE, R.string.label_wallpaper);
+                    SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.INT_CHANGE_SCREEN_TYPE, Define.CHANGE_SCREEN_TYPE[0]);
                 }else if(Build.VERSION.SDK_INT == Build.VERSION_CODES.N && numberOfSelectedImage == 1){
                     //if build version is nougat and selected images is only one.
                     ((Dialog)dialog).findViewById(R.id.layout_change_repeat_cycle).setVisibility(View.GONE);

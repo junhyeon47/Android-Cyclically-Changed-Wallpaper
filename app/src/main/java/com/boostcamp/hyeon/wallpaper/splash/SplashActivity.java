@@ -13,6 +13,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.boostcamp.hyeon.wallpaper.R;
@@ -31,6 +36,8 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
     private long mStartTime;
     private long mEndTime;
     @BindView(R.id.progress_bar) RoundCornerProgressBar mRoundCornerProgressBar;
+    @BindView(R.id.tv_loading) TextView mLoadingTextView;
+    private Animation mFadeInOutAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +54,25 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     public void init(){
+        mFadeInOutAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in_out);
+        mLoadingTextView.startAnimation(mFadeInOutAnimation);
+        mFadeInOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mLoadingTextView.startAnimation(animation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
         getSupportLoaderManager().initLoader(FIRST_SYNC_DATA_LOADER, null, this);
     }
 
@@ -55,6 +81,8 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
         return new AsyncTaskLoader<Void>(this){
             @Override
             protected void onStartLoading() {
+                mLoadingTextView.setVisibility(View.VISIBLE);
+                mRoundCornerProgressBar.setVisibility(View.VISIBLE);
                 mStartTime = System.currentTimeMillis();
                 forceLoad();
             }
@@ -69,6 +97,11 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<Void> loader, Void data) {
+        mFadeInOutAnimation.cancel();
+        mFadeInOutAnimation.setAnimationListener(null);
+        mLoadingTextView.clearAnimation();
+        mLoadingTextView.setVisibility(View.INVISIBLE);
+        mRoundCornerProgressBar.setVisibility(View.INVISIBLE);
         mEndTime = System.currentTimeMillis();
         moveToMainActivity();
     }

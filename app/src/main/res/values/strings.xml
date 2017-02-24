@@ -1,8 +1,5 @@
 <resources>
-    <string name="app_name">Wallpaper</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">내 마음대로 배경화면</string>
     <string name="title_select">배경화면 선택</string>
     <string name="title_gallery">갤러리</string>
     <string name="title_search">배경화면 검색</string>
@@ -49,4 +46,9 @@
     <string name="label_using">사용중</string>
     <string name="label_not_using">사용 안함</string>
     <string name="label_setup_wallpaper">"배경화면을 설정해주세요</string>
+    <string name="message_loading">이미지 불러오는 중...</string>
+    <string name="message_complete_set_wallpaper">배경화면이 설정되었습니다.</string>
+    <string name="message_search_image">이미지를 검색해주세요.</string>
+    <string name="message_hint_search">검색어 입력</string>
+    <string name="message_downloading">다운로드중...</string>
 </resources>

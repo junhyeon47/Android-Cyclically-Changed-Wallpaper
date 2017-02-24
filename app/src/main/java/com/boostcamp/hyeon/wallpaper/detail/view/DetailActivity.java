@@ -82,7 +82,7 @@ public class DetailActivity extends Activity {
             finish();
         }
 
-        mAdapter = new DetailPagerAdapter(getApplicationContext(), realmResults, from);
+        mAdapter = new DetailPagerAdapter(this, realmResults, from);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(position);
     }

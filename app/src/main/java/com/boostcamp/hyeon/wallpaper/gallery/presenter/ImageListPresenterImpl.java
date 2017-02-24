@@ -56,7 +56,7 @@ public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnI
             //if select mode
             String imageId = mAdapterModel.getItem(position).getImageId();
             mGalleryModel.selectImage(imageId);
-            mAdapterView.notifyAdapter(position);
+            mAdapterView.notifyAdapter();
         }else{
             //moveToDetailActivity
             String bucketId = mAdapterModel.getItem(position).getBucketId();
@@ -78,7 +78,7 @@ public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnI
         //mAdapterView.notifyAdapter(position);
         String imageId = mAdapterModel.getItem(position).getImageId();
         mGalleryModel.selectImage(imageId);
-        mAdapterView.notifyAdapter(position);
+        mAdapterView.notifyAdapter();
     }
 
 }

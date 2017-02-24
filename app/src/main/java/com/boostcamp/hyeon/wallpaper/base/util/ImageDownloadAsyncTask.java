@@ -1,21 +1,39 @@
 package com.boostcamp.hyeon.wallpaper.base.util;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
+
+
+import com.boostcamp.hyeon.wallpaper.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 
+import dmax.dialog.SpotsDialog;
+
 /**
  * Created by hyeon on 2017. 2. 21..
  */
 
 public class ImageDownloadAsyncTask extends AsyncTask<String, Void, Void> {
+    private AlertDialog mAlertDialog;
+
+    public ImageDownloadAsyncTask(Activity activity) {
+        mAlertDialog = new SpotsDialog(activity, R.style.CustomSpotsDialog);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        mAlertDialog.show();
+    }
 
     @Override
     protected Void doInBackground(String... params) {
@@ -56,5 +74,16 @@ public class ImageDownloadAsyncTask extends AsyncTask<String, Void, Void> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAlertDialog.dismiss();
+            }
+        }, 1000);
+        super.onPostExecute(aVoid);
     }
 }

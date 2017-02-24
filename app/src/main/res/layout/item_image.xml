@@ -3,15 +3,15 @@
     android:id="@+id/layout_item"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/colorGrey300">
+    android:background="@color/colorGrey300"
+    android:layout_marginRight="0.5dp"
+    android:layout_marginEnd="0.5dp"
+    android:layout_marginBottom="0.5dp">
 
     <ImageView
         android:id="@+id/iv_thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginRight="0.5dp"
-        android:layout_marginEnd="0.5dp"
-        android:layout_marginBottom="0.5dp"/>
+        android:layout_height="match_parent"/>
 
     <ImageView
         android:id="@+id/iv_select"

@@ -42,7 +42,7 @@ public class FolderListViewHolder extends RecyclerView.ViewHolder{
         this.mSize = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceWidthSize/4;
     }
 
-    public void bind(final Folder folder, final int position){
+    public void bind(Folder folder, final int position){
         mFolderNameTextView.setText(folder.getName());
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

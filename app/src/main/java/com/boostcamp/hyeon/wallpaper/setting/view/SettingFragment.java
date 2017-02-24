@@ -245,10 +245,10 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
 
     private void setWallpaperChangeType(boolean value){
         if(value){
-            int changeScreenType = SharedPreferenceHelper.getInstance().getInt(SharedPreferenceHelper.Key.INT_CHANGE_SCREEN_TYPE, 0);
+            int changeScreenType = SharedPreferenceHelper.getInstance().getInt(SharedPreferenceHelper.Key.INT_CHANGE_SCREEN_TYPE, -1);
             Log.d(TAG, "changeScreenType: "+changeScreenType);
             mWallpaperIsUsingTextView.setText(getString(R.string.label_wallpaper_change_using));
-            if(changeScreenType != 0){
+            if(changeScreenType != -1){
                 mWallpaperTypeTextView.setText(getString(changeScreenType));
                 mRecyclerViewLinearLayout.setVisibility(View.VISIBLE);
                 mRecyclerView.setVisibility(View.VISIBLE);

@@ -33,4 +33,17 @@
         <item name="colorSwitchThumbNormal">@color/colorGrey500</item>
         <item name="android:colorForeground">@color/colorBlackOpacity50</item>
     </style>
+
+    <style name="CustomSpotsDialog" parent="android:Theme.DeviceDefault.Light.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="DialogTitleText">@string/message_downloading</item>
+        <item name="DialogSpotColor">@android:color/white</item>
+        <item name="DialogSpotCount">5</item>
+    </style>
 </resources>
