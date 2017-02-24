@@ -117,24 +117,26 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
         }
 
         setSettingValues(true);
-
         //init listener
         mWallpaperTypeSwitch.setOnCheckedChangeListener(this);
         mRandomWallpaperSwitch.setOnCheckedChangeListener(this);
         //mTransparentSwitch.setOnCheckedChangeListener(this);
+
+        Log.d(TAG, "init()");
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume()");
-        setSettingValues(true);
     }
 
     //switch group checked change.
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Log.d(TAG, "onCheckedChanged: "+isChecked);
         if(buttonView.equals(mWallpaperTypeSwitch)){
+            Log.d(TAG, "onCheckedChanged - mWallpaperTypeSwitch: "+isChecked);
             SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, isChecked);
         }else if(buttonView.equals(mRandomWallpaperSwitch)){
             SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_RANDOM_ORDER, isChecked);
@@ -196,7 +198,7 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
             date.setTimeInMillis(System.currentTimeMillis() + Define.DELAY_MILLIS);
             AlarmManagerHelper.registerToAlarmManager(getContext(),date, Define.ID_ALARM_DEFAULT);
         }
-        onResume();
+        setWallpaperChangeCycle(mChangeCycle);
     }
 
     //radio group checked change.
@@ -226,13 +228,14 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
     private void setSettingValues(boolean isInit){
         //get setting values init view
         boolean isUsingWallpaper = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, false);
+        Log.d(TAG, "setSettingValues - isUsingWallpaper: "+ isUsingWallpaper);
         long changeCycle = SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, Define.NOT_USE_CHANGE_CYCLE);
         boolean isRandomOrder = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_RANDOM_ORDER, false);
-        boolean isTransparentWallpaper = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_TRANSPARENT_WALLPAPER, false);
+        //boolean isTransparentWallpaper = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_TRANSPARENT_WALLPAPER, false);
         if(isInit){
             mWallpaperTypeSwitch.setChecked(isUsingWallpaper);
             mRandomWallpaperSwitch.setChecked(isRandomOrder);
-            mTransparentSwitch.setChecked(isTransparentWallpaper);
+            //mTransparentSwitch.setChecked(isTransparentWallpaper);
         }
         setWallpaperChangeType(isUsingWallpaper);
         setWallpaperChangeCycle(changeCycle);
@@ -257,7 +260,7 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
                 mShadowView.setVisibility(View.VISIBLE);
             }
             mRandomWallpaperSwitch.setEnabled(true);
-            mTransparentSwitch.setEnabled(true);
+            //mTransparentSwitch.setEnabled(true);
         }else{
             mWallpaperIsUsingTextView.setText(getString(R.string.label_wallpaper_change_not_using));
             mWallpaperTypeTextView.setText("");
@@ -265,7 +268,7 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
             mRecyclerView.setVisibility(View.GONE);
             mShadowView.setVisibility(View.VISIBLE);
             mRandomWallpaperSwitch.setEnabled(false);
-            mTransparentSwitch.setEnabled(false);
+            //mTransparentSwitch.setEnabled(false);
         }
     }
 

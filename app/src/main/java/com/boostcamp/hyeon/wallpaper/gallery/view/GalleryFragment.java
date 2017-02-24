@@ -127,14 +127,14 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         //init Image Adapter
         realm.beginTransaction();
         String bucketId;
-        RealmList<Image> imageRealmList = null;
+        RealmResults<Image> imageRealmResults = null;
         if(folderRealmResults.size() != 0) {
             bucketId = realm.where(Folder.class).equalTo("isOpened", true).findFirst().getBucketId();
-            imageRealmList = realm.where(Folder.class).equalTo("bucketId", bucketId).findFirst().getImages();
+            imageRealmResults = realm.where(Folder.class).equalTo("bucketId", bucketId).findFirst().getImages().sort("dateAdded", Sort.DESCENDING);
         }
         mImageListAdapter = new ImageListAdapter(
                 getContext(),
-                imageRealmList,
+                imageRealmResults,
                 true
         );
         realm.commitTransaction();
@@ -162,7 +162,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
     public void onResume() {
         super.onResume();
         Log.d(TAG, "on Resume");
-
+        mFolderListAdapter.notifyAdapter();
     }
 
     @Override
@@ -253,7 +253,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         //change adapter
         mImageListAdapter = new ImageListAdapter(
                 getContext(),
-                mFolderListAdapter.getData().get(position).getImages(),
+                mFolderListAdapter.getData().get(position).getImages().sort("dateAdded", Sort.DESCENDING),
                 true
         );
 
@@ -303,6 +303,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         realm.commitTransaction();
 
         SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, true);
+        Log.d(TAG, "IS USING WALLPAPER: "+SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, false));
         if(imageRealmList.size() == 0) {
             SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, (long) Define.NOT_USE_CHANGE_CYCLE);
         }else{

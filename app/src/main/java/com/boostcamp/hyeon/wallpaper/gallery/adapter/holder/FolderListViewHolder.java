@@ -10,11 +10,15 @@ import android.widget.TextView;
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
+import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by hyeon on 2017. 2. 12..
@@ -57,9 +61,11 @@ public class FolderListViewHolder extends RecyclerView.ViewHolder{
             mFolderOpenIconImageView.setVisibility(View.GONE);
         }
 
+        Image image = folder.getImages().sort("dateAdded", Sort.DESCENDING).first();
+
         Picasso.with(mContext)
-                .load(Uri.parse(folder.getImages().get(0).getThumbnailUri()))
-                .rotate(Integer.valueOf(folder.getImages().get(0).getOrientation()))
+                .load(Uri.parse(image.getThumbnailUri()))
+                .rotate(Integer.valueOf(image.getOrientation()))
                 .resize(mSize, mSize)
                 .centerCrop()
                 .into(mFolderImageView);

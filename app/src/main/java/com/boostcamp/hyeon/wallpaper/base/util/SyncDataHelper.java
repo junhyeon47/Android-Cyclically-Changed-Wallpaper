@@ -35,7 +35,6 @@ public class SyncDataHelper {
                 MediaStore.Images.Media._ID, //Image ID
                 MediaStore.Images.Media.DATA, //Image path
                 MediaStore.Images.Media.ORIENTATION, //Image orientation
-                MediaStore.Images.Media.DATE_TAKEN, //Image Taken Date.
                 MediaStore.Images.Media.DATE_ADDED
         };
         String selection = null;
@@ -76,7 +75,7 @@ public class SyncDataHelper {
             int idColumnIndex = cursor.getColumnIndex(projection[2]);
             int pathColumnIndex = cursor.getColumnIndex(projection[3]);
             int orientationColumnIndex = cursor.getColumnIndex(projection[4]);
-            int dateTakenColumnIndex = cursor.getColumnIndex(projection[5]);
+            int dateAddedColumnIndex = cursor.getColumnIndex(projection[5]);
 
             do {
                 //get data from Cursor
@@ -85,7 +84,7 @@ public class SyncDataHelper {
                 String imageId = cursor.getString(idColumnIndex);
                 String path = cursor.getString(pathColumnIndex);
                 String orientation = cursor.getString(orientationColumnIndex);
-                String dateTaken = cursor.getString(dateTakenColumnIndex);
+                String dateAdded = cursor.getString(dateAddedColumnIndex);
 
                 //init realm
                 Realm realm = WallpaperApplication.getRealmInstance();
@@ -100,6 +99,9 @@ public class SyncDataHelper {
                     folder.setImages(new RealmList<Image>());
                     folder.setOpened(false);
                 }
+                if(scanPath == null){
+                    folder.setOpened(false);
+                }
                 folder.setSynced(true);
 
                 // if image isn't exist in realm create realm object and adding RealmList
@@ -112,7 +114,7 @@ public class SyncDataHelper {
                     image.setThumbnailUri(getThumbnailUri(context, Long.valueOf(imageId)));
                     image.setImageId(imageId);
                     image.setOrientation(orientation == null ? "0" : orientation);
-                    image.setDateTaken(dateTaken);
+                    image.setDateAdded(dateAdded);
                     imageRealmList.add(image);
                 }
                 image.setSelected(false);

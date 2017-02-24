@@ -13,7 +13,7 @@ public class Image extends RealmObject{
     private String imageUri;
     private String thumbnailUri;
     private String orientation;
-    private String dateTaken;
+    private String dateAdded;
     private Boolean isSelected;
     private Integer number;
     private Boolean isSynced;
@@ -58,12 +58,12 @@ public class Image extends RealmObject{
         this.orientation = orientation;
     }
 
-    public String getDateTaken() {
-        return dateTaken;
+    public String getDateAdded() {
+        return dateAdded;
     }
 
-    public void setDateTaken(String dateTaken) {
-        this.dateTaken = dateTaken;
+    public void setDateAdded(String dateAdded) {
+        this.dateAdded = dateAdded;
     }
 
     public Boolean getSelected() {
