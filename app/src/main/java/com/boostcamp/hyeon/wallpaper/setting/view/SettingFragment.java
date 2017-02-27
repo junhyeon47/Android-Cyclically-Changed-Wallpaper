@@ -116,7 +116,6 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
             mShadowView.setVisibility(View.VISIBLE);
         }
 
-        setSettingValues(true);
         //init listener
         mWallpaperTypeSwitch.setOnCheckedChangeListener(this);
         mRandomWallpaperSwitch.setOnCheckedChangeListener(this);
@@ -129,18 +128,29 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume()");
+        setSettingValues(true);
     }
 
     //switch group checked change.
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         Log.d(TAG, "onCheckedChanged: "+isChecked);
-        if(buttonView.equals(mWallpaperTypeSwitch)){
-            Log.d(TAG, "onCheckedChanged - mWallpaperTypeSwitch: "+isChecked);
-            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, isChecked);
-        }else if(buttonView.equals(mRandomWallpaperSwitch)){
-            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_RANDOM_ORDER, isChecked);
-        }else if(buttonView.equals(mTransparentSwitch)){
+        switch (buttonView.getId()){
+            case R.id.sw_wallpaper_type:
+                SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, isChecked);
+                break;
+            case R.id.sw_random_wallpaper:
+                SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_RANDOM_ORDER, isChecked);
+                break;
+            case R.id.sw_transparent_wallpaper:
+                break;
+        }
+//        if(buttonView.equals(mWallpaperTypeSwitch)){
+//            Log.d(TAG, "onCheckedChanged - mWallpaperTypeSwitch: "+isChecked);
+//
+//        }else if(buttonView.equals(mRandomWallpaperSwitch)){
+//
+//        }else if(buttonView.equals(mTransparentSwitch)){
 //            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_TRANSPARENT_WALLPAPER, isChecked);
 //            Calendar date = Calendar.getInstance();
 //            date.setTimeInMillis(System.currentTimeMillis() + Define.DELAY_MILLIS);
@@ -151,7 +161,7 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
 //                AlarmManagerHelper.unregisterToAlarmManager(getContext(), Define.ID_ALARM_TRANSPARENT);
 //                AlarmManagerHelper.registerToAlarmManager(getContext(), date, Define.ID_ALARM_DEFAULT);
 //            }
-        }
+//        }
         setSettingValues(false);
     }
 
@@ -228,7 +238,6 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
     private void setSettingValues(boolean isInit){
         //get setting values init view
         boolean isUsingWallpaper = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, false);
-        Log.d(TAG, "setSettingValues - isUsingWallpaper: "+ isUsingWallpaper);
         long changeCycle = SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, Define.NOT_USE_CHANGE_CYCLE);
         boolean isRandomOrder = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_RANDOM_ORDER, false);
         //boolean isTransparentWallpaper = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_TRANSPARENT_WALLPAPER, false);
@@ -246,7 +255,6 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
     private void setWallpaperChangeType(boolean value){
         if(value){
             int changeScreenType = SharedPreferenceHelper.getInstance().getInt(SharedPreferenceHelper.Key.INT_CHANGE_SCREEN_TYPE, -1);
-            Log.d(TAG, "changeScreenType: "+changeScreenType);
             mWallpaperIsUsingTextView.setText(getString(R.string.label_wallpaper_change_using));
             if(changeScreenType != -1){
                 mWallpaperTypeTextView.setText(getString(changeScreenType));
