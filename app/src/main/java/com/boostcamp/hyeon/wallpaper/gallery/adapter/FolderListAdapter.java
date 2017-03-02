@@ -24,8 +24,8 @@ import io.realm.RealmRecyclerViewAdapter;
 public class FolderListAdapter extends RealmRecyclerViewAdapter<Folder, FolderListViewHolder> implements RealmListAdapterContract.Model<Folder>, RealmListAdapterContract.View{
     private OnItemClickListener mOnItemClickListener;
 
-    public FolderListAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<Folder> data, boolean autoUpdate) {
-        super(context, data, autoUpdate);
+    public FolderListAdapter(@Nullable OrderedRealmCollection<Folder> data, boolean autoUpdate) {
+        super(data, autoUpdate);
     }
 
     @Override

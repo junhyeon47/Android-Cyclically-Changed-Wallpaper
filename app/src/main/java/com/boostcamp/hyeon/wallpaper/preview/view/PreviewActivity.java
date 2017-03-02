@@ -38,7 +38,6 @@ public class PreviewActivity extends Activity implements PreviewListPresenter.Vi
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
         mPreviewListAdapter = new PreviewListAdapter(
-                getApplicationContext(),
                 realm.where(Image.class).equalTo("isSelected", true).findAllSorted("number", Sort.ASCENDING),
                 true
         );

@@ -93,7 +93,6 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
             imageRealmResults = realm.where(Wallpaper.class).findFirst().getImages().sort("number", Sort.ASCENDING);
         }
         mAdapter = new WallpaperListAdapter(
-                getContext(),
                 imageRealmResults,
                 true
         );

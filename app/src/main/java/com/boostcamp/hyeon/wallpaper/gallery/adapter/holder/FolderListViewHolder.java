@@ -1,10 +1,13 @@
 package com.boostcamp.hyeon.wallpaper.gallery.adapter.holder;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.boostcamp.hyeon.wallpaper.R;
@@ -28,6 +31,7 @@ import io.realm.Sort;
  */
 
 public class FolderListViewHolder extends RecyclerView.ViewHolder{
+    @BindView(R.id.layout_item) LinearLayout mItemLinearLayout;
     @BindView(R.id.iv_folder_icon) ImageView mFolderIconImageView;
     @BindView(R.id.iv_folder_open_icon) ImageView mFolderOpenIconImageView;
     @BindView(R.id.tv_folder_name) TextView mFolderNameTextView;
@@ -42,7 +46,18 @@ public class FolderListViewHolder extends RecyclerView.ViewHolder{
         this.mContext = mContext;
         this.mOnItemCLickListener = mOnItemCLickListener;
 
-        this.mSize = DisplayMetricsHelper.getInstance().getDeviceWidth()/4;
+        this.mSize = DisplayMetricsHelper.getInstance().getDeviceWidth()/3;
+
+        ViewGroup.LayoutParams layoutParams = mItemLinearLayout.getLayoutParams();
+        layoutParams.width = mSize;
+        mItemLinearLayout.setLayoutParams(layoutParams);
+
+        int padding = (int) (20 * Resources.getSystem().getDisplayMetrics().density);
+
+        layoutParams = mFolderImageView.getLayoutParams();
+        layoutParams.width = mSize - padding;
+        layoutParams.height = mSize - padding;
+        mFolderImageView.setLayoutParams(layoutParams);
     }
 
     public void bind(Folder folder, final int position){
@@ -69,7 +84,7 @@ public class FolderListViewHolder extends RecyclerView.ViewHolder{
         Picasso.with(mContext)
                 .load(new File(image.getThumbnailUri()))
                 .rotate(Integer.valueOf(image.getOrientation()))
-                .resize(mSize, mSize)
+                .fit()
                 .centerCrop()
                 .into(mFolderImageView);
     }

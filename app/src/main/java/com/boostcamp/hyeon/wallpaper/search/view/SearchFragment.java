@@ -90,7 +90,6 @@ public class SearchFragment extends Fragment implements ImageNaverListPresenter.
         RealmResults<ImageNaver>  imageNaverRealmResults = realm.where(ImageNaver.class).findAll();
 
         mImageNaverListAdapter = new ImageNaverListAdapter(
-                getContext(),
                 imageNaverRealmResults,
                 true
         );

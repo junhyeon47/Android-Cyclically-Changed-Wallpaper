@@ -25,8 +25,8 @@ import io.realm.RealmRecyclerViewAdapter;
 public class ImageListAdapter extends RealmRecyclerViewAdapter<Image, ImageListViewHolder> implements RealmListAdapterContract.Model<Image>, RealmListAdapterContract.View {
     private OnItemClickListener mOnItemClickListener;
 
-    public ImageListAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<Image> data, boolean autoUpdate) {
-        super(context, data, autoUpdate);
+    public ImageListAdapter(@Nullable OrderedRealmCollection<Image> data, boolean autoUpdate) {
+        super(data, autoUpdate);
     }
 
     @Override

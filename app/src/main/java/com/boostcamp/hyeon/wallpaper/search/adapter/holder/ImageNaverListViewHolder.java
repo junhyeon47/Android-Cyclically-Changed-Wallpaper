@@ -26,7 +26,6 @@ import butterknife.ButterKnife;
  */
 
 public class ImageNaverListViewHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.layout_item) RelativeLayout mItemRelativeLayout;
     @BindView(R.id.iv_thumbnail) ImageView mThumbnailImageView;
     @BindView(R.id.iv_select) ImageView mSelectImageView;
     @BindView(R.id.layout_select) RelativeLayout mSelectRelativeLayout;
@@ -53,7 +52,7 @@ public class ImageNaverListViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(ImageNaver imageNaver, final int position){
         Picasso.with(mContext)
-                .load(Uri.parse(imageNaver.getThumbnail()))
+                .load(imageNaver.getThumbnail())
                 .fit()
                 .centerCrop()
                 .into(mThumbnailImageView);

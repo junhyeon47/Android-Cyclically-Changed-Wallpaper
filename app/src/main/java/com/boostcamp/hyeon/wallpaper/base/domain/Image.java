@@ -13,6 +13,7 @@ public class Image extends RealmObject{
     private String imageUri;
     private String thumbnailUri;
     private String orientation;
+    private String dateTaken;
     private String dateAdded;
     private Boolean isSelected;
     private Integer number;
@@ -56,6 +57,14 @@ public class Image extends RealmObject{
 
     public void setOrientation(String orientation) {
         this.orientation = orientation;
+    }
+
+    public String getDateTaken() {
+        return dateTaken;
+    }
+
+    public void setDateTaken(String dateTaken) {
+        this.dateTaken = dateTaken;
     }
 
     public String getDateAdded() {

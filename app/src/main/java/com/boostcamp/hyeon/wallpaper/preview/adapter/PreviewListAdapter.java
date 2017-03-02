@@ -23,8 +23,8 @@ import io.realm.RealmRecyclerViewAdapter;
 public class PreviewListAdapter extends RealmRecyclerViewAdapter<Image, PreviewListViewHolder> implements RealmListAdapterContract.Model<Image>, RealmListAdapterContract.View {
     private OnItemClickListener mOnItemClickListener;
 
-    public PreviewListAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<Image> data, boolean autoUpdate) {
-        super(context, data, autoUpdate);
+    public PreviewListAdapter(@Nullable OrderedRealmCollection<Image> data, boolean autoUpdate) {
+        super(data, autoUpdate);
     }
 
     @Override

@@ -23,8 +23,8 @@ import io.realm.RealmRecyclerViewAdapter;
 public class ImageNaverListAdapter extends RealmRecyclerViewAdapter<ImageNaver, ImageNaverListViewHolder> implements RealmListAdapterContract.Model<ImageNaver>, RealmListAdapterContract.View{
     private OnItemClickListener mOnItemClickListener;
 
-    public ImageNaverListAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<ImageNaver> data, boolean autoUpdate) {
-        super(context, data, autoUpdate);
+    public ImageNaverListAdapter(@Nullable OrderedRealmCollection<ImageNaver> data, boolean autoUpdate) {
+        super(data, autoUpdate);
     }
 
     @Override

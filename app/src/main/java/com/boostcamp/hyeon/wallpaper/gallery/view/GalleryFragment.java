@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +32,7 @@ import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.util.Define;
+import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.RegisterWallpaperAsyncTask;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.detail.view.DetailActivity;
@@ -106,7 +109,6 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
             folderRealmResults.get(0).setOpened(true);
         }
         mFolderListAdapter = new FolderListAdapter(
-                getContext(),
                 folderRealmResults,
                 true
         );
@@ -114,7 +116,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
 
         mFolderRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mFolderRecyclerView.setAdapter(mFolderListAdapter);
-        mFolderRecyclerView.setHasFixedSize(false);
+        mFolderRecyclerView.setHasFixedSize(true);
 
         //init Folder Presenter
         mFolderListPresenter = new FolderListPresenterImpl(model);
@@ -131,16 +133,21 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
             imageRealmResults = realm.where(Folder.class).equalTo("bucketId", bucketId).findFirst().getImages().sort("dateAdded", Sort.DESCENDING);
         }
         mImageListAdapter = new ImageListAdapter(
-                getContext(),
                 imageRealmResults,
                 true
         );
         realm.commitTransaction();
 
         //init Image(Right) RecyclerView
-        mImageRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        mImageRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         mImageRecyclerView.setAdapter(mImageListAdapter);
-        mImageRecyclerView.setHasFixedSize(false);
+        mImageRecyclerView.setHasFixedSize(true);
+
+//        int height = DisplayMetricsHelper.getInstance().getDeviceHeight() - (int) (106 * Resources.getSystem().getDisplayMetrics().density);
+//        ViewGroup.LayoutParams layoutParams = mImageRecyclerView.getLayoutParams();
+//        layoutParams.height = height;
+//        mImageRecyclerView.setLayoutParams(layoutParams);
+//        Log.d(TAG, "recycler view height: "+height);
 
         //init Presenter
         mImageListPresenter = new ImageListPresenterImpl(model);
@@ -255,7 +262,6 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         realm.commitTransaction();
         //change adapter
         mImageListAdapter = new ImageListAdapter(
-                getContext(),
                 imageRealmResults,
                 true
         );

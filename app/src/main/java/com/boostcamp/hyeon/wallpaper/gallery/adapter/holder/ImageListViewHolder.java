@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,14 +34,14 @@ import butterknife.ButterKnife;
 
 public class ImageListViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = ImageListViewHolder.class.getSimpleName();
-    @BindView(R.id.layout_item) RelativeLayout mItemRelativeLayout;
+    @BindView(R.id.layout_item) FrameLayout mItemFrameLayout;
     @BindView(R.id.iv_thumbnail) ImageView mThumbnailImageView;
     @BindView(R.id.iv_select) ImageView mSelectImageView;
     @BindView(R.id.layout_select) RelativeLayout mSelectRelativeLayout;
     @BindView(R.id.tv_number) TextView mNumberTextView;
-
     private Context mContext;
     private OnItemClickListener mOnItemCLickListener;
+    private int mSize;
 
     public ImageListViewHolder(View itemView, Context mContext, OnItemClickListener mOnItemCLickListener) {
         super(itemView);
@@ -48,23 +49,21 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
         this.mContext = mContext;
         this.mOnItemCLickListener = mOnItemCLickListener;
 
-        int size = DisplayMetricsHelper.getInstance().getDeviceWidth()/9*2;
+        mSize = DisplayMetricsHelper.getInstance().getDeviceWidth()*2/9;
 
-        ViewGroup.LayoutParams layoutParams = mItemRelativeLayout.getLayoutParams();
-        layoutParams.width = size;
-        layoutParams.height = size;
-        mItemRelativeLayout.setLayoutParams(layoutParams);
+        ViewGroup.LayoutParams layoutParams = mItemFrameLayout.getLayoutParams();
+        layoutParams.width = mSize;
+        layoutParams.height = mSize;
+        mItemFrameLayout.setLayoutParams(layoutParams);
 
         layoutParams = mThumbnailImageView.getLayoutParams();
-        layoutParams.width = size-1;
-        layoutParams.height = size-1;
+        layoutParams.width = mSize-1;
+        layoutParams.height = mSize-1;
         mThumbnailImageView.setLayoutParams(layoutParams);
         Log.d(TAG, "ImageListViewHolder constructor");
     }
 
     public void bind(Image image, final int position){
-        mThumbnailImageView.setImageDrawable(null);
-
         Picasso.with(mContext)
                 .load(new File(image.getThumbnailUri()))
                 .rotate(Integer.valueOf(image.getOrientation()))
