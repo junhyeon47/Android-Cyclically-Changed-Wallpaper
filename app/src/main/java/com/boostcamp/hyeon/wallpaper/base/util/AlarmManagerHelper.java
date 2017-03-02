@@ -23,10 +23,6 @@ public class AlarmManagerHelper {
         PendingIntent sender = PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        long now = System.currentTimeMillis();
-        Calendar currentDate = Calendar.getInstance();
-        currentDate.setTimeInMillis(now);
-
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             manager.setAlarmClock(new AlarmManager.AlarmClockInfo(date.getTimeInMillis(), sender), sender);
         } else {

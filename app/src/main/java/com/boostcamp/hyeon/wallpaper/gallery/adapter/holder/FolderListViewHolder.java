@@ -12,7 +12,10 @@ import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
+import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +42,7 @@ public class FolderListViewHolder extends RecyclerView.ViewHolder{
         this.mContext = mContext;
         this.mOnItemCLickListener = mOnItemCLickListener;
 
-        this.mSize = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceWidthSize/4;
+        this.mSize = DisplayMetricsHelper.getInstance().getDeviceWidth()/4;
     }
 
     public void bind(Folder folder, final int position){
@@ -64,7 +67,7 @@ public class FolderListViewHolder extends RecyclerView.ViewHolder{
         Image image = folder.getImages().sort("dateAdded", Sort.DESCENDING).first();
 
         Picasso.with(mContext)
-                .load(Uri.parse(image.getThumbnailUri()))
+                .load(new File(image.getThumbnailUri()))
                 .rotate(Integer.valueOf(image.getOrientation()))
                 .resize(mSize, mSize)
                 .centerCrop()

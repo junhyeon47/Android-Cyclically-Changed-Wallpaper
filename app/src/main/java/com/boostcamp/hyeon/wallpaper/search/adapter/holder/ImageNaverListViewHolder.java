@@ -14,6 +14,7 @@ import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.ImageNaver;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
+import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
  */
 
 public class ImageNaverListViewHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.layout_item) FrameLayout mItemFrameLayout;
+    @BindView(R.id.layout_item) RelativeLayout mItemRelativeLayout;
     @BindView(R.id.iv_thumbnail) ImageView mThumbnailImageView;
     @BindView(R.id.iv_select) ImageView mSelectImageView;
     @BindView(R.id.layout_select) RelativeLayout mSelectRelativeLayout;
@@ -40,13 +41,13 @@ public class ImageNaverListViewHolder extends RecyclerView.ViewHolder {
         this.mOnItemCLickListener = mOnItemCLickListener;
         ButterKnife.bind(this, itemView);
 
-        int width = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceWidthSize/4;
-        int height = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceHeightSize/4;
+        int width = DisplayMetricsHelper.getInstance().getDeviceWidth()/4;
+        int height = DisplayMetricsHelper.getInstance().getDeviceHeight()/4;
 
-        ViewGroup.LayoutParams layoutParams = mItemFrameLayout.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = mThumbnailImageView.getLayoutParams();
         layoutParams.width = width;
         layoutParams.height = height;
-        mItemFrameLayout.setLayoutParams(layoutParams);
+        mThumbnailImageView.setLayoutParams(layoutParams);
 
     }
 

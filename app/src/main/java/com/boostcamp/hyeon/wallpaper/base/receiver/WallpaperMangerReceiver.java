@@ -5,6 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -15,8 +18,12 @@ import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.domain.Wallpaper;
 import com.boostcamp.hyeon.wallpaper.base.util.AlarmManagerHelper;
+import com.boostcamp.hyeon.wallpaper.base.util.BitmapHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.Define;
-import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
+import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -29,44 +36,40 @@ import io.realm.Realm;
  */
 
 public class WallpaperMangerReceiver extends BroadcastReceiver{
-    private static String TAG = WallpaperMangerReceiver.class.getSimpleName();
+    private static final String TAG = WallpaperMangerReceiver.class.getSimpleName();
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "onReceive: "+intent.getAction());
-        if(!SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, false))
-            return;
-        boolean isTransparentWallpaper = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_TRANSPARENT_WALLPAPER, false);
-        long changeCycle = SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, 0);
-        Log.d(TAG, "change cycle: "+changeCycle);
-
-        if(!isTransparentWallpaper){
-            Log.d(TAG, "default wallpaper");
-            if (intent.getAction().equals(context.getString(R.string.wallpaper_set_action)) && changeCycle != Define.CHANGE_CYCLE_SCREEN_OFF) {
-                setWallpaperManager(context, changeCycle);
-            }else if(intent.getAction().equals(context.getString(R.string.wallpaper_set_action)) && changeCycle == Define.CHANGE_CYCLE_SCREEN_OFF){
-                setWallpaperManager(context, changeCycle);
-            }else if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF) && changeCycle == Define.CHANGE_CYCLE_SCREEN_OFF){
-                setWallpaperManager(context, changeCycle);
-            }
-        }else{
-            if(intent.getAction().equals(context.getString(R.string.wallpaper_set_action))){
-                Log.d(TAG, "transparent wallpaper: start");
-            }else if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF)){
-                Log.d(TAG, "transparent wallpaper: screen off");
-            }else if(intent.getAction().equals(Intent.ACTION_SCREEN_ON)){
-                Log.d(TAG, "transparent wallpaper: screen on");
-            }
-        }
-    }
-
-    private void setWallpaperManager(Context context, long changeCycle){
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
         Wallpaper wallpaper = realm.where(Wallpaper.class).findFirst();
+        if(wallpaper == null)
+            wallpaper = realm.createObject(Wallpaper.class);
+        if(wallpaper.isUsing()) {
+            if (!wallpaper.isTransparent()) {
+                if (intent.getAction().equals(context.getString(R.string.wallpaper_set_action)) || intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                    Log.d(TAG, "default wallpaper");
+                    setWallpaperManager(context, wallpaper);
+                }
+            } else {
+                if (intent.getAction().equals(context.getString(R.string.wallpaper_set_action))) {
+                    Log.d(TAG, "transparent wallpaper: start");
+                } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                    Log.d(TAG, "transparent wallpaper: screen off");
+                } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                    Log.d(TAG, "transparent wallpaper: screen on");
+                }
+            }
+        }
+        realm.commitTransaction();
+    }
+
+    private void setWallpaperManager(Context context, Wallpaper wallpaper){
+        Log.d(TAG, "setWallpaperManager");
         Image image = wallpaper.getImages().get(wallpaper.getNextPosition());
         int currentPosition = wallpaper.getNextPosition();
         int nextPosition;
-        if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_RANDOM_ORDER, false)){
+        if(wallpaper.isRandom()){
             int randomNumber;
             do {
                 Random random = new Random();
@@ -82,46 +85,59 @@ public class WallpaperMangerReceiver extends BroadcastReceiver{
         }
         wallpaper.setCurrentPosition(currentPosition);
         wallpaper.setNextPosition(nextPosition);
-        realm.commitTransaction();
 
-        int changeScreenType = SharedPreferenceHelper.getInstance().getInt(SharedPreferenceHelper.Key.INT_CHANGE_SCREEN_TYPE, 0);
-        setWallpaperFromChangeType(context, changeScreenType, Uri.parse(image.getImageUri()));
+        setWallpaperFromChangeType(context, wallpaper.getChangeScreenType(), image.getImageUri(), Integer.valueOf(image.getOrientation()));
 
-        if (wallpaper.getImages().size() != 1 && changeCycle != Define.CHANGE_CYCLE_SCREEN_OFF) {
+        // if not need repeat, example 1 image selected or change type is screen off.
+        if (wallpaper.getImages().size() != 1 && wallpaper.getChangeCycle() != Define.CHANGE_CYCLE_SCREEN_OFF) {
             Calendar date = Calendar.getInstance();
-            date.setTimeInMillis(System.currentTimeMillis() + changeCycle);
+            date.setTimeInMillis(System.currentTimeMillis() + wallpaper.getChangeCycle());
             AlarmManagerHelper.registerToAlarmManager(context, date, Define.ID_ALARM_DEFAULT);
         }
     }
 
-    private void setWallpaperFromChangeType(Context context, int changeScreenType, Uri imageUri){
+    private void setWallpaperFromChangeType(Context context, int changeScreenType, String imageUri, int orientation){
+        Log.d(TAG, "setWallpaperFromChangeType: "+changeScreenType);
+
+        int sampleSize;
+        if(BitmapHelper.getBitmapWidth(imageUri) >= Define.LIMIT_WIDTH_FOR_SAMPLE || BitmapHelper.getBitmapHeight(imageUri) >= Define.LIMIT_HEIGHT_FOR_SAMPLE)
+            sampleSize = Define.HIGH_SAMPLE_SIZE;
+        else
+            sampleSize = Define.LOW_SAMPLE_SIZE;
+
+        Bitmap bitmap = BitmapHelper.decodeFile(imageUri, sampleSize);
+
+        if(orientation != 0){
+            bitmap = BitmapHelper.changeOrientation(bitmap, orientation);
+        }
+
         if(changeScreenType == Define.CHANGE_SCREEN_TYPE[Define.INDEX_TYPE_WALLPAPER]){
-            setWallpaper(context, imageUri);
+            setWallpaper(context, bitmap);
         }else if(changeScreenType == Define.CHANGE_SCREEN_TYPE[Define.INDEX_TYPE_LOCK_SCREEN]){
-            setLockScreen(context, imageUri);
+            setLockScreen(context, bitmap);
         }else{
-            setLockScreen(context, imageUri);
-            setWallpaper(context, imageUri);
+            setLockScreen(context, bitmap);
+            setWallpaper(context, bitmap);
         }
     }
 
-    private void setWallpaper(Context context, Uri imageUri){
-        WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
+    private void setWallpaper(Context context, Bitmap bitmap){
+        Log.d(TAG, "setWallpaper");
+        final WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
         try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver() , imageUri);
             wallpaperManager.setBitmap(bitmap);
-        }catch (IOException e){
+        }catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void setLockScreen(Context context, Uri imageUri){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-            WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
+    private void setLockScreen(Context context, Bitmap bitmap){
+        Log.d(TAG, "setLockScreen");
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            final WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver() , imageUri);
                 wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_LOCK);
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

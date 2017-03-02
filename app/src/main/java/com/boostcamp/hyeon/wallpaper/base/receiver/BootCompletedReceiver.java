@@ -5,12 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
+import com.boostcamp.hyeon.wallpaper.base.domain.Wallpaper;
 import com.boostcamp.hyeon.wallpaper.base.service.WallpaperManagerService;
 import com.boostcamp.hyeon.wallpaper.base.util.AlarmManagerHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.Define;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 
 import java.util.Calendar;
+
+import io.realm.Realm;
 
 /**
  * Created by hyeon on 2017. 2. 18..
@@ -29,7 +33,11 @@ public class BootCompletedReceiver extends BroadcastReceiver {
             context.startService(startServiceIntent);
 
             int alarmId;
-            if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_TRANSPARENT_WALLPAPER, false)){
+            Realm realm = WallpaperApplication.getRealmInstance();
+            realm.beginTransaction();
+            Wallpaper wallpaper = realm.where(Wallpaper.class).findFirst();
+            realm.commitTransaction();
+            if(wallpaper.isTransparent()){
                 alarmId = Define.ID_ALARM_TRANSPARENT;
             }else{
                 alarmId = Define.ID_ALARM_DEFAULT;

@@ -17,7 +17,10 @@ public class Define {
     public static final int DELAY_MILLIS = 100;
     public static final int MINUTE_CONVERT_TO_MILLIS = 60*1000;
     public static final int HOUR_CONVERT_TO_MILLIS = 60*60*1000;
-    public static final int NOT_USE_CHANGE_CYCLE = 0;
+    public static final boolean USE_WALLPAPER = true;
+    public static final boolean NOT_USE_WALLPAPER = false;
+    public static final int DEFAULT_CHANGE_CYCLE = 0;
+    public static final int DEFAULT_CHANGE_SCREEN_TYPE = R.string.label_wallpaper;
     public static final int[] CHANGE_SCREEN_TYPE = {
             R.string.label_wallpaper,
             R.string.label_lock_screen,
@@ -28,4 +31,10 @@ public class Define {
     public static final int INDEX_TYPE_WALLPAPER_PLUS_LOCK_SCREEN = 2;
     public static final int ID_ALARM_DEFAULT = 2100;
     public static final int ID_ALARM_TRANSPARENT = 9999;
+    public static final int TYPE_USING_WALLPAPER = 304;
+    public static final int TYPE_USING_RANDOM = 593;
+    public static final int LIMIT_WIDTH_FOR_SAMPLE = 2000;
+    public static final int LIMIT_HEIGHT_FOR_SAMPLE = 2000;
+    public static final int LOW_SAMPLE_SIZE = 2;
+    public static final int HIGH_SAMPLE_SIZE = 4;
 }

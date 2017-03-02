@@ -1,40 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_item"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/colorGrey300"
-    android:layout_marginRight="0.5dp"
-    android:layout_marginEnd="0.5dp"
-    android:layout_marginBottom="0.5dp">
+    android:background="@color/colorGrey300">
 
-    <ImageView
-        android:id="@+id/iv_thumbnail"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/iv_select"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorTeal300Opacity150"
-        android:visibility="gone"/>
+        <ImageView
+            android:id="@+id/iv_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    <RelativeLayout
-        android:id="@+id/layout_select"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/tv_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:textSize="10dp"
-            android:textAlignment="center"
-            android:textColor="#e6ffffff"/>
-    </RelativeLayout>
+        <ImageView
+            android:id="@+id/iv_select"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorTeal300Opacity150"
+            android:visibility="gone" />
 
-</FrameLayout>
+        <RelativeLayout
+            android:id="@+id/layout_select"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:textAlignment="center"
+                android:textColor="#e6ffffff"
+                android:textSize="10dp" />
+        </RelativeLayout>
+
+    </FrameLayout>
+</RelativeLayout>

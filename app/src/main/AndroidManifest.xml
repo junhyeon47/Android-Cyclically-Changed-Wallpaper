@@ -51,7 +51,7 @@
             android:screenOrientation="portrait"/>
 
         <receiver android:name=".base.receiver.WallpaperMangerReceiver"
-            android:process="">
+            android:process=":remote">
             <intent-filter>
                 <action android:name="ACTION.SET_WALLPAPER.WallpaperMangerReceiver" />
             </intent-filter>
@@ -76,7 +76,8 @@
 
         <service
             android:name=".base.service.WallpaperManagerService"
-            android:enabled="true"/>
+            android:enabled="true"
+            android:process=":remote"/>
         <service
             android:name=".base.service.ForeGroundService"
             android:exported="false"

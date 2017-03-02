@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
 
+import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.MediaScannerConnectionHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 
@@ -15,19 +16,13 @@ import io.realm.RealmConfiguration;
  */
 
 public class WallpaperApplication extends Application{
-    //device screen size variable
-    public int mDeviceWidthSize;
-    public int mDeviceHeightSize;
-
     @Override
     public void onCreate() {
         super.onCreate();
         Realm.init(getApplicationContext());
 
         //init device screen size
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        mDeviceWidthSize = displayMetrics.widthPixels;
-        mDeviceHeightSize = displayMetrics.heightPixels;
+        DisplayMetricsHelper.getInstance(getApplicationContext());
 
         //init SharedPreferences
         SharedPreferenceHelper.getInstance(getApplicationContext());

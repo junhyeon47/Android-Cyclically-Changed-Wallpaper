@@ -77,7 +77,7 @@ public class DetailPagerAdapter extends PagerAdapter {
         mAvLoadingIndicatorView.show();
 
         Picasso.with(mActivity)
-                .load(imageUri)
+                .load(new File(imageUri))
                 .into(mImageView, new Callback() {
                     @Override
                     public void onSuccess() {

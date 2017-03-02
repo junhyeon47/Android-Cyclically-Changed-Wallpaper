@@ -15,11 +15,14 @@ import com.boostcamp.hyeon.wallpaper.R;
 
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
+import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +33,6 @@ import butterknife.ButterKnife;
 
 public class ImageListViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = ImageListViewHolder.class.getSimpleName();
-    @BindView(R.id.layout_item) FrameLayout mItemFrameLayout;
     @BindView(R.id.iv_thumbnail) ImageView mThumbnailImageView;
     @BindView(R.id.iv_select) ImageView mSelectImageView;
     @BindView(R.id.layout_select) RelativeLayout mSelectRelativeLayout;
@@ -45,18 +47,18 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
         this.mContext = mContext;
         this.mOnItemCLickListener = mOnItemCLickListener;
 
-        int size = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceWidthSize/9*2;
+        int size = DisplayMetricsHelper.getInstance().getDeviceWidth()/9*2;
 
-        ViewGroup.LayoutParams layoutParams = mItemFrameLayout.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = mThumbnailImageView.getLayoutParams();
         layoutParams.width = size;
         layoutParams.height = size;
-        mItemFrameLayout.setLayoutParams(layoutParams);
+        mThumbnailImageView.setLayoutParams(layoutParams);
         Log.d(TAG, "ImageListViewHolder constructor");
     }
 
     public void bind(Image image, final int position){
         Picasso.with(mContext)
-                .load(Uri.parse(image.getThumbnailUri()))
+                .load(new File(image.getThumbnailUri()))
                 .rotate(Integer.valueOf(image.getOrientation()))
                 .fit()
                 .centerCrop()

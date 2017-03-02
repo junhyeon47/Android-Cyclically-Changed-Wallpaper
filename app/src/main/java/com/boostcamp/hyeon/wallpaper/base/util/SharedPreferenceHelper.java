@@ -17,13 +17,8 @@ public class SharedPreferenceHelper{
     public enum Key{
         BOOLEAN_GALLEY_SELECT_MODE("pref_key_gallery_select_mode"),
         BOOLEAN_PREVIEW_ACTIVITY_CALL("pref_key_preview_activity_call"),
-        INT_CHANGE_SCREEN_TYPE("pref_key_change_screen_type"),
-        LONG_REPEAT_CYCLE_MILLS("pref_key_repeat_cycle_millis"),
         STRING_SEARCH_RESULT_SAVE("pref_key_search_result_save"),
-        STRING_LAST_SEARCH_QUERY("pref_key_last_search_query"),
-        BOOLEAN_IS_USING_WALLPAPER("pref_key_is_using_wallpaper"),
-        BOOLEAN_IS_RANDOM_ORDER("pref_key_is_random_order"),
-        BOOLEAN_IS_TRANSPARENT_WALLPAPER("pref_key_is_transparent_wallpaper");
+        STRING_LAST_SEARCH_QUERY("pref_key_last_search_query");
 
         private final String name;
 

@@ -137,32 +137,34 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
         Log.d(TAG, "onCheckedChanged: "+isChecked);
         switch (buttonView.getId()){
             case R.id.sw_wallpaper_type:
-                SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, isChecked);
+                //SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, isChecked);
+                setWallpaperValue(Define.TYPE_USING_WALLPAPER, isChecked);
                 break;
             case R.id.sw_random_wallpaper:
-                SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_RANDOM_ORDER, isChecked);
+                //SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_RANDOM_ORDER, isChecked);
+                setWallpaperValue(Define.TYPE_USING_RANDOM, isChecked);
                 break;
             case R.id.sw_transparent_wallpaper:
                 break;
         }
-//        if(buttonView.equals(mWallpaperTypeSwitch)){
-//            Log.d(TAG, "onCheckedChanged - mWallpaperTypeSwitch: "+isChecked);
-//
-//        }else if(buttonView.equals(mRandomWallpaperSwitch)){
-//
-//        }else if(buttonView.equals(mTransparentSwitch)){
-//            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_TRANSPARENT_WALLPAPER, isChecked);
-//            Calendar date = Calendar.getInstance();
-//            date.setTimeInMillis(System.currentTimeMillis() + Define.DELAY_MILLIS);
-//            if(isChecked) {
-//                AlarmManagerHelper.unregisterToAlarmManager(getContext(), Define.ID_ALARM_DEFAULT);
-//                AlarmManagerHelper.registerToAlarmManager(getContext(), date, Define.ID_ALARM_TRANSPARENT);
-//            }else {
-//                AlarmManagerHelper.unregisterToAlarmManager(getContext(), Define.ID_ALARM_TRANSPARENT);
-//                AlarmManagerHelper.registerToAlarmManager(getContext(), date, Define.ID_ALARM_DEFAULT);
-//            }
-//        }
         setSettingValues(false);
+    }
+
+    private void setWallpaperValue(int type, boolean isChecked){
+        Realm realm = WallpaperApplication.getRealmInstance();
+        realm.beginTransaction();
+        Wallpaper wallpaper = realm.where(Wallpaper.class).findFirst();
+        if(wallpaper == null)
+            wallpaper = realm.createObject(Wallpaper.class);
+        switch (type){
+            case Define.TYPE_USING_WALLPAPER:
+                wallpaper.setUsing(isChecked);
+                break;
+            case Define.TYPE_USING_RANDOM:
+                wallpaper.setRandom(isChecked);
+                break;
+        }
+        realm.commitTransaction();
     }
 
     @OnClick(R.id.layout_wallpaper_change_cycle)
@@ -201,7 +203,11 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
     }
 
     public void setWallpaperChangeCycle(){
-        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, (long) mChangeCycle);
+        Realm realm = WallpaperApplication.getRealmInstance();
+        realm.beginTransaction();
+        Wallpaper wallpaper = realm.where(Wallpaper.class).findFirst();
+        wallpaper.setChangeCycle(mChangeCycle);
+        realm.commitTransaction();
         if(mChangeCycle != Define.CHANGE_CYCLE_SCREEN_OFF){
             AlarmManagerHelper.unregisterToAlarmManager(getContext(), Define.ID_ALARM_DEFAULT);
             Calendar date = Calendar.getInstance();
@@ -237,27 +243,33 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
 
     private void setSettingValues(boolean isInit){
         //get setting values init view
-        boolean isUsingWallpaper = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, false);
-        long changeCycle = SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, Define.NOT_USE_CHANGE_CYCLE);
-        boolean isRandomOrder = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_RANDOM_ORDER, false);
-        //boolean isTransparentWallpaper = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_TRANSPARENT_WALLPAPER, false);
+//        boolean isUsingWallpaper = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, false);
+//        long changeCycle = SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, Define.NOT_USE_CHANGE_CYCLE);
+//        boolean isRandomOrder = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_RANDOM_ORDER, false);
+//        boolean isTransparentWallpaper = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_TRANSPARENT_WALLPAPER, false);
+        Realm realm = WallpaperApplication.getRealmInstance();
+        realm.beginTransaction();
+        Wallpaper wallpaper = realm.where(Wallpaper.class).findFirst();
+        if(wallpaper == null)
+            wallpaper = realm.createObject(Wallpaper.class);
+        realm.commitTransaction();
+
         if(isInit){
-            mWallpaperTypeSwitch.setChecked(isUsingWallpaper);
-            mRandomWallpaperSwitch.setChecked(isRandomOrder);
+            mWallpaperTypeSwitch.setChecked(wallpaper.isUsing());
+            mRandomWallpaperSwitch.setChecked(wallpaper.isRandom());
             //mTransparentSwitch.setChecked(isTransparentWallpaper);
         }
-        setWallpaperChangeType(isUsingWallpaper);
-        setWallpaperChangeCycle(changeCycle);
-        setWallpaperRandomOrder(isRandomOrder);
+        setWallpaperChangeType(wallpaper.isUsing(), wallpaper.getChangeScreenType());
+        setWallpaperChangeCycle(wallpaper.getChangeCycle());
+        setWallpaperRandomOrder(wallpaper.isRandom());
         //setTransparentWallpaper(isTransparentWallpaper);
     }
 
-    private void setWallpaperChangeType(boolean value){
-        if(value){
-            int changeScreenType = SharedPreferenceHelper.getInstance().getInt(SharedPreferenceHelper.Key.INT_CHANGE_SCREEN_TYPE, -1);
+    private void setWallpaperChangeType(boolean isUsing, int type){
+        if(isUsing){
             mWallpaperIsUsingTextView.setText(getString(R.string.label_wallpaper_change_using));
-            if(changeScreenType != -1){
-                mWallpaperTypeTextView.setText(getString(changeScreenType));
+            if(type != 0){
+                mWallpaperTypeTextView.setText(getString(type));
                 mRecyclerViewLinearLayout.setVisibility(View.VISIBLE);
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mShadowView.setVisibility(View.GONE);
@@ -282,7 +294,7 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
 
     private void setWallpaperChangeCycle(long changeCycle){
         String changeCycleConvertToTime;
-        if(changeCycle == Define.NOT_USE_CHANGE_CYCLE){
+        if(changeCycle == Define.DEFAULT_CHANGE_CYCLE){
             changeCycleConvertToTime = getString(R.string.label_not_using);
         }else {
             //mills to minute or hour.

@@ -13,9 +13,12 @@ import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
+import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,18 +42,18 @@ public class PreviewListViewHolder extends RecyclerView.ViewHolder {
         this.mContext = mContext;
         this.mOnItemCLickListener = mOnItemCLickListener;
 
-        mWidth = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceWidthSize/3*2;
-        mHeight = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceHeightSize/3*2;
+        mWidth = DisplayMetricsHelper.getInstance().getDeviceWidth()/3*2;
+        mHeight = DisplayMetricsHelper.getInstance().getDeviceHeight()/3*2;
         ViewGroup.LayoutParams layoutParams = mImageView.getLayoutParams();
         layoutParams.width = mWidth;
         layoutParams.height = mHeight;
         mImageView.setLayoutParams(layoutParams);
     }
 
-    public void bind(final Image image, final int position) {
+    public void bind(Image image, final int position) {
         mNumberTextView.setText(String.valueOf(image.getNumber()));
         Picasso.with(mContext)
-                .load(image.getImageUri())
+                .load(new File(image.getImageUri()))
                 .resize(mWidth, mHeight)
                 .centerCrop()
                 .into(mImageView);

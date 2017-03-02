@@ -14,7 +14,10 @@ import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.domain.Wallpaper;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
+import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,8 +45,8 @@ public class WallpaperListViewHolder extends RecyclerView.ViewHolder {
         this.mContext = mContext;
         this.mOnItemCLickListener = mOnItemCLickListener;
 
-        mWidth = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceWidthSize/5*2;
-        mHeight = ((WallpaperApplication)mContext.getApplicationContext()).mDeviceHeightSize/5*2;
+        mWidth = DisplayMetricsHelper.getInstance().getDeviceWidth()/5*2;
+        mHeight = DisplayMetricsHelper.getInstance().getDeviceHeight()/5*2;
 
         ViewGroup.LayoutParams layoutParams = mImageView.getLayoutParams();
         layoutParams.width = mWidth;
@@ -56,11 +59,11 @@ public class WallpaperListViewHolder extends RecyclerView.ViewHolder {
         mBorderFrameLayout.setLayoutParams(layoutParams);
     }
 
-    public void bind(final Image image, final int position) {
+    public void bind(Image image, final int position) {
         Picasso.with(mContext)
-                .load(image.getImageUri())
+                .load(new File(image.getImageUri()))
                 .resize(mWidth, mHeight)
-                .centerCrop()
+                .centerInside()
                 .into(mImageView);
 
         Realm realm = WallpaperApplication.getRealmInstance();
@@ -81,7 +84,6 @@ public class WallpaperListViewHolder extends RecyclerView.ViewHolder {
                     break;
                 }
             }
-
 
             if(number == currentPosition){
                 mBorderFrameLayout.setVisibility(View.VISIBLE);

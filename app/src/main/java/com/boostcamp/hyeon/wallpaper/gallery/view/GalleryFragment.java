@@ -29,8 +29,9 @@ import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.domain.Wallpaper;
-import com.boostcamp.hyeon.wallpaper.base.util.AlarmManagerHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.Define;
+import com.boostcamp.hyeon.wallpaper.base.util.GridItemDecoration;
+import com.boostcamp.hyeon.wallpaper.base.util.RegisterWallpaperAsyncTask;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.detail.view.DetailActivity;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.FolderListAdapter;
@@ -44,12 +45,9 @@ import com.boostcamp.hyeon.wallpaper.base.listener.OnBackKeyPressedListener;
 import com.boostcamp.hyeon.wallpaper.main.view.MainActivity;
 import com.boostcamp.hyeon.wallpaper.preview.view.PreviewActivity;
 
-import java.util.Calendar;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -140,6 +138,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         realm.commitTransaction();
 
         //init Image(Right) RecyclerView
+        mImageRecyclerView.addItemDecoration(new GridItemDecoration(1));
         mImageRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mImageRecyclerView.setAdapter(mImageListAdapter);
         mImageRecyclerView.setHasFixedSize(false);
@@ -154,15 +153,14 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, false);
 
         //init initial Value
-        mChangeCycle = 30000;
-        mChangeScreenType = R.string.label_wallpaper;
+        mChangeCycle = Define.DEFAULT_CHANGE_CYCLE;
+        mChangeScreenType = Define.DEFAULT_CHANGE_SCREEN_TYPE;
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, "on Resume");
-        mFolderListAdapter.notifyAdapter();
     }
 
     @Override
@@ -293,36 +291,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
     }
 
     private void registerWallpaper(){
-        Realm realm = WallpaperApplication.getRealmInstance();
-        realm.beginTransaction();
-
-        RealmResults<Wallpaper> wallpaperRealmResults = realm.where(Wallpaper.class).findAll();
-        wallpaperRealmResults.deleteAllFromRealm();
-
-        Wallpaper wallpaper = realm.createObject(Wallpaper.class);
-        RealmResults<Image> imageRealmResults = realm.where(Image.class).equalTo("isSelected", true).findAllSorted("number", Sort.ASCENDING);
-        RealmList<Image> imageRealmList = new RealmList<>();
-        imageRealmList.addAll(imageRealmResults.subList(0, imageRealmResults.size()));
-        wallpaper.setImages(imageRealmList);
-        wallpaper.setCurrentPosition(0);
-        wallpaper.setNextPosition(0);
-        realm.commitTransaction();
-
-        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, true);
-        Log.d(TAG, "IS USING WALLPAPER: "+SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, false));
-        if(imageRealmList.size() == 0) {
-            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, (long) Define.NOT_USE_CHANGE_CYCLE);
-        }else{
-            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, (long) mChangeCycle);
-        }
-        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.INT_CHANGE_SCREEN_TYPE, mChangeScreenType);
-
-        Calendar date = Calendar.getInstance();
-        date.setTimeInMillis(System.currentTimeMillis()+Define.DELAY_MILLIS);
-        AlarmManagerHelper.unregisterToAlarmManager(getContext(), Define.ID_ALARM_DEFAULT);
-        AlarmManagerHelper.registerToAlarmManager(getContext(), date, Define.ID_ALARM_DEFAULT);
-        changeModeForDefault();
-        Toast.makeText(getActivity(), getString(R.string.message_complete_set_wallpaper), Toast.LENGTH_SHORT).show();
+        new RegisterWallpaperAsyncTask(getActivity(), this).execute(mChangeCycle, mChangeScreenType);
     }
 
     private void clickDone(){
@@ -364,14 +333,14 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
                     mChangeRepeatCycleRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_repeat_cycle);
                     mChangeRepeatCycleRadioGroup.setOnCheckedChangeListener(GalleryFragment.this);
                     mChangeRepeatCycleRadioGroup.check(mChangeRepeatCycleRadioGroup.getChildAt(0).getId());
-                    SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.INT_CHANGE_SCREEN_TYPE, Define.CHANGE_SCREEN_TYPE[0]);
+                    //SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.INT_CHANGE_SCREEN_TYPE, Define.CHANGE_SCREEN_TYPE[0]);
                 }else if(Build.VERSION.SDK_INT == Build.VERSION_CODES.N && numberOfSelectedImage == 1){
                     //if build version is nougat and selected images is only one.
                     ((Dialog)dialog).findViewById(R.id.layout_change_repeat_cycle).setVisibility(View.GONE);
                     mChangeScreenRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_screen);
                     mChangeScreenRadioGroup.setOnCheckedChangeListener(GalleryFragment.this);
                     mChangeScreenRadioGroup.check(mChangeScreenRadioGroup.getChildAt(0).getId());
-                    SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, Define.NOT_USE_CHANGE_CYCLE);
+                    //SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, Define.NOT_USE_CHANGE_CYCLE);
                 }else{
                     //if build version is nougat and selected selected images is greater than one.
                     mChangeScreenRadioGroup = (RadioGroup)((Dialog)dialog).findViewById(R.id.rb_change_screen);

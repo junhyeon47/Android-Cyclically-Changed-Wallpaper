@@ -8,24 +8,69 @@ import io.realm.RealmObject;
  */
 
 public class Wallpaper extends RealmObject{
-    private Integer currentPosition;
-    private Integer nextPosition;
+    private int currentPosition;
+    private int nextPosition;
+    private int changeCycle;
+    private int changeScreenType;
+    private boolean isUsing;
+    private boolean isRandom;
+    private boolean isTransparent;
     private RealmList<Image> images;
 
-    public Integer getCurrentPosition() {
+    public int getCurrentPosition() {
         return currentPosition;
     }
 
-    public void setCurrentPosition(Integer currentPosition) {
+    public void setCurrentPosition(int currentPosition) {
         this.currentPosition = currentPosition;
     }
 
-    public Integer getNextPosition() {
+    public int getNextPosition() {
         return nextPosition;
     }
 
-    public void setNextPosition(Integer nextPosition) {
+    public void setNextPosition(int nextPosition) {
         this.nextPosition = nextPosition;
+    }
+
+    public int getChangeCycle() {
+        return changeCycle;
+    }
+
+    public void setChangeCycle(int changeCycle) {
+        this.changeCycle = changeCycle;
+    }
+
+    public int getChangeScreenType() {
+        return changeScreenType;
+    }
+
+    public void setChangeScreenType(int changeScreenType) {
+        this.changeScreenType = changeScreenType;
+    }
+
+    public boolean isUsing() {
+        return isUsing;
+    }
+
+    public void setUsing(boolean using) {
+        isUsing = using;
+    }
+
+    public boolean isRandom() {
+        return isRandom;
+    }
+
+    public void setRandom(boolean random) {
+        isRandom = random;
+    }
+
+    public boolean isTransparent() {
+        return isTransparent;
+    }
+
+    public void setTransparent(boolean transparent) {
+        isTransparent = transparent;
     }
 
     public RealmList<Image> getImages() {

@@ -110,7 +110,8 @@ public class SyncDataHelper {
                     RealmList<Image> imageRealmList = folder.getImages();
                     image = realm.createObject(Image.class);
                     image.setBucketId(bucketId);
-                    image.setImageUri(Uri.fromFile(new File(path)).toString());
+                    //image.setImageUri(Uri.fromFile(new File(path)).toString());
+                    image.setImageUri(path);
                     image.setThumbnailUri(getThumbnailUri(context, Long.valueOf(imageId)));
                     image.setImageId(imageId);
                     image.setOrientation(orientation == null ? "0" : orientation);
@@ -162,7 +163,8 @@ public class SyncDataHelper {
 
             String thumbnailPath = thumbnailCursor.getString(thumbnailColumnIndex);
             thumbnailCursor.close();
-            return Uri.fromFile(new File(thumbnailPath)).toString();
+            //return Uri.fromFile(new File(thumbnailPath)).toString();
+            return thumbnailPath;
         } else {
             //if thumbnail is not exit, make thumbnail
             MediaStore.Images.Thumbnails.getThumbnail(
