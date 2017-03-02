@@ -33,6 +33,7 @@ import butterknife.ButterKnife;
 
 public class ImageListViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = ImageListViewHolder.class.getSimpleName();
+    @BindView(R.id.layout_item) RelativeLayout mItemRelativeLayout;
     @BindView(R.id.iv_thumbnail) ImageView mThumbnailImageView;
     @BindView(R.id.iv_select) ImageView mSelectImageView;
     @BindView(R.id.layout_select) RelativeLayout mSelectRelativeLayout;
@@ -49,14 +50,21 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
 
         int size = DisplayMetricsHelper.getInstance().getDeviceWidth()/9*2;
 
-        ViewGroup.LayoutParams layoutParams = mThumbnailImageView.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = mItemRelativeLayout.getLayoutParams();
         layoutParams.width = size;
         layoutParams.height = size;
+        mItemRelativeLayout.setLayoutParams(layoutParams);
+
+        layoutParams = mThumbnailImageView.getLayoutParams();
+        layoutParams.width = size-1;
+        layoutParams.height = size-1;
         mThumbnailImageView.setLayoutParams(layoutParams);
         Log.d(TAG, "ImageListViewHolder constructor");
     }
 
     public void bind(Image image, final int position){
+        mThumbnailImageView.setImageDrawable(null);
+
         Picasso.with(mContext)
                 .load(new File(image.getThumbnailUri()))
                 .rotate(Integer.valueOf(image.getOrientation()))

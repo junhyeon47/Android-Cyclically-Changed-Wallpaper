@@ -70,26 +70,39 @@ public class DetailPagerAdapter extends PagerAdapter {
         String imageUri = null;
         if(mFrom == Define.GALLERY_FRAGMENT) {
             imageUri = ((Image)mList.get(position)).getImageUri();
+            Picasso.with(mActivity)
+                    .load(new File(imageUri))
+                    .into(mImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            //sometimes error occur
+                            //mAttacher = new PhotoViewAttacher(mImageView);
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
         }else if(mFrom == Define.SEARCH_FRAGMENT){
             imageUri = ((ImageNaver)mList.get(position)).getLink();
+            Picasso.with(mActivity)
+                    .load(imageUri)
+                    .into(mImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            //sometimes error occur
+                            //mAttacher = new PhotoViewAttacher(mImageView);
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
         }
 
         mAvLoadingIndicatorView.show();
-
-        Picasso.with(mActivity)
-                .load(new File(imageUri))
-                .into(mImageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        //sometimes error occur
-                        //mAttacher = new PhotoViewAttacher(mImageView);
-                    }
-
-                    @Override
-                    public void onError() {
-
-                    }
-                });
 
         container.addView(view);
         return view;

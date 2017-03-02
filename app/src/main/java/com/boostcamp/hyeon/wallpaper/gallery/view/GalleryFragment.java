@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -28,9 +29,7 @@ import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
-import com.boostcamp.hyeon.wallpaper.base.domain.Wallpaper;
 import com.boostcamp.hyeon.wallpaper.base.util.Define;
-import com.boostcamp.hyeon.wallpaper.base.util.GridItemDecoration;
 import com.boostcamp.hyeon.wallpaper.base.util.RegisterWallpaperAsyncTask;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.detail.view.DetailActivity;
@@ -58,6 +57,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
     private static final String TAG = GalleryFragment.class.getSimpleName();
     @BindView(R.id.rv_folder) RecyclerView mFolderRecyclerView;
     @BindView(R.id.rv_image) RecyclerView mImageRecyclerView;
+    @BindView(R.id.layout_register_dialog) LinearLayout mRegisterDialogLinearLayout;
     private FolderListAdapter mFolderListAdapter;
     private ImageListAdapter mImageListAdapter;
     private FolderListPresenterImpl mFolderListPresenter;
@@ -138,7 +138,6 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         realm.commitTransaction();
 
         //init Image(Right) RecyclerView
-        mImageRecyclerView.addItemDecoration(new GridItemDecoration(1));
         mImageRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mImageRecyclerView.setAdapter(mImageListAdapter);
         mImageRecyclerView.setHasFixedSize(false);
@@ -291,7 +290,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
     }
 
     private void registerWallpaper(){
-        new RegisterWallpaperAsyncTask(getActivity(), this).execute(mChangeCycle, mChangeScreenType);
+        new RegisterWallpaperAsyncTask(this).execute(mChangeCycle, mChangeScreenType);
     }
 
     private void clickDone(){
@@ -379,5 +378,13 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
             }
             Log.d(TAG, "mRepeatCycle: "+mChangeCycle);
         }
+    }
+
+    public void showRegisterDialog(){
+        mRegisterDialogLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void hideRegisterDialog(){
+        mRegisterDialogLinearLayout.setVisibility(View.GONE);
     }
 }

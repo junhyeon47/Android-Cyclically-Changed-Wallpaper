@@ -26,7 +26,7 @@ public class ImageDownloadAsyncTask extends AsyncTask<String, Void, Void> {
     private AlertDialog mAlertDialog;
 
     public ImageDownloadAsyncTask(Activity activity) {
-        mAlertDialog = new SpotsDialog(activity, R.style.CustomSpotsDialog);
+        mAlertDialog = new SpotsDialog(activity, R.style.CustomDownloadSpotsDialog);
     }
 
     @Override

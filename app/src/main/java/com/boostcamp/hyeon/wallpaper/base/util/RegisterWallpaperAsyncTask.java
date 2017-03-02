@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
@@ -29,14 +31,15 @@ public class RegisterWallpaperAsyncTask extends AsyncTask<Integer, Void, Void> {
     private Fragment mFragment;
     private AlertDialog mAlertDialog;
 
-    public RegisterWallpaperAsyncTask(Activity activity, Fragment fragment) {
+    public RegisterWallpaperAsyncTask(Fragment fragment) {
         this.mFragment = fragment;
-        mAlertDialog = new SpotsDialog(fragment.getActivity(), R.style.CustomSpotsDialog);
+        mAlertDialog = new SpotsDialog(fragment.getActivity(), R.style.CustomWallpaperSpotsDialog);
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        ((GalleryFragment)mFragment).showRegisterDialog();
         mAlertDialog.show();
     }
 
@@ -81,6 +84,7 @@ public class RegisterWallpaperAsyncTask extends AsyncTask<Integer, Void, Void> {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                ((GalleryFragment)mFragment).hideRegisterDialog();
                 mAlertDialog.dismiss();
             }
         }, 1000);

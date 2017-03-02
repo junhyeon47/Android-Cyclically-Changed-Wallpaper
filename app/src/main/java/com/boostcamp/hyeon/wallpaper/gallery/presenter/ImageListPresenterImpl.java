@@ -56,7 +56,7 @@ public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnI
             //if select mode
             String imageId = mAdapterModel.getItem(position).getImageId();
             mGalleryModel.selectImage(imageId);
-            mAdapterView.notifyAdapter();
+            mAdapterView.notifyAdapter(position);
         }else{
             //moveToDetailActivity
             String bucketId = mAdapterModel.getItem(position).getBucketId();
@@ -74,11 +74,10 @@ public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnI
     public void onItemLongClick(int position) {
         mView.changeModeForSelect();
         //realm image object update. position -> select
-        //mAdapterModel.update(position);
-        //mAdapterView.notifyAdapter(position);
+        mAdapterView.notifyAdapter(position);
         String imageId = mAdapterModel.getItem(position).getImageId();
         mGalleryModel.selectImage(imageId);
-        mAdapterView.notifyAdapter();
+        mAdapterView.notifyAdapter(position);
     }
 
 }
