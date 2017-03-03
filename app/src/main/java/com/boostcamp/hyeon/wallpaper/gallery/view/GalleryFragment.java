@@ -219,7 +219,6 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
 
     @Override
     public void changeModeForSelect() {
-        mImageRecyclerView.getRecycledViewPool().clear();
         //menu_select menu item gone.
         //menu_preview, menu_done menu item visible.
         mSelectMenuItem.setVisible(false);
@@ -234,7 +233,6 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         ((MainActivity)getActivity()).setOnBackKeyPressedListener(this);
         //set SharedPreferences
         SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, true);
-        mImageListAdapter.notifyAdapter();
     }
 
     @Override
@@ -263,14 +261,23 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
         RealmResults<Image> imageRealmResults = realm.where(Image.class).equalTo("bucketId", bucketId).findAllSorted("dateAdded", Sort.DESCENDING);
-        realm.commitTransaction();
         //change adapter
         mImageListAdapter = new ImageListAdapter(
                 imageRealmResults,
                 true
         );
+        realm.commitTransaction();
 
+        //init Image(Right) RecyclerView
+        mImageRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         mImageRecyclerView.setAdapter(mImageListAdapter);
+        mImageRecyclerView.setHasFixedSize(true);
+
+        //remove blinking animation
+        RecyclerView.ItemAnimator animator = mImageRecyclerView.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
 
         mImageListPresenter.detachView();
         mImageListPresenter.attachView(this);

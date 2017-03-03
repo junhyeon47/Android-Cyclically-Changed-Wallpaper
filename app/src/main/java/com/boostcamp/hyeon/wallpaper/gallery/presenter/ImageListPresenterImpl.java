@@ -47,7 +47,6 @@ public class ImageListPresenterImpl implements ImageListPresenter.Presenter, OnI
     @Override
     public void updateAllImagesDeselected() {
         mGalleryModel.updateAllImagesDeselected();
-        mAdapterView.notifyAdapter();
     }
 
     @Override
