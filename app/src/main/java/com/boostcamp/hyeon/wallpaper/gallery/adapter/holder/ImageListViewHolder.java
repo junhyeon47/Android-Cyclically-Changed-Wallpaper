@@ -1,26 +1,19 @@
 package com.boostcamp.hyeon.wallpaper.gallery.adapter.holder;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.boostcamp.hyeon.wallpaper.R;
-
-import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
-import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
-import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
-
-import com.squareup.picasso.MemoryPolicy;
+import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -41,7 +34,6 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.tv_number) TextView mNumberTextView;
     private Context mContext;
     private OnItemClickListener mOnItemCLickListener;
-    private int mSize;
 
     public ImageListViewHolder(View itemView, Context mContext, OnItemClickListener mOnItemCLickListener) {
         super(itemView);
@@ -49,16 +41,16 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
         this.mContext = mContext;
         this.mOnItemCLickListener = mOnItemCLickListener;
 
-        mSize = DisplayMetricsHelper.getInstance().getDeviceWidth()*2/9;
+        int size = DisplayMetricsHelper.getInstance().getDeviceWidth()*2/9;
 
         ViewGroup.LayoutParams layoutParams = mItemFrameLayout.getLayoutParams();
-        layoutParams.width = mSize;
-        layoutParams.height = mSize;
+        layoutParams.width = size;
+        layoutParams.height = size;
         mItemFrameLayout.setLayoutParams(layoutParams);
 
         layoutParams = mThumbnailImageView.getLayoutParams();
-        layoutParams.width = mSize-1;
-        layoutParams.height = mSize-1;
+        layoutParams.width = size-1;
+        layoutParams.height = size-1;
         mThumbnailImageView.setLayoutParams(layoutParams);
         Log.d(TAG, "ImageListViewHolder constructor");
     }

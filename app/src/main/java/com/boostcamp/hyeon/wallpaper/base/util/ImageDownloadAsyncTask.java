@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 
-
 import com.boostcamp.hyeon.wallpaper.R;
 
 import java.io.File;

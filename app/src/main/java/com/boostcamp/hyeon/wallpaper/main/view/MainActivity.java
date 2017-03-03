@@ -1,10 +1,10 @@
 package com.boostcamp.hyeon.wallpaper.main.view;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -14,9 +14,9 @@ import android.widget.ImageView;
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnBackKeyPressedListener;
 import com.boostcamp.hyeon.wallpaper.base.service.WallpaperManagerService;
+import com.boostcamp.hyeon.wallpaper.gallery.view.GalleryFragment;
 import com.boostcamp.hyeon.wallpaper.main.adapter.ViewPagerAdapter;
 import com.boostcamp.hyeon.wallpaper.search.view.SearchFragment;
-import com.boostcamp.hyeon.wallpaper.gallery.view.GalleryFragment;
 import com.boostcamp.hyeon.wallpaper.setting.view.SettingFragment;
 
 import butterknife.BindView;

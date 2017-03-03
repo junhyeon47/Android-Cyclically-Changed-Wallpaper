@@ -3,6 +3,7 @@ package com.boostcamp.hyeon.wallpaper.splash;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -12,10 +13,8 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
@@ -23,7 +22,6 @@ import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.util.SyncDataHelper;
 import com.boostcamp.hyeon.wallpaper.main.view.MainActivity;
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

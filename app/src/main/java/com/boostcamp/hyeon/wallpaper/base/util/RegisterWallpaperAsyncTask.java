@@ -1,13 +1,9 @@
 package com.boostcamp.hyeon.wallpaper.base.util;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;

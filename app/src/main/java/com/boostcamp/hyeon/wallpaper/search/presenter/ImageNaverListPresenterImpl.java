@@ -4,11 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.boostcamp.hyeon.wallpaper.base.adapter.RealmListAdapterContract;
-import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.domain.ImageNaver;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 import com.boostcamp.hyeon.wallpaper.base.util.Define;
-import com.boostcamp.hyeon.wallpaper.gallery.presenter.ImageListPresenter;
 import com.boostcamp.hyeon.wallpaper.search.model.SearchModel;
 
 /**

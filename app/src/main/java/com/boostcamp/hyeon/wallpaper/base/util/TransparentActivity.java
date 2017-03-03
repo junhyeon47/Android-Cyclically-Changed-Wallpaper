@@ -1,7 +1,6 @@
 package com.boostcamp.hyeon.wallpaper.base.util;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager.LayoutParams;

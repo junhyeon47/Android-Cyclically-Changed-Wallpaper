@@ -1,12 +1,11 @@
 package com.boostcamp.hyeon.wallpaper.detail.view;
 
 import android.app.Activity;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
@@ -21,11 +20,12 @@ import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class DetailActivity extends Activity {
+public class DetailActivity extends Activity implements ViewPager.OnPageChangeListener{
     private static final String TAG = DetailActivity.class.getSimpleName();
     @BindView(R.id.view_pager) ViewPager mViewPager;
     @BindView(R.id.ib_download) ImageButton mDownloadImageButton;
     private DetailPagerAdapter mAdapter;
+    private int mCurrentPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +85,7 @@ public class DetailActivity extends Activity {
         mAdapter = new DetailPagerAdapter(this, realmResults, from);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(position);
+        mViewPager.addOnPageChangeListener(this);
     }
 
     @OnClick(R.id.ib_back)
@@ -96,5 +97,20 @@ public class DetailActivity extends Activity {
     public void onClickDownload(){
         Log.d(TAG, "onClickDownload - position: "+mViewPager.getCurrentItem());
         mAdapter.downloadImage(mViewPager.getCurrentItem());
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        Log.d(TAG, "onPageSelected: "+position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        Log.d(TAG, "onPageScrollStateChanged: "+state);
     }
 }

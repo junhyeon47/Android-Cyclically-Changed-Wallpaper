@@ -1,8 +1,6 @@
 package com.boostcamp.hyeon.wallpaper.base.app;
 
 import android.app.Application;
-import android.util.DisplayMetrics;
-import android.widget.Toast;
 
 import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.MediaScannerConnectionHelper;

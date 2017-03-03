@@ -1,7 +1,6 @@
 package com.boostcamp.hyeon.wallpaper.base.domain;
 
 import io.realm.RealmObject;
-import io.realm.annotations.Required;
 
 /**
  * Created by hyeon on 2017. 2. 13..

@@ -3,8 +3,8 @@ package com.boostcamp.hyeon.wallpaper.gallery.presenter;
 
 import com.boostcamp.hyeon.wallpaper.base.adapter.RealmListAdapterContract;
 import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
-import com.boostcamp.hyeon.wallpaper.gallery.model.GalleryModel;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
+import com.boostcamp.hyeon.wallpaper.gallery.model.GalleryModel;
 
 /**
  * Created by hyeon on 2017. 2. 13..

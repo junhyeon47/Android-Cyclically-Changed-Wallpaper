@@ -28,7 +28,6 @@ import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.domain.Wallpaper;
 import com.boostcamp.hyeon.wallpaper.base.util.AlarmManagerHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.Define;
-import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.setting.adapter.WallpaperListAdapter;
 import com.boostcamp.hyeon.wallpaper.setting.presenter.SettingPresenter;
 import com.boostcamp.hyeon.wallpaper.setting.presenter.SettingPresenterImpl;

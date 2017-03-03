@@ -10,7 +10,6 @@ import com.boostcamp.hyeon.wallpaper.base.domain.Wallpaper;
 import com.boostcamp.hyeon.wallpaper.base.service.WallpaperManagerService;
 import com.boostcamp.hyeon.wallpaper.base.util.AlarmManagerHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.Define;
-import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 
 import java.util.Calendar;
 

@@ -24,16 +24,13 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
-import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
 import com.boostcamp.hyeon.wallpaper.base.domain.ImageNaver;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.detail.view.DetailActivity;
 import com.boostcamp.hyeon.wallpaper.search.adapter.ImageNaverListAdapter;
-import com.boostcamp.hyeon.wallpaper.search.model.SearchModel;
 import com.boostcamp.hyeon.wallpaper.search.presenter.ImageNaverListPresenter;
 import com.boostcamp.hyeon.wallpaper.search.presenter.ImageNaverListPresenterImpl;
 

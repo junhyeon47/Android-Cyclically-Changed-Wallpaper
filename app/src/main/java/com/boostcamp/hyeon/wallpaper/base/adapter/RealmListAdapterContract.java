@@ -2,8 +2,6 @@ package com.boostcamp.hyeon.wallpaper.base.adapter;
 
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 
-import java.util.List;
-
 /**
  * Created by hyeon on 2017. 2. 15..
  */

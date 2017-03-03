@@ -1,7 +1,6 @@
 package com.boostcamp.hyeon.wallpaper.base.util;
 
 import android.content.Context;
-
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.util.Log;
