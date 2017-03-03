@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -115,6 +116,12 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         mFolderRecyclerView.setAdapter(mFolderListAdapter);
         mFolderRecyclerView.setHasFixedSize(true);
 
+        //remove blinking animation
+        RecyclerView.ItemAnimator animator = mFolderRecyclerView.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
+
         //init Folder Presenter
         mFolderListPresenter = new FolderListPresenterImpl(model);
         mFolderListPresenter.attachView(this);
@@ -140,11 +147,11 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         mImageRecyclerView.setAdapter(mImageListAdapter);
         mImageRecyclerView.setHasFixedSize(true);
 
-//        int height = DisplayMetricsHelper.getInstance().getDeviceHeight() - (int) (106 * Resources.getSystem().getDisplayMetrics().density);
-//        ViewGroup.LayoutParams layoutParams = mImageRecyclerView.getLayoutParams();
-//        layoutParams.height = height;
-//        mImageRecyclerView.setLayoutParams(layoutParams);
-//        Log.d(TAG, "recycler view height: "+height);
+        //remove blinking animation
+        animator = mImageRecyclerView.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
 
         //init Presenter
         mImageListPresenter = new ImageListPresenterImpl(model);
