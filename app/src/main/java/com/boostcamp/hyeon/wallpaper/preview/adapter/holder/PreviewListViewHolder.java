@@ -49,7 +49,7 @@ public class PreviewListViewHolder extends RecyclerView.ViewHolder {
         Picasso.with(mContext)
                 .load(new File(image.getImageUri()))
                 .resize(mWidth, mHeight)
-                .centerCrop()
+                .centerInside()
                 .into(mImageView);
     }
 }
