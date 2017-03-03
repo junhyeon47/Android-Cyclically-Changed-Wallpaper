@@ -33,8 +33,8 @@ public class Define {
     public static final int ID_ALARM_TRANSPARENT = 9999;
     public static final int TYPE_USING_WALLPAPER = 304;
     public static final int TYPE_USING_RANDOM = 593;
-    public static final int LIMIT_WIDTH_FOR_SAMPLE = 2000;
-    public static final int LIMIT_HEIGHT_FOR_SAMPLE = 2000;
-    public static final int LOW_SAMPLE_SIZE = 2;
+    public static final int LIMIT_WIDTH_FOR_SAMPLE = 1980;
+    public static final int LIMIT_HEIGHT_FOR_SAMPLE = 1980;
+    public static final int LOW_SAMPLE_SIZE = 1;
     public static final int HIGH_SAMPLE_SIZE = 4;
 }
