@@ -38,9 +38,12 @@ public class WallpaperMangerReceiver extends BroadcastReceiver{
             wallpaper = realm.createObject(Wallpaper.class);
         if(wallpaper.isUsing()) {
             if (!wallpaper.isTransparent()) {
-                if (intent.getAction().equals(context.getString(R.string.wallpaper_set_action)) || intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                if (intent.getAction().equals(context.getString(R.string.wallpaper_set_action))) {
                     Log.d(TAG, "default wallpaper");
                     setWallpaperManager(context, wallpaper);
+                }else if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF)){
+                    if(wallpaper.getChangeCycle() == Define.CHANGE_CYCLE_SCREEN_OFF)
+                        setWallpaperManager(context, wallpaper);
                 }
             } else {
                 if (intent.getAction().equals(context.getString(R.string.wallpaper_set_action))) {

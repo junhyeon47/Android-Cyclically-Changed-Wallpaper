@@ -214,13 +214,27 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
         Wallpaper wallpaper = realm.where(Wallpaper.class).findFirst();
+        int currentChangeCycle = wallpaper.getChangeCycle();
         wallpaper.setChangeCycle(mChangeCycle);
         realm.commitTransaction();
-        if(mChangeCycle != Define.CHANGE_CYCLE_SCREEN_OFF){
-            AlarmManagerHelper.unregisterToAlarmManager(getContext(), Define.ID_ALARM_DEFAULT);
-            Calendar date = Calendar.getInstance();
-            date.setTimeInMillis(System.currentTimeMillis() + Define.DELAY_MILLIS);
-            AlarmManagerHelper.registerToAlarmManager(getContext(),date, Define.ID_ALARM_DEFAULT);
+
+        if(currentChangeCycle != Define.CHANGE_CYCLE_SCREEN_OFF){
+            //배경화면 변경주기가 시간인 경우. (알람매니저에 등록된 알람이 있음)
+            if(mChangeCycle == Define.CHANGE_CYCLE_SCREEN_OFF){
+                //변경된 주기가 화면을 켜질때 마다 인 경우.
+                AlarmManagerHelper.unregisterToAlarmManager(getContext(), Define.ID_ALARM_DEFAULT);
+                Calendar date = Calendar.getInstance();
+                date.setTimeInMillis(System.currentTimeMillis() + Define.DELAY_MILLIS);
+                AlarmManagerHelper.registerToAlarmManager(getContext(), date, Define.ID_ALARM_DEFAULT);
+            }
+        }else{
+            //이전에 설정이 화면 켜질때 마다인 경우. (알람매니저에 등록된 알람이 없음)
+            if(mChangeCycle != Define.CHANGE_CYCLE_SCREEN_OFF){
+                //변경된 주기가 시간인 경우.
+                Calendar date = Calendar.getInstance();
+                date.setTimeInMillis(System.currentTimeMillis() + Define.DELAY_MILLIS);
+                AlarmManagerHelper.registerToAlarmManager(getContext(), date, Define.ID_ALARM_DEFAULT);
+            }
         }
         setWallpaperChangeCycle(mChangeCycle);
     }
