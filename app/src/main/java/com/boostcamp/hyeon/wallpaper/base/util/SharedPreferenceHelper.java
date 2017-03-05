@@ -18,7 +18,8 @@ public class SharedPreferenceHelper{
         BOOLEAN_GALLEY_SELECT_MODE("pref_key_gallery_select_mode"),
         BOOLEAN_PREVIEW_ACTIVITY_CALL("pref_key_preview_activity_call"),
         STRING_SEARCH_RESULT_SAVE("pref_key_search_result_save"),
-        STRING_LAST_SEARCH_QUERY("pref_key_last_search_query");
+        STRING_LAST_SEARCH_QUERY("pref_key_last_search_query"),
+        BOOLEAN_FIRST_EXECUTION("pref_key_first_execution");
 
         private final String name;
 

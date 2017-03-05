@@ -4,13 +4,13 @@
     android:interpolator="@android:anim/accelerate_interpolator">
     <alpha
         android:startOffset="0"
-        android:duration="1000"
+        android:duration="2000"
         android:fromAlpha="0.0"
         android:toAlpha="1.0"
         android:fillAfter="false"/>
     <alpha
-        android:startOffset="1000"
-        android:duration="1000"
+        android:startOffset="2000"
+        android:duration="2000"
         android:fromAlpha="1.0"
         android:toAlpha="0.0"
         android:fillBefore="false"/>

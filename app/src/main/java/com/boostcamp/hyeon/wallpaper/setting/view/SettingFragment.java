@@ -14,6 +14,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -69,6 +71,8 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //for use option menu
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -127,6 +131,12 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
         super.onResume();
         Log.d(TAG, "onResume()");
         setSettingValues(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_setting, menu);
     }
 
     //switch group checked change.

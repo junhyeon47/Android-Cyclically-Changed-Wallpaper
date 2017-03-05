@@ -13,6 +13,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.boostcamp.hyeon.wallpaper.R;
+import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.SyncDataHelper;
 import com.boostcamp.hyeon.wallpaper.main.view.MainActivity;
 
@@ -27,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SplashActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Void>, Handler.Callback{
+    private static final String TAG = SplashActivity.class.getSimpleName();
     private static final int PERMISSION_READ_WRITE = 23;
     private static final int FIRST_SYNC_DATA_LOADER = 1;
     private static final int DELAY_MILLIS = 2000;
@@ -79,6 +82,14 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
         return new AsyncTaskLoader<Void>(this){
             @Override
             protected void onStartLoading() {
+                if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_FIRST_EXECUTION, true)){
+                    Log.d(TAG, "first execution");
+                    SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_FIRST_EXECUTION, false);
+                    mLoadingTextView.setText(getString(R.string.message_first_execution));
+                }else{
+                    Log.d(TAG, "not first execution");
+                    mLoadingTextView.setText(getString(R.string.message_loading));
+                }
                 mLoadingTextView.setVisibility(View.VISIBLE);
                 mRoundCornerProgressBar.setVisibility(View.VISIBLE);
                 mStartTime = System.currentTimeMillis();
