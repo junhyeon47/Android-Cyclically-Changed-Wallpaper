@@ -37,4 +37,16 @@ public class Define {
     public static final int LIMIT_HEIGHT_FOR_SAMPLE = 1980;
     public static final int LOW_SAMPLE_SIZE = 1;
     public static final int HIGH_SAMPLE_SIZE = 4;
+
+    public static final int[] OPEN_SOURCE_LICENSE_DESCRIPTIONS = {
+            R.raw.license_aosp,
+            R.raw.license_aosp,
+            R.raw.license_aosp,
+            R.raw.license_realm,
+            R.raw.license_jake_wharton,
+            R.raw.license_square,
+            R.raw.license_jack_wang,
+            R.raw.license_akexorcist,
+            R.raw.license_maxim_dybarsky
+    };
 }

@@ -15,6 +15,7 @@ import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnBackKeyPressedListener;
 import com.boostcamp.hyeon.wallpaper.base.service.WallpaperManagerService;
 import com.boostcamp.hyeon.wallpaper.gallery.view.GalleryFragment;
+import com.boostcamp.hyeon.wallpaper.license.list.LicenseListActivity;
 import com.boostcamp.hyeon.wallpaper.main.adapter.ViewPagerAdapter;
 import com.boostcamp.hyeon.wallpaper.search.view.SearchFragment;
 import com.boostcamp.hyeon.wallpaper.setting.view.SettingFragment;
@@ -29,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     @BindView(R.id.view_pager) ViewPager mViewPager;
     @BindView(R.id.et_search) EditText mSearchEditText;
     @BindView(R.id.iv_search_icon) ImageView mSearchIconImageView;
-
     private ViewPagerAdapter mAdapter;
     private OnBackKeyPressedListener mOnBackKeyPressedListener;
 

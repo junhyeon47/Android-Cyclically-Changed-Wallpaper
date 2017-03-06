@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="license_list">
+        <item>Android Support v7 Appcompat Library</item>
+        <item>Android Support v7 Recycler View Library</item>
+        <item>Android Support Design Library</item>
+        <item>Realm</item>
+        <item>Butter Knife</item>
+        <item>Retrofit</item>
+        <item>AV Loading Indicator View</item>
+        <item>Round Corner Progress Bar</item>
+        <item>Spots Dialog</item>
+    </string-array>
+</resources>

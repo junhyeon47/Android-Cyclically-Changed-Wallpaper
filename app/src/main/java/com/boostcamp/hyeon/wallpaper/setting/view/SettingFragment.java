@@ -3,6 +3,7 @@ package com.boostcamp.hyeon.wallpaper.setting.view;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -30,6 +32,8 @@ import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.domain.Wallpaper;
 import com.boostcamp.hyeon.wallpaper.base.util.AlarmManagerHelper;
 import com.boostcamp.hyeon.wallpaper.base.util.Define;
+import com.boostcamp.hyeon.wallpaper.license.list.LicenseListActivity;
+import com.boostcamp.hyeon.wallpaper.main.view.MainActivity;
 import com.boostcamp.hyeon.wallpaper.setting.adapter.WallpaperListAdapter;
 import com.boostcamp.hyeon.wallpaper.setting.presenter.SettingPresenter;
 import com.boostcamp.hyeon.wallpaper.setting.presenter.SettingPresenterImpl;
@@ -137,6 +141,16 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_setting, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_open_source_license:
+                moveToLicenseListActivity();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     //switch group checked change.
@@ -366,5 +380,10 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
         }else{
             mTransparentWallpaperTextView.setText(getString(R.string.label_not_using));
         }
+    }
+
+    private void moveToLicenseListActivity(){
+        Intent intent = new Intent(getActivity(), LicenseListActivity.class);
+        getActivity().startActivity(intent);
     }
 }

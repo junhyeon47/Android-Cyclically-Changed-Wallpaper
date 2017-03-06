@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/menu_option_setting"
+    <item android:id="@+id/menu_open_source_license"
         android:orderInCategory="1"
-        android:title="@string/label_using_open_source_library"
+        android:title="@string/label_open_source_license"
         app:showAsAction="never" />
 </menu>

@@ -2,19 +2,16 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="tab_label">16sp</dimen>
     <dimen name="folder_name_margin">5dp</dimen>
     <dimen name="folder_layout_padding">10dp</dimen>
     <dimen name="folder_text_size">12sp</dimen>
     <dimen name="folder_image_size">16dp</dimen>
     <dimen name="folder_margin_right">2dp</dimen>
-    <dimen name="select_image_padding">20dp</dimen>
     <dimen name="progress_bar_height">7dp</dimen>
     <dimen name="progress_bar_margin">20dp</dimen>
     <dimen name="progress_bar_padding">0.5dp</dimen>
     <dimen name="progress_bar_radius">3dp</dimen>
     <dimen name="splash_padding">10dp</dimen>
-    <dimen name="image_select_padding">10dp</dimen>
     <dimen name="alert_padding">15dp</dimen>
     <dimen name="alert_margin">10dp</dimen>
 </resources>
