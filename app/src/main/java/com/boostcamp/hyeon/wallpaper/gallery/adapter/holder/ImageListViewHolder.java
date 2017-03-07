@@ -52,7 +52,6 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
         layoutParams.width = size-1;
         layoutParams.height = size-1;
         mThumbnailImageView.setLayoutParams(layoutParams);
-        Log.d(TAG, "ImageListViewHolder constructor");
     }
 
     public void bind(Image image, final int position){

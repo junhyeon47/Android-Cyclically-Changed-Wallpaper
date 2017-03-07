@@ -47,6 +47,7 @@ public class Define {
             R.raw.license_square,
             R.raw.license_jack_wang,
             R.raw.license_akexorcist,
-            R.raw.license_maxim_dybarsky
+            R.raw.license_maxim_dybarsky,
+            R.raw.license_chris_banes
     };
 }

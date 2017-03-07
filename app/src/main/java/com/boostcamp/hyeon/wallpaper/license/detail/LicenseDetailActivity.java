@@ -37,6 +37,11 @@ public class LicenseDetailActivity extends AppCompatActivity {
 
         new AsyncTask<Integer, Void, String>(){
             @Override
+            protected void onPreExecute() {
+
+            }
+
+            @Override
             protected String doInBackground(Integer... params) {
                 return loadTextFile(params[0]);
             }

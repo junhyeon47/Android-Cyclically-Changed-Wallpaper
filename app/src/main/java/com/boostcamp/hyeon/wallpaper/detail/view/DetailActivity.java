@@ -20,12 +20,11 @@ import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class DetailActivity extends Activity implements ViewPager.OnPageChangeListener{
+public class DetailActivity extends Activity {
     private static final String TAG = DetailActivity.class.getSimpleName();
     @BindView(R.id.view_pager) ViewPager mViewPager;
     @BindView(R.id.ib_download) ImageButton mDownloadImageButton;
     private DetailPagerAdapter mAdapter;
-    private int mCurrentPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +84,6 @@ public class DetailActivity extends Activity implements ViewPager.OnPageChangeLi
         mAdapter = new DetailPagerAdapter(this, realmResults, from);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(position);
-        mViewPager.addOnPageChangeListener(this);
     }
 
     @OnClick(R.id.ib_back)
@@ -95,22 +93,6 @@ public class DetailActivity extends Activity implements ViewPager.OnPageChangeLi
 
     @OnClick(R.id.ib_download)
     public void onClickDownload(){
-        Log.d(TAG, "onClickDownload - position: "+mViewPager.getCurrentItem());
         mAdapter.downloadImage(mViewPager.getCurrentItem());
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        Log.d(TAG, "onPageSelected: "+position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-        Log.d(TAG, "onPageScrollStateChanged: "+state);
     }
 }
