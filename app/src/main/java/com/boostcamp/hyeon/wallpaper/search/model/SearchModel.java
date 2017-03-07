@@ -52,6 +52,7 @@ public class SearchModel {
 
     public interface ModelDataChange {
         void update();
+        void fail();
     }
 
     public void setOnChangeListener(ModelDataChange dataChange) {
@@ -93,6 +94,9 @@ public class SearchModel {
         @Override
         public void onFailure(Call<ResultNaver> call, Throwable t) {
             t.printStackTrace();
+            if(mModelDataChange != null){
+                mModelDataChange.fail();
+            }
         }
     };
 }

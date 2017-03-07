@@ -12,6 +12,7 @@ import com.boostcamp.hyeon.wallpaper.base.domain.ImageNaver;
 public interface ImageNaverListPresenter {
     interface View{
         void moveToDetailActivity(Bundle bundle);
+        void showFailureMessage();
     }
     interface Presenter{
         void attachView(ImageNaverListPresenter.View view);

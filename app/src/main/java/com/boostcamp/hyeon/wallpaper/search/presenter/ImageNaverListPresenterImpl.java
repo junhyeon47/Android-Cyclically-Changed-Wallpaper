@@ -72,4 +72,9 @@ public class ImageNaverListPresenterImpl implements ImageNaverListPresenter.Pres
     public void update() {
         mAdapterView.notifyAdapter();
     }
+
+    @Override
+    public void fail() {
+        mView.showFailureMessage();
+    }
 }
