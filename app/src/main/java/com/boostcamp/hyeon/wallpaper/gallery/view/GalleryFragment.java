@@ -161,6 +161,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
 
         //init SharedPreferences
         SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_GALLEY_SELECT_MODE, false);
+        SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_PREVIEW_ACTIVITY_CALL, false);
 
         //init initial Value
         mChangeCycle = Define.DEFAULT_CHANGE_CYCLE;
