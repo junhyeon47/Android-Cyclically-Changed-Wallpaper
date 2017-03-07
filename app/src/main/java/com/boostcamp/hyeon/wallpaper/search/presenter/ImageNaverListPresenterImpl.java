@@ -47,8 +47,8 @@ public class ImageNaverListPresenterImpl implements ImageNaverListPresenter.Pres
     }
 
     @Override
-    public void search(String query) {
-        mSearchModel.callGetList(query);
+    public void search(String query, int start) {
+        mSearchModel.callGetList(query, start);
     }
 
     @Override

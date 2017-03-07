@@ -18,6 +18,6 @@ public interface ImageNaverListPresenter {
         void detachView();
         void setListAdapterModel(RealmListAdapterContract.Model<ImageNaver> adapterModel);
         void setListAdapterView(RealmListAdapterContract.View adapterView);
-        void search(String query);
+        void search(String query, int start);
     }
 }

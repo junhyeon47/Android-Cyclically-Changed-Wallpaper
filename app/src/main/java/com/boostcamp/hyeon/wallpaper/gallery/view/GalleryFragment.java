@@ -301,6 +301,8 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         if(realm.where(Image.class).equalTo("isSelected", true).findAll().size() > 0) {
             Intent intent = new Intent(getActivity(), PreviewActivity.class);
             getActivity().startActivity(intent);
+        }else{
+            Toast.makeText(getActivity(), "이미지를 선택해주세요!", Toast.LENGTH_SHORT).show();
         }
 
         realm.commitTransaction();

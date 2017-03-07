@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.domain.ImageNaver;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -26,6 +26,7 @@ public class ImageNaverListViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.layout_item) FrameLayout mItemFrameLayout;
     @BindView(R.id.iv_thumbnail) ImageView mThumbnailImageView;
     @BindView(R.id.tv_number) TextView mNumberTextView;
+    @BindView(R.id.tv_error_message)TextView mErrorMessageTextView;
 
     private Context mContext;
     private OnItemClickListener mOnItemCLickListener;
@@ -51,12 +52,23 @@ public class ImageNaverListViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void bind(ImageNaver imageNaver, final int position){
+    public void bind(final ImageNaver imageNaver, final int position){
+        mErrorMessageTextView.setVisibility(View.GONE);
         Picasso.with(mContext)
                 .load(imageNaver.getThumbnail())
                 .fit()
                 .centerCrop()
-                .into(mThumbnailImageView);
+                .into(mThumbnailImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        mErrorMessageTextView.setVisibility(View.VISIBLE);
+                    }
+                });
 
         mNumberTextView.setVisibility(View.GONE);
 

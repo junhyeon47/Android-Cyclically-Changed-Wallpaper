@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +28,7 @@ import android.widget.TextView;
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.ImageNaver;
+import com.boostcamp.hyeon.wallpaper.base.listener.EndlessRecyclerViewScrollListener;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.detail.view.DetailActivity;
 import com.boostcamp.hyeon.wallpaper.search.adapter.ImageNaverListAdapter;
@@ -52,6 +52,7 @@ public class SearchFragment extends Fragment implements ImageNaverListPresenter.
     private ImageNaverListPresenterImpl mImageNaverListPresenter;
     private RadioGroup mSearchResultSaveRadioGroup;
     private String mSearchResultSaveValue;
+    private String mQuery;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -82,6 +83,15 @@ public class SearchFragment extends Fragment implements ImageNaverListPresenter.
         mSearchEditText = (EditText)toolbar.findViewById(R.id.et_search);
         mSearchEditText.setOnEditorActionListener(this);
 
+        //init SharedPreferences
+        if(SharedPreferenceHelper.getInstance().getString(SharedPreferenceHelper.Key.STRING_SEARCH_RESULT_SAVE, null) == null){
+            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_SEARCH_RESULT_SAVE, getString(R.string.label_search_result_do_not_save));
+        }else if(isSaveSearchResult()){
+            mSearchEditText.setText(SharedPreferenceHelper.getInstance().getString(SharedPreferenceHelper.Key.STRING_LAST_SEARCH_QUERY, ""));
+        }else if(!isSaveSearchResult()){
+            deleteSearchResult();
+        }
+
         //init adapter
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
@@ -94,22 +104,22 @@ public class SearchFragment extends Fragment implements ImageNaverListPresenter.
         realm.commitTransaction();
 
         //init Image(Right) RecyclerView
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mImageNaverListAdapter);
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                mImageNaverListPresenter.search(mQuery, totalItemsCount);
+            }
+        });
 
         //init presenter
         mImageNaverListPresenter = new ImageNaverListPresenterImpl(getContext());
         mImageNaverListPresenter.attachView(this);
         mImageNaverListPresenter.setListAdapterModel(mImageNaverListAdapter);
         mImageNaverListPresenter.setListAdapterView(mImageNaverListAdapter);
-
-        //init SharedPreferences
-        if(SharedPreferenceHelper.getInstance().getString(SharedPreferenceHelper.Key.STRING_SEARCH_RESULT_SAVE, null) == null){
-            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_SEARCH_RESULT_SAVE, getString(R.string.label_search_result_do_not_save));
-        }else if(isSaveSearchResult()){
-            mSearchEditText.setText(SharedPreferenceHelper.getInstance().getString(SharedPreferenceHelper.Key.STRING_LAST_SEARCH_QUERY, ""));
-        }
 
         //init initial value
         mSearchResultSaveValue = SharedPreferenceHelper.getInstance().getString(SharedPreferenceHelper.Key.STRING_SEARCH_RESULT_SAVE, null);
@@ -139,9 +149,10 @@ public class SearchFragment extends Fragment implements ImageNaverListPresenter.
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if(actionId == EditorInfo.IME_ACTION_DONE){
-            String query = v.getText().toString();
-            mImageNaverListPresenter.search(query);
-            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_LAST_SEARCH_QUERY, query);
+            deleteSearchResult();
+            mQuery = v.getText().toString();
+            mImageNaverListPresenter.search(mQuery, 1);
+            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_LAST_SEARCH_QUERY, mQuery);
         }
         return false;
     }
@@ -201,17 +212,11 @@ public class SearchFragment extends Fragment implements ImageNaverListPresenter.
         return (SharedPreferenceHelper.getInstance().getString(SharedPreferenceHelper.Key.STRING_SEARCH_RESULT_SAVE, null).equals(getString(R.string.label_search_result_save)));
     }
 
-    @Override
-    public void onDestroy() {
-        if(!isSaveSearchResult())
-            deleteSearchResult();
-        super.onDestroy();
-    }
-
     private void deleteSearchResult(){
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
         realm.where(ImageNaver.class).findAll().deleteAllFromRealm();
         realm.commitTransaction();
     }
+
 }

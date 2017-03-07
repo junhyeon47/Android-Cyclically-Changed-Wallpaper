@@ -44,6 +44,7 @@ public class SearchModel {
         Call<ResultNaver> getList(
                 @HeaderMap Map<String, String> headers,
                 @Query("query") String query,
+                @Query("start") Integer start,
                 @Query("display") Integer display,
                 @Query("sort") String sort
         );
@@ -57,12 +58,12 @@ public class SearchModel {
         this.mModelDataChange = dataChange;
     }
 
-    public void callGetList(String query){
+    public void callGetList(String query, int start){
         NaverSearch naverSearch = NaverSearch.retrofit.create(NaverSearch.class);
         Map<String, String> map = new HashMap<>();
         map.put("X-Naver-Client-Id", mContext.getString(R.string.naver_client_id));
         map.put("X-Naver-Client-Secret", mContext.getString(R.string.naver_client_secret));
-        Call<ResultNaver> call = naverSearch.getList(map, query, 100, "sim");
+        Call<ResultNaver> call = naverSearch.getList(map, query, start, 100, "sim");
         call.enqueue(callBackListener);
     }
 
@@ -75,7 +76,6 @@ public class SearchModel {
                 Log.d(TAG, "Success");
                 Realm realm = WallpaperApplication.getRealmInstance();
                 realm.beginTransaction();
-                realm.where(ImageNaver.class).findAll().deleteAllFromRealm();
                 for(ImageNaver item : imageNaverList){
                     ImageNaver imageNaver = realm.createObject(ImageNaver.class);
                     imageNaver.setLink(item.getLink());
