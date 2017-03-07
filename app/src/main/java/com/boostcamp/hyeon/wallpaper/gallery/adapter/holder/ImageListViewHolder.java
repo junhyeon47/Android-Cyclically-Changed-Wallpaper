@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,8 +30,8 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = ImageListViewHolder.class.getSimpleName();
     @BindView(R.id.layout_item) FrameLayout mItemFrameLayout;
     @BindView(R.id.iv_thumbnail) ImageView mThumbnailImageView;
-    @BindView(R.id.iv_select) ImageView mSelectImageView;
-    @BindView(R.id.layout_select) RelativeLayout mSelectRelativeLayout;
+    @BindView(R.id.layout_border) FrameLayout mBorderFrameLayout;
+    @BindView(R.id.layout_number) LinearLayout mNumberLinearLayout;
     @BindView(R.id.tv_number) TextView mNumberTextView;
     private Context mContext;
     private OnItemClickListener mOnItemCLickListener;
@@ -52,6 +53,11 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
         layoutParams.width = size-1;
         layoutParams.height = size-1;
         mThumbnailImageView.setLayoutParams(layoutParams);
+
+        layoutParams = mBorderFrameLayout.getLayoutParams();
+        layoutParams.width = size-1;
+        layoutParams.height = size-1;
+        mBorderFrameLayout.setLayoutParams(layoutParams);
     }
 
     public void bind(Image image, final int position){
@@ -63,12 +69,12 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
                 .into(mThumbnailImageView);
 
         if(image.getSelected()){
-            mSelectImageView.setVisibility(View.VISIBLE);
-            mSelectRelativeLayout.setVisibility(View.VISIBLE);
+            mBorderFrameLayout.setVisibility(View.VISIBLE);
+            mNumberLinearLayout.setVisibility(View.VISIBLE);
             mNumberTextView.setText(String.valueOf(image.getNumber()));
         }else{
-            mSelectImageView.setVisibility(View.GONE);
-            mSelectRelativeLayout.setVisibility(View.GONE);
+            mBorderFrameLayout.setVisibility(View.GONE);
+            mNumberLinearLayout.setVisibility(View.GONE);
         }
 
         mThumbnailImageView.setOnClickListener(new View.OnClickListener() {
@@ -83,13 +89,6 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
             public boolean onLongClick(View v) {
                 mOnItemCLickListener.onItemLongClick(position);
                 return true;
-            }
-        });
-
-        mSelectImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mOnItemCLickListener.onItemClick(position);
             }
         });
     }

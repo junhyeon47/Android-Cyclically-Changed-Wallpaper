@@ -25,8 +25,6 @@ import butterknife.ButterKnife;
 public class ImageNaverListViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.layout_item) FrameLayout mItemFrameLayout;
     @BindView(R.id.iv_thumbnail) ImageView mThumbnailImageView;
-    @BindView(R.id.iv_select) ImageView mSelectImageView;
-    @BindView(R.id.layout_select) RelativeLayout mSelectRelativeLayout;
     @BindView(R.id.tv_number) TextView mNumberTextView;
 
     private Context mContext;
