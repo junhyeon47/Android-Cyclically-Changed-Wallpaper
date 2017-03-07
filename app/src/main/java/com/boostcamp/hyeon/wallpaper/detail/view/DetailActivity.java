@@ -2,8 +2,6 @@ package com.boostcamp.hyeon.wallpaper.detail.view;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -12,6 +10,7 @@ import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.domain.ImageNaver;
 import com.boostcamp.hyeon.wallpaper.base.util.Define;
+import com.boostcamp.hyeon.wallpaper.base.util.ViewPagerForPhotoView;
 import com.boostcamp.hyeon.wallpaper.detail.adapter.DetailPagerAdapter;
 
 import butterknife.BindView;
@@ -23,7 +22,7 @@ import io.realm.Sort;
 
 public class DetailActivity extends Activity {
     private static final String TAG = DetailActivity.class.getSimpleName();
-    @BindView(R.id.view_pager) ViewPager mViewPager;
+    @BindView(R.id.view_pager) ViewPagerForPhotoView mViewPager;
     @BindView(R.id.ib_download) ImageButton mDownloadImageButton;
     private DetailPagerAdapter mAdapter;
 
