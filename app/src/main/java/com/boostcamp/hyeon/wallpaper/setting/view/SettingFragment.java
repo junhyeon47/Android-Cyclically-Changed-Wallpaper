@@ -127,6 +127,7 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
         mRandomWallpaperSwitch.setOnCheckedChangeListener(this);
         //mTransparentSwitch.setOnCheckedChangeListener(this);
 
+        setSettingValues(true);
         Log.d(TAG, "init()");
     }
 
@@ -134,7 +135,7 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume()");
-        setSettingValues(true);
+        //setSettingValues(true);
     }
 
     @Override
@@ -159,11 +160,9 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
         Log.d(TAG, "onCheckedChanged: "+isChecked);
         switch (buttonView.getId()){
             case R.id.sw_wallpaper_type:
-                //SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, isChecked);
                 setWallpaperValue(Define.TYPE_USING_WALLPAPER, isChecked);
                 break;
             case R.id.sw_random_wallpaper:
-                //SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_IS_RANDOM_ORDER, isChecked);
                 setWallpaperValue(Define.TYPE_USING_RANDOM, isChecked);
                 break;
             case R.id.sw_transparent_wallpaper:
@@ -278,11 +277,6 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
     }
 
     private void setSettingValues(boolean isInit){
-        //get setting values init view
-//        boolean isUsingWallpaper = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_USING_WALLPAPER, false);
-//        long changeCycle = SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.Key.LONG_REPEAT_CYCLE_MILLS, Define.NOT_USE_CHANGE_CYCLE);
-//        boolean isRandomOrder = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_RANDOM_ORDER, false);
-//        boolean isTransparentWallpaper = SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_IS_TRANSPARENT_WALLPAPER, false);
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
         Wallpaper wallpaper = realm.where(Wallpaper.class).findFirst();
