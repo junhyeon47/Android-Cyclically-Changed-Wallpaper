@@ -134,7 +134,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         RealmResults<Image> imageRealmResults = null;
         if(folderRealmResults.size() != 0) {
             bucketId = realm.where(Folder.class).equalTo("isOpened", true).findFirst().getBucketId();
-            imageRealmResults = realm.where(Folder.class).equalTo("bucketId", bucketId).findFirst().getImages().sort("dateAdded", Sort.DESCENDING);
+            imageRealmResults = realm.where(Folder.class).equalTo("bucketId", bucketId).findFirst().getImages().sort("dateTaken", Sort.DESCENDING).sort("dateAdded", Sort.DESCENDING);
         }
         mImageListAdapter = new ImageListAdapter(
                 imageRealmResults,
@@ -260,7 +260,7 @@ public class GalleryFragment extends Fragment implements FolderListPresenter.Vie
         String bucketId = mFolderListAdapter.getData().get(position).getBucketId();
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
-        RealmResults<Image> imageRealmResults = realm.where(Image.class).equalTo("bucketId", bucketId).findAllSorted("dateAdded", Sort.DESCENDING);
+        RealmResults<Image> imageRealmResults = realm.where(Image.class).equalTo("bucketId", bucketId).findAllSorted("dateTaken", Sort.DESCENDING, "dateAdded", Sort.DESCENDING);
         //change adapter
         mImageListAdapter = new ImageListAdapter(
                 imageRealmResults,

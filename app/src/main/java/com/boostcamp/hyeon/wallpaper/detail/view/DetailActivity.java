@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class DetailActivity extends Activity {
     private static final String TAG = DetailActivity.class.getSimpleName();
@@ -48,7 +49,7 @@ public class DetailActivity extends Activity {
 
             Realm realm = WallpaperApplication.getRealmInstance();
             realm.beginTransaction();
-            realmResults = realm.where(Image.class).equalTo("bucketId", bucketId).findAll();
+            realmResults = realm.where(Image.class).equalTo("bucketId", bucketId).findAllSorted("dateTaken", Sort.DESCENDING, "dateAdded", Sort.DESCENDING);
             realm.commitTransaction();
 
             for (Object object : realmResults) {
