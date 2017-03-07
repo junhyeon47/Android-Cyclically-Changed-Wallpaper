@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -88,12 +89,12 @@ public class SearchFragment extends Fragment implements ImageNaverListPresenter.
 
         mImageNaverListAdapter = new ImageNaverListAdapter(
                 imageNaverRealmResults,
-                true
+                false
         );
         realm.commitTransaction();
 
         //init Image(Right) RecyclerView
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mImageNaverListAdapter);
         mRecyclerView.setHasFixedSize(true);
 
@@ -105,7 +106,7 @@ public class SearchFragment extends Fragment implements ImageNaverListPresenter.
 
         //init SharedPreferences
         if(SharedPreferenceHelper.getInstance().getString(SharedPreferenceHelper.Key.STRING_SEARCH_RESULT_SAVE, null) == null){
-            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_SEARCH_RESULT_SAVE, getString(R.string.label_search_result_save));
+            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.STRING_SEARCH_RESULT_SAVE, getString(R.string.label_search_result_do_not_save));
         }else if(isSaveSearchResult()){
             mSearchEditText.setText(SharedPreferenceHelper.getInstance().getString(SharedPreferenceHelper.Key.STRING_LAST_SEARCH_QUERY, ""));
         }
