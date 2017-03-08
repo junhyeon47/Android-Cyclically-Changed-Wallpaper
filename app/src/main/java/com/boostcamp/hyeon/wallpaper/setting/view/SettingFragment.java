@@ -67,6 +67,7 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
     private SettingPresenterImpl mSettingPresenter;
     private RadioGroup mChangeRepeatCycleRadioGroup;
     private int mChangeCycle;
+    private boolean mIsInit = false;
 
     public SettingFragment() {
 
@@ -127,8 +128,8 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
         mRandomWallpaperSwitch.setOnCheckedChangeListener(this);
         //mTransparentSwitch.setOnCheckedChangeListener(this);
 
-        setSettingValues(true);
         Log.d(TAG, "init()");
+        mIsInit = true;
     }
 
     @Override
@@ -136,6 +137,7 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
         super.onResume();
         Log.d(TAG, "onResume()");
         //setSettingValues(true);
+        setSettingValues();
     }
 
     @Override
@@ -168,7 +170,7 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
             case R.id.sw_transparent_wallpaper:
                 break;
         }
-        setSettingValues(false);
+        setSettingValues();
     }
 
     private void setWallpaperValue(int type, boolean isChecked){
@@ -276,7 +278,7 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
         }
     }
 
-    private void setSettingValues(boolean isInit){
+    private void setSettingValues(){
         Realm realm = WallpaperApplication.getRealmInstance();
         realm.beginTransaction();
         Wallpaper wallpaper = realm.where(Wallpaper.class).findFirst();
@@ -284,15 +286,16 @@ public class SettingFragment extends Fragment implements SettingPresenter.View, 
             wallpaper = realm.createObject(Wallpaper.class);
         realm.commitTransaction();
 
-        if(isInit){
+        if(mIsInit){
+            Log.d(TAG, "setSettingValues isUsing: "+wallpaper.isUsing());
             mWallpaperTypeSwitch.setChecked(wallpaper.isUsing());
             mRandomWallpaperSwitch.setChecked(wallpaper.isRandom());
             //mTransparentSwitch.setChecked(isTransparentWallpaper);
+            setWallpaperChangeType(wallpaper.isUsing(), wallpaper.getChangeScreenType());
+            setWallpaperChangeCycle(wallpaper.getChangeCycle());
+            setWallpaperRandomOrder(wallpaper.isRandom());
+            //setTransparentWallpaper(isTransparentWallpaper);
         }
-        setWallpaperChangeType(wallpaper.isUsing(), wallpaper.getChangeScreenType());
-        setWallpaperChangeCycle(wallpaper.getChangeCycle());
-        setWallpaperRandomOrder(wallpaper.isRandom());
-        //setTransparentWallpaper(isTransparentWallpaper);
     }
 
     private void setWallpaperChangeType(boolean isUsing, int type){
