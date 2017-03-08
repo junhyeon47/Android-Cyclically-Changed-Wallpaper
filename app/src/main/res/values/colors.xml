@@ -9,4 +9,5 @@
     <color name="colorTeal500">#009688</color>
     <color name="colorTeal300Opacity150">#964db6ac</color>
     <color name="colorGrey500">#9E9E9E</color>
+    <color name="colorIntroActivityBackground">#a0000000</color>
 </resources>

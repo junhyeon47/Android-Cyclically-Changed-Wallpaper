@@ -37,7 +37,6 @@ public class Define {
     public static final int LIMIT_HEIGHT_FOR_SAMPLE = 1980;
     public static final int LOW_SAMPLE_SIZE = 1;
     public static final int HIGH_SAMPLE_SIZE = 4;
-
     public static final int[] OPEN_SOURCE_LICENSE_DESCRIPTIONS = {
             R.raw.license_aosp,
             R.raw.license_aosp,
@@ -48,6 +47,20 @@ public class Define {
             R.raw.license_jack_wang,
             R.raw.license_akexorcist,
             R.raw.license_maxim_dybarsky,
-            R.raw.license_chris_banes
+            R.raw.license_chris_banes,
+            R.raw.license_tango_agency
+    };
+    public static final int NUMBER_OF_INTRO = 4;
+    public static final int[] INTRO_IMAGE = {
+            R.drawable.app_desc_01,
+            R.drawable.app_desc_02,
+            R.drawable.app_desc_03,
+            R.drawable.app_desc_04
+    };
+    public static final int[] INTRO_MESSAGE = {
+            R.string.message_intro_select_images,
+            R.string.message_intro_select_cycle,
+            R.string.message_intro_search_and_download,
+            R.string.message_intro_setting
     };
 }

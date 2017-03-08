@@ -14,7 +14,9 @@ import android.widget.ImageView;
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnBackKeyPressedListener;
 import com.boostcamp.hyeon.wallpaper.base.service.WallpaperManagerService;
+import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
 import com.boostcamp.hyeon.wallpaper.gallery.view.GalleryFragment;
+import com.boostcamp.hyeon.wallpaper.intro.IntroActivity;
 import com.boostcamp.hyeon.wallpaper.license.list.LicenseListActivity;
 import com.boostcamp.hyeon.wallpaper.main.adapter.ViewPagerAdapter;
 import com.boostcamp.hyeon.wallpaper.search.view.SearchFragment;
@@ -81,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         //setup ActionBar
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(mToolbarTitles[mTabLayout.getSelectedTabPosition()]);
+
+        if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_FIRST_EXECUTION, true))
+            moveToIntroActivity();
     }
 
     @Override
@@ -123,5 +128,10 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         }else {
             super.onBackPressed();
         }
+    }
+
+    private void moveToIntroActivity(){
+        Intent intent = new Intent(this, IntroActivity.class);
+        startActivity(intent);
     }
 }

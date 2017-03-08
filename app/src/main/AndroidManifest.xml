@@ -43,12 +43,17 @@
             android:name=".preview.view.PreviewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent" />
-        <activity android:name=".license.list.LicenseListActivity"
+        <activity
+            android:name=".license.list.LicenseListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".license.detail.LicenseDetailActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".license.detail.LicenseDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".intro.IntroActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Intro" />
         <activity
             android:name=".base.util.TransparentActivity"
             android:excludeFromRecents="true"
@@ -88,6 +93,7 @@
             android:name=".base.service.ForeGroundService"
             android:exported="false"
             android:process=":locker" />
+
     </application>
 
 </manifest>

@@ -84,7 +84,6 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
             protected void onStartLoading() {
                 if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_FIRST_EXECUTION, true)){
                     Log.d(TAG, "first execution");
-                    SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.BOOLEAN_FIRST_EXECUTION, false);
                     mLoadingTextView.setText(getString(R.string.message_first_execution));
                 }else{
                     Log.d(TAG, "not first execution");
