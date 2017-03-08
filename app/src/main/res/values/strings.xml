@@ -45,7 +45,7 @@
     <string name="label_using">사용중</string>
     <string name="label_not_using">사용 안함</string>
     <string name="label_setup_wallpaper">"배경화면을 설정해주세요</string>
-    <string name="message_loading">[데이터베이스 동기화 중]\n변경된 이미지가 많으면 오래 걸릴 수 있습니다.</string>
+    <string name="message_loading">[데이터베이스 동기화 중]\n이미지가 많으면 오래 걸릴 수 있습니다.</string>
     <string name="message_search_image">이미지를 검색해주세요.</string>
     <string name="message_hint_search">검색어 입력</string>
     <string name="message_downloading">이미지를 내려받고 있습니다</string>

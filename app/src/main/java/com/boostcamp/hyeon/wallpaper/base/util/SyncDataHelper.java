@@ -92,31 +92,32 @@ public class SyncDataHelper {
                 Folder folder = realm.where(Folder.class).equalTo("bucketId", bucketId).findFirst();
                 if(folder == null){
                     folder = realm.createObject(Folder.class);
-                    folder.setBucketId(bucketId);
-                    folder.setName(bucketDisplayName);
                     folder.setImages(new RealmList<Image>());
-                    folder.setOpened(false);
                 }
+                folder.setBucketId(bucketId);
+                folder.setName(bucketDisplayName);
+                folder.setOpened(false);
+
                 if(scanPath == null){
                     folder.setOpened(false);
                 }
+
                 folder.setSynced(true);
 
                 // if image isn't exist in realm create realm object and adding RealmList
                 Image image = realm.where(Image.class).equalTo("imageId", imageId).findFirst();
                 if(image == null){
-                    RealmList<Image> imageRealmList = folder.getImages();
                     image = realm.createObject(Image.class);
-                    image.setBucketId(bucketId);
-                    //image.setImageUri(Uri.fromFile(new File(path)).toString());
-                    image.setImageUri(path);
-                    image.setThumbnailUri(getThumbnailUri(context, Long.valueOf(imageId)));
-                    image.setImageId(imageId);
-                    image.setOrientation(orientation == null ? "0" : orientation);
-                    image.setDateTaken(dateTaken);
-                    image.setDateAdded(dateAdded);
+                    RealmList<Image> imageRealmList = folder.getImages();
                     imageRealmList.add(image);
                 }
+                image.setBucketId(bucketId);
+                image.setImageUri(path);
+                image.setThumbnailUri(getThumbnailUri(context, Long.valueOf(imageId)));
+                image.setImageId(imageId);
+                image.setOrientation(orientation == null ? "0" : orientation);
+                image.setDateTaken(dateTaken);
+                image.setDateAdded(dateAdded);
                 image.setSelected(false);
                 image.setNumber(null);
                 image.setSynced(true);
