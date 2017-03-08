@@ -12,7 +12,7 @@ public class Define {
     public static final int SETTING_FRAGMENT = 3;
     public static final int DOWNLOAD_IMAGE_QUALITY = 100;
     public static final String DOWNLOAD_IMAGE_EXT = ".jpg";
-    public static final String APP_FOLDER_NAME = "Wallpaper";
+    public static final String APP_FOLDER_NAME = "CC 배경화면";
     public static final int CHANGE_CYCLE_SCREEN_OFF = -1;
     public static final int DELAY_MILLIS = 100;
     public static final int MINUTE_CONVERT_TO_MILLIS = 60*1000;
