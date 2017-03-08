@@ -58,4 +58,5 @@
     <string name="message_intro_select_cycle">배경화면 변경 시간 선택!</string>
     <string name="message_intro_search_and_download">배경화면 검색 및 다운로드!</string>
     <string name="message_intro_setting">현재 설정된 배경화면의 정보를 한눈에 볼 수 있는 기능!</string>
+    <string name="label_sync">동기화</string>
 </resources>

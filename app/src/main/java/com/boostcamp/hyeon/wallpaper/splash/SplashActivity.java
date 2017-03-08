@@ -32,7 +32,7 @@ public class SplashActivity extends AppCompatActivity implements LoaderManager.L
     private static final String TAG = SplashActivity.class.getSimpleName();
     private static final int PERMISSION_READ_WRITE = 23;
     private static final int FIRST_SYNC_DATA_LOADER = 1;
-    private static final int DELAY_MILLIS = 2000;
+    private static final int DELAY_MILLIS = 1000;
     private Handler mHandler;
     private long mStartTime;
     private long mEndTime;

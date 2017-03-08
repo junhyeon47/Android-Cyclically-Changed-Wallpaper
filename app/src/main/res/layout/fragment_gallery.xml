@@ -26,5 +26,5 @@
         android:background="@color/colorBlackOpacity50"
         android:gravity="center"
         android:clickable="true"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 </FrameLayout>

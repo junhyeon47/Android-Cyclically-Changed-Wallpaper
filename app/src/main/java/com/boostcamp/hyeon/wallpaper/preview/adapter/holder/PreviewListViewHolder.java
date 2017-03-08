@@ -11,9 +11,8 @@ import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,10 +45,10 @@ public class PreviewListViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(Image image, final int position) {
         mNumberTextView.setText(String.valueOf(image.getNumber()));
-        Picasso.with(mContext)
-                .load(new File(image.getImageUri()))
-                .resize(mWidth, mHeight)
-                .centerInside()
+        Glide.with(mContext)
+                .load(image.getImageUri())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .fitCenter()
                 .into(mImageView);
     }
 }

@@ -18,7 +18,8 @@
         android:textSize="12sp"
         android:textColor="@color/colorBlackOpacity50"
         android:text="@string/message_thumbnail_not_exist"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:padding="5dp"/>
 
     <FrameLayout
         android:id="@+id/layout_border"

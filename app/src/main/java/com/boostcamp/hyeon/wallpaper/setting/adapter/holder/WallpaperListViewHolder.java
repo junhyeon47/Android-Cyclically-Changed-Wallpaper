@@ -15,9 +15,8 @@ import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.domain.Wallpaper;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,10 +58,10 @@ public class WallpaperListViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Image image, final int position) {
-        Picasso.with(mContext)
-                .load(new File(image.getImageUri()))
-                .resize(mWidth, mHeight)
-                .centerInside()
+        Glide.with(mContext)
+                .load(image.getImageUri())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
                 .into(mImageView);
 
         Realm realm = WallpaperApplication.getRealmInstance();

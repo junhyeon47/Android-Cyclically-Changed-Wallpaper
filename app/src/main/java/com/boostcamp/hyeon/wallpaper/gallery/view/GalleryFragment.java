@@ -34,6 +34,7 @@ import com.boostcamp.hyeon.wallpaper.base.listener.OnBackKeyPressedListener;
 import com.boostcamp.hyeon.wallpaper.base.util.Define;
 import com.boostcamp.hyeon.wallpaper.base.util.RegisterWallpaperAsyncTask;
 import com.boostcamp.hyeon.wallpaper.base.util.SharedPreferenceHelper;
+import com.boostcamp.hyeon.wallpaper.base.util.SyncDataHelper;
 import com.boostcamp.hyeon.wallpaper.detail.view.DetailActivity;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.FolderListAdapter;
 import com.boostcamp.hyeon.wallpaper.gallery.adapter.ImageListAdapter;
@@ -44,6 +45,7 @@ import com.boostcamp.hyeon.wallpaper.gallery.presenter.ImageListPresenter;
 import com.boostcamp.hyeon.wallpaper.gallery.presenter.ImageListPresenterImpl;
 import com.boostcamp.hyeon.wallpaper.main.view.MainActivity;
 import com.boostcamp.hyeon.wallpaper.preview.view.PreviewActivity;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

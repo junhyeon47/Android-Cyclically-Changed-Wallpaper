@@ -10,7 +10,6 @@ public class Image extends RealmObject{
     private String bucketId;
     private String imageId;
     private String imageUri;
-    private String thumbnailUri;
     private String orientation;
     private String dateTaken;
     private String dateAdded;
@@ -40,14 +39,6 @@ public class Image extends RealmObject{
 
     public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
-    }
-
-    public String getThumbnailUri() {
-        return thumbnailUri;
-    }
-
-    public void setThumbnailUri(String thumbnailUri) {
-        this.thumbnailUri = thumbnailUri;
     }
 
     public String getOrientation() {

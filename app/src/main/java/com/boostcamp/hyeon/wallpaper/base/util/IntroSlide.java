@@ -9,7 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.boostcamp.hyeon.wallpaper.R;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import agency.tango.materialintroscreen.SlideFragment;
 import butterknife.BindView;
@@ -63,10 +64,10 @@ public class IntroSlide extends SlideFragment {
     public void init(){
         int index = getArguments().getInt("index");
 
-        Picasso.with(getContext())
+        Glide.with(getContext())
                 .load(Define.INTRO_IMAGE[index])
-                .fit()
-                .centerInside()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
                 .into(mIntroImageView);
 
         mMessageTextView.setText(getString(Define.INTRO_MESSAGE[index]));

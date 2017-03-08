@@ -2,22 +2,19 @@ package com.boostcamp.hyeon.wallpaper.gallery.adapter.holder;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,10 +58,9 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Image image, final int position){
-        Picasso.with(mContext)
-                .load(new File(image.getThumbnailUri()))
-                .rotate(Integer.valueOf(image.getOrientation()))
-                .fit()
+        Glide.with(mContext)
+                .load(image.getImageUri())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
                 .into(mThumbnailImageView);
 

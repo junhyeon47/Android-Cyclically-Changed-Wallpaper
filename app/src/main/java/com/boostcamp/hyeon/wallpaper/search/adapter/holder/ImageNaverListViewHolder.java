@@ -12,8 +12,11 @@ import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.domain.ImageNaver;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,21 +57,23 @@ public class ImageNaverListViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(final ImageNaver imageNaver, final int position){
         mErrorMessageTextView.setVisibility(View.GONE);
-        Picasso.with(mContext)
+        Glide.with(mContext)
                 .load(imageNaver.getThumbnail())
-                .fit()
-                .centerCrop()
-                .into(mThumbnailImageView, new Callback() {
+                .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError() {
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                         mErrorMessageTextView.setVisibility(View.VISIBLE);
+                        return false;
                     }
-                });
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        return false;
+                    }
+                })
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+                .into(mThumbnailImageView);
 
         mNumberTextView.setVisibility(View.GONE);
 

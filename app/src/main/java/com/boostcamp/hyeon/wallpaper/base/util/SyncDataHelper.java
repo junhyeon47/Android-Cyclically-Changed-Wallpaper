@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.boostcamp.hyeon.wallpaper.R;
 import com.boostcamp.hyeon.wallpaper.base.app.WallpaperApplication;
@@ -22,7 +23,7 @@ import io.realm.RealmResults;
 
 public class SyncDataHelper {
     private static final String TAG = SyncDataHelper.class.getSimpleName();
-    public static void syncDataToRealm(Context context, Handler handler, String scanPath){
+    public static void syncDataToRealm(final Context context, final Handler handler, final String scanPath){
         //read all images from Content Provider to Cursor Object.
         String[] projection = {
                 MediaStore.Images.Media.BUCKET_ID, //Folder ID
@@ -42,7 +43,7 @@ public class SyncDataHelper {
             selectionArgs = new String[]{ scanPath };
         }
 
-        Cursor cursor =  context.getContentResolver().query(
+        final Cursor cursor =  context.getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projection,
                 selection,
@@ -57,7 +58,6 @@ public class SyncDataHelper {
             // error handling
         } else if (cursor.moveToFirst()) {
             int totalImageCount = cursor.getCount();
-            int loopCount = 0;
             if(handler != null){
                 Bundle bundle = new Bundle();
                 bundle.putInt(context.getString(R.string.key_max), totalImageCount);
@@ -66,14 +66,18 @@ public class SyncDataHelper {
                 handler.sendMessage(message);
             }
             //index for accessing Cursor data
-            int bucketIdColumnIndex = cursor.getColumnIndex(projection[0]);
-            int bucketDisplayNameColumnIndex = cursor.getColumnIndex(projection[1]);
-            int idColumnIndex = cursor.getColumnIndex(projection[2]);
-            int pathColumnIndex = cursor.getColumnIndex(projection[3]);
-            int orientationColumnIndex = cursor.getColumnIndex(projection[4]);
-            int dateTakenColumnIndex = cursor.getColumnIndex(projection[5]);
-            int dateAddedColumnIndex = cursor.getColumnIndex(projection[6]);
+            final int bucketIdColumnIndex = cursor.getColumnIndex(projection[0]);
+            final int bucketDisplayNameColumnIndex = cursor.getColumnIndex(projection[1]);
+            final int idColumnIndex = cursor.getColumnIndex(projection[2]);
+            final int pathColumnIndex = cursor.getColumnIndex(projection[3]);
+            final int orientationColumnIndex = cursor.getColumnIndex(projection[4]);
+            final int dateTakenColumnIndex = cursor.getColumnIndex(projection[5]);
+            final int dateAddedColumnIndex = cursor.getColumnIndex(projection[6]);
 
+            //init realm
+            Realm realm = WallpaperApplication.getRealmInstance();
+            realm.beginTransaction();
+            int loopCount = 0;
             do {
                 //get data from Cursor
                 String bucketId = cursor.getString(bucketIdColumnIndex);
@@ -83,10 +87,6 @@ public class SyncDataHelper {
                 String orientation = cursor.getString(orientationColumnIndex);
                 String dateTaken = cursor.getString(dateTakenColumnIndex);
                 String dateAdded = cursor.getString(dateAddedColumnIndex);
-
-                //init realm
-                Realm realm = WallpaperApplication.getRealmInstance();
-                realm.beginTransaction();
 
                 // if bucket isn't exist in realm, create realm object
                 Folder folder = realm.where(Folder.class).equalTo("bucketId", bucketId).findFirst();
@@ -113,7 +113,7 @@ public class SyncDataHelper {
                 }
                 image.setBucketId(bucketId);
                 image.setImageUri(path);
-                image.setThumbnailUri(getThumbnailUri(context, Long.valueOf(imageId)));
+                //image.setThumbnailUri(getThumbnailUri(context, Long.valueOf(imageId)));
                 image.setImageId(imageId);
                 image.setOrientation(orientation == null ? "0" : orientation);
                 image.setDateTaken(dateTaken);
@@ -121,9 +121,6 @@ public class SyncDataHelper {
                 image.setSelected(false);
                 image.setNumber(null);
                 image.setSynced(true);
-
-                realm.commitTransaction();
-
 
                 //update handler
                 if(handler != null){
@@ -137,8 +134,9 @@ public class SyncDataHelper {
                 }
 
             } while (cursor.moveToNext());
-            // close Cursor
+            realm.commitTransaction();
             cursor.close();
+            // close Cursor
         } else {
             // Cursor is empty
         }

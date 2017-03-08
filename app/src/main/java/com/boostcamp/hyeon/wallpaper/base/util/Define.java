@@ -51,7 +51,8 @@ public class Define {
             R.raw.license_akexorcist,
             R.raw.license_maxim_dybarsky,
             R.raw.license_chris_banes,
-            R.raw.license_tango_agency
+            R.raw.license_tango_agency,
+            R.raw.license_glide
     };
     public static final int NUMBER_OF_INTRO = 4;
     public static final int[] INTRO_IMAGE = {

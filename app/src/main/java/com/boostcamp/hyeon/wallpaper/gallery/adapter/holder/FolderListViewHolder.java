@@ -14,13 +14,11 @@ import com.boostcamp.hyeon.wallpaper.base.domain.Folder;
 import com.boostcamp.hyeon.wallpaper.base.domain.Image;
 import com.boostcamp.hyeon.wallpaper.base.listener.OnItemClickListener;
 import com.boostcamp.hyeon.wallpaper.base.util.DisplayMetricsHelper;
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Sort;
 
 /**
  * Created by hyeon on 2017. 2. 12..
@@ -75,12 +73,11 @@ public class FolderListViewHolder extends RecyclerView.ViewHolder{
             mFolderOpenIconImageView.setVisibility(View.GONE);
         }
 
-        Image image = folder.getImages().sort("dateAdded", Sort.DESCENDING).first();
+        Image image = folder.getImages().first();
 
-        Picasso.with(mContext)
-                .load(new File(image.getThumbnailUri()))
-                .rotate(Integer.valueOf(image.getOrientation()))
-                .fit()
+        Glide.with(mContext)
+                .load(image.getImageUri())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
                 .into(mFolderImageView);
     }
