@@ -71,7 +71,6 @@ public class ImageNaverListViewHolder extends RecyclerView.ViewHolder {
                         return false;
                     }
                 })
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
                 .into(mThumbnailImageView);
 

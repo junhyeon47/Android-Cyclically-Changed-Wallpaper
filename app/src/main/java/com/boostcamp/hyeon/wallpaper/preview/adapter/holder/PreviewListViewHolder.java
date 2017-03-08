@@ -47,7 +47,6 @@ public class PreviewListViewHolder extends RecyclerView.ViewHolder {
         mNumberTextView.setText(String.valueOf(image.getNumber()));
         Glide.with(mContext)
                 .load(image.getImageUri())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .fitCenter()
                 .into(mImageView);
     }

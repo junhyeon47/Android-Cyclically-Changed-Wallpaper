@@ -66,7 +66,6 @@ public class IntroSlide extends SlideFragment {
 
         Glide.with(getContext())
                 .load(Define.INTRO_IMAGE[index])
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .fitCenter()
                 .into(mIntroImageView);
 

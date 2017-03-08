@@ -72,7 +72,6 @@ public class DetailPagerAdapter extends PagerAdapter {
                         return false;
                     }
                 })
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .fitCenter()
                 .into(imageView);
         container.addView(view);

@@ -77,7 +77,6 @@ public class FolderListViewHolder extends RecyclerView.ViewHolder{
 
         Glide.with(mContext)
                 .load(image.getImageUri())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
                 .into(mFolderImageView);
     }

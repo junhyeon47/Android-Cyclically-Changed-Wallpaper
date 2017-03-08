@@ -60,7 +60,6 @@ public class ImageListViewHolder extends RecyclerView.ViewHolder {
     public void bind(Image image, final int position){
         Glide.with(mContext)
                 .load(image.getImageUri())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
                 .into(mThumbnailImageView);
 
