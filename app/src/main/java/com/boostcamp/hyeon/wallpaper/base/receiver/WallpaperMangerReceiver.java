@@ -94,10 +94,15 @@ public class WallpaperMangerReceiver extends BroadcastReceiver{
         Log.d(TAG, "setWallpaperFromChangeType: "+changeScreenType);
 
         int sampleSize;
-        if(BitmapHelper.getBitmapWidth(imageUri) >= Define.LIMIT_WIDTH_FOR_SAMPLE || BitmapHelper.getBitmapHeight(imageUri) >= Define.LIMIT_HEIGHT_FOR_SAMPLE)
-            sampleSize = Define.HIGH_SAMPLE_SIZE;
-        else
+        int width = BitmapHelper.getBitmapWidth(imageUri);
+        int height = BitmapHelper.getBitmapHeight(imageUri);
+
+        if(width <= Define.LIMIT_LOW_WIDTH_FOR_SAMPLE && height <= Define.LIMIT_LOW_HEIGHT_FOR_SAMPLE)
             sampleSize = Define.LOW_SAMPLE_SIZE;
+        else if(width <= Define.LIMIT_MID_WIDTH_FOR_SAMPLE && height <= Define.LIMIT_MID_HEIGHT_FOR_SAMPLE)
+            sampleSize = Define.MID_SAMPLE_SIZE;
+        else
+            sampleSize = Define.HIGH_SAMPLE_SIZE;
 
         Bitmap bitmap = BitmapHelper.decodeFile(imageUri, sampleSize);
 
