@@ -84,8 +84,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(mToolbarTitles[mTabLayout.getSelectedTabPosition()]);
 
-        if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_FIRST_EXECUTION, true))
-            moveToIntroActivity();
+//        if(SharedPreferenceHelper.getInstance().getBoolean(SharedPreferenceHelper.Key.BOOLEAN_FIRST_EXECUTION, true))
+//            moveToIntroActivity();
+        moveToIntroActivity();
     }
 
     @Override

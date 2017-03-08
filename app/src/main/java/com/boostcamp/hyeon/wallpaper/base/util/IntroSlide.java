@@ -67,7 +67,7 @@ public class IntroSlide extends SlideFragment {
         Glide.with(getContext())
                 .load(Define.INTRO_IMAGE[index])
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop()
+                .fitCenter()
                 .into(mIntroImageView);
 
         mMessageTextView.setText(getString(Define.INTRO_MESSAGE[index]));
