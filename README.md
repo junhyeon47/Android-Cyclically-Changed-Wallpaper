@@ -29,6 +29,9 @@ Play Store: [https://play.google.com/store/apps/details?id=com.boostcamp.hyeon.w
 * [Material Intro Screen](https://github.com/TangoAgency/material-intro-screen)
 * [Glide](http://gun0912.tistory.com/17)
 
+###사용한 Open API
+* 네이버 검색 API
+
 ###기술적인 특징
 * MVP pattern 적용
 * Notification 제거한 Foreground Service 개발
