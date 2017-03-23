@@ -1,11 +1,11 @@
-#CC 배경화면(Cyclically Changed Wallpaper)
+# CC 배경화면(Cyclically Changed Wallpaper)
 
-###소개
+### 소개
 여러 개의 사진 또는 이미지를 선택하여 주기적으로 배경화면을 자동으로 변경해주는 앱</br>
 Play Store: [https://play.google.com/store/apps/details?id=com.boostcamp.hyeon.wallpaper](https://play.google.com/store/apps/details?id=com.boostcamp.hyeon.wallpaper)
 
 
-###기능
+### 기능
 1. 여러 개의 배경화면 이미지 선택: 배경화면으로 사용할 여러 이미지를 선택하고, 미리보기, 확대보기 기능을 지원합니다.</br>
 ![Alt text](/docs/images/app_desc_01.png)
 ![Alt text](/docs/images/app_desc_02.png)
@@ -18,7 +18,7 @@ Play Store: [https://play.google.com/store/apps/details?id=com.boostcamp.hyeon.w
 4. 현재 설정된 배경화면 정보를 한눈에 볼 수 있는 기능: 현재 배경화면으로 지정된 모든 사진을 순서대로 볼 수 있고, 스위치 버튼을 통해서 배경화면 설정을 해제하는 기능, 배경화면 변경 주기를 바꾸는 기능, 무작위로 배경화면을 변경하는 기능을 지원합니다.</br>
 ![Alt text](/docs/images/app_desc_07.png)
 
-###사용한 라이브러리
+### 사용한 라이브러리
 * [Realm](https://realm.io/kr/)
 * [Butter Knife](http://jakewharton.github.io/butterknife/)
 * [Retrofit](http://square.github.io/retrofit/)
@@ -29,10 +29,10 @@ Play Store: [https://play.google.com/store/apps/details?id=com.boostcamp.hyeon.w
 * [Material Intro Screen](https://github.com/TangoAgency/material-intro-screen)
 * [Glide](http://gun0912.tistory.com/17)
 
-###사용한 Open API
+### 사용한 Open API
 * 네이버 검색 API
 
-###기술적인 특징
+### 기술적인 특징
 * MVP pattern 적용
 * Notification 제거한 Foreground Service 개발
 * Boot Complete 적용한 BroadcastReceiver 개발
